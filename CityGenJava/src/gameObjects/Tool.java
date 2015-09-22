@@ -39,4 +39,14 @@ public abstract class Tool implements Item {
 	 */
 	public abstract void use();
 	
+	@Override
+	public String getName(){
+		return name;
+	}
+	
+	@Override
+	public String getDescription(){
+		return description;
+	}
+	
 }

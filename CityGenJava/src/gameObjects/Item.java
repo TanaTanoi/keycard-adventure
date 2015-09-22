@@ -12,7 +12,7 @@ public interface Item {
 	 * Performs action on/with item
 	 * NOTE: may need a mouse click or object interacting with as param
 	 */
-	public void interact();
+	public void interact(Item i);
 	
 	/**
 	 * Returns the name of the item
