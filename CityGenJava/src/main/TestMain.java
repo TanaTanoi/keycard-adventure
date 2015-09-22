@@ -230,7 +230,7 @@ public class TestMain {
 				points.add(new Vector2(i,j+0.1f));
 				glColor3f(i+1, j+1, (i+j)/2+1);
 				glColor3f(1,0,0);
-				building.Generator.renderRandomBlock(points, 4);
+				
 			}
 		}
 		glEndList();
