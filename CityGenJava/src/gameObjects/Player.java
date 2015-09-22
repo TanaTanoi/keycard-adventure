@@ -27,8 +27,14 @@ public class Player implements Character{
 		// Need to do something here
 	}
 	
-	public Item talk(NPC npc){
-		
+	@Override
+	public Item talk(Character c){
+		return null;
+	}
+
+	@Override
+	public String getName() {
+		return name;		
 	}
 	
 }
