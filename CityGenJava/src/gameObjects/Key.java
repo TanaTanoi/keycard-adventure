@@ -3,16 +3,11 @@ package gameObjects;
 public class Key extends Tool {
 
 	
-	public Key(String name, String desc) {
-		super(name, desc, new KeyInteractStrategy());		
+	public Key(String name, String desc) {		
+		super(name, desc);		
+		super.setStrategy(new KeyInteractStrategy(this));
 	}
-
-	@Override
-	public void interact(Item i) {
-		// TODO Auto-generated method stub
-		
-	}	
-
+	
 	@Override
 	public void equip() {
 		// TODO Auto-generated method stub

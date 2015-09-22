@@ -113,5 +113,21 @@ public class Container implements Item{
 	public String getDescription() {
 		return desc;
 	}
+	
+	/**
+	 * Determines whether the container has a key
+	 * @return boolean indicating whether the container has a key
+	 */
+	public boolean hasKey(){
+		return key != null;
+	}
+	
+	/**
+	 * Returns name of the key that locks/unlocks it
+	 * @return
+	 */
+	public String getKeyName(){
+		return key.getName();
+	}
 
 }

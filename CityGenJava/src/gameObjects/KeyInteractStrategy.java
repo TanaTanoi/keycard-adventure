@@ -9,19 +9,34 @@ package gameObjects;
  */
 
 public class KeyInteractStrategy implements InteractStrategy {
-	
-	public KeyInteractStrategy(){}
+
+	private Key key;
+
+	public KeyInteractStrategy(Key k){
+		this.key = k;
+	}
 
 	@Override
 	public void interact(Item i) {
-		// TODO Auto-generated method stub
-		
+		// If a container has been clicked
+		if(i instanceof Container){
+			Container cont = (Container) i;
+			// If the container has a lock
+			if(cont.hasKey()){
+				// If this key unlocks/locks the container
+				if(key.getName() == cont.getKeyName()){
+					// Unlock/lock the container
+					cont.setLockStatus(key);
+					//NOTE: Maybe at this point text/ animation needs to appear?
+				}
+			}
+		}
+
 	}
 
 	@Override
 	public void useOnSelf(Player p) {
-		// TODO Auto-generated method stub
-		
+		// Does nothing
 	}
 
 }
