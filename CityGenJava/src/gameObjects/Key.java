@@ -2,8 +2,9 @@ package gameObjects;
 
 public class Key extends Tool {
 
+	
 	public Key(String name, String desc) {
-		super(name, desc);		
+		super(name, desc, new KeyInteractStrategy());		
 	}
 
 	@Override
@@ -23,13 +24,7 @@ public class Key extends Tool {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public void use() {
-		// TODO Auto-generated method stub
 		
-	}
-	
 	@Override
 	public String getName() {
 		return getName();

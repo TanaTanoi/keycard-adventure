@@ -11,10 +11,12 @@ public abstract class Tool implements Item {
 	
 	private String name;
 	private String description;
+	private InteractStrategy interactStrategy;
 	
-	public Tool(String name, String desc){
+	public Tool(String name, String desc, InteractStrategy strat){
 		this.name = name;
 		description = desc;
+		interactStrategy = strat;
 	}
 	
 	/**
@@ -33,11 +35,10 @@ public abstract class Tool implements Item {
 	 */
 	public abstract boolean canUse();
 	
-	/**
-	 * use defines the action that should be performed
-	 * when the item is used
-	 */
-	public abstract void use();
+	@Override
+	public void interact(Item i){
+		interactStrategy.interact(i);
+	}
 	
 	@Override
 	public String getName(){
