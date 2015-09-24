@@ -24,5 +24,6 @@ public interface Character {
 	 * @param x is the x direction
 	 * @param z is the z direction
 	 */
-	public void move(int x, int z);
+	public void move(int x, int z);	
+	
 }

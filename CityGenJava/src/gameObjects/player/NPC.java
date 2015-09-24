@@ -17,9 +17,11 @@ import gameObjects.objects.Item;
 public class NPC implements Character {
 	
 	private String name;
+	private int health;
 	
-	public NPC(String name){
-		
+	public NPC(String name, int health){
+		this.name = name;
+		this.health = health;
 	}
 
 	@Override
@@ -37,6 +39,25 @@ public class NPC implements Character {
 	public void move(int x, int z) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * Attack allows a player to attack an NPC
+	 * and do a given amonut of damage to their health
+	 * 
+	 * @param damage is the amount of health the NPC loses
+	 */
+	public void attack(int damage){
+		health -= damage;
+	}
+	
+	/**
+	 * Checks whether the NPC is alive
+	 * i.e. whether their health is above zero
+	 * @return
+	 */
+	public boolean isAlive(){
+		return health > 0;
 	}
 
 }
