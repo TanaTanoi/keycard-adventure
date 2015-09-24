@@ -45,6 +45,14 @@ public abstract class Tool implements Item {
 			interactStrategy.interact(i);
 		}
 	}
+	
+	/**
+	 * Drop releases the object from a player
+	 * and places it in the game world
+	 */
+	public void drop(){
+		
+	}
 
 	@Override
 	public String getName(){
