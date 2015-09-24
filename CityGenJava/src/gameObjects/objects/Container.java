@@ -19,7 +19,7 @@ import java.util.List;
  *
  */
 
-public class Container implements Item{
+public abstract class Container implements Item{
 
 	// Fields describing the container
 	private String name;
@@ -131,10 +131,4 @@ public class Container implements Item{
 	public String getKeyName(){
 		return key.getName();
 	}
-
-	@Override
-	public void interact(Character c) {
-		// See if they can add container to inventory?		
-	}
-
 }
