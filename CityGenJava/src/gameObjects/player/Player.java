@@ -12,8 +12,10 @@ import gameObjects.objects.Item;
 
 public class Player implements Character{
 	
-	String name; // name selected by user
-	Item [] inventory; // items  that the player carries 
+	private String name; // name selected by user
+	private Item [] inventory; // items  that the player carries 
+	private int health;
+	
 	//Location l; // describes player's whereabouts in the game world
 	
 	public Player(String name){
@@ -37,6 +39,25 @@ public class Player implements Character{
 	@Override
 	public String getName() {
 		return name;		
+	}
+	
+	/**
+	 * Taking a potion has an effect on the character's health
+	 * This can be either a positive or a negative effect
+	 * @param effect
+	 */
+	public void takePotion(int effect){
+		health += effect;
+	}
+	
+	@Override
+	public void attack(int damage){
+		health -= damage;
+	}
+
+	@Override
+	public boolean isAlive() {
+		return health > 0;
 	}
 	
 }

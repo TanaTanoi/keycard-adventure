@@ -41,21 +41,11 @@ public class NPC implements Character {
 		
 	}
 	
-	/**
-	 * Attack allows a player to attack an NPC
-	 * and do a given amonut of damage to their health
-	 * 
-	 * @param damage is the amount of health the NPC loses
-	 */
 	public void attack(int damage){
 		health -= damage;
-	}
+	}	
 	
-	/**
-	 * Checks whether the NPC is alive
-	 * i.e. whether their health is above zero
-	 * @return
-	 */
+	@Override
 	public boolean isAlive(){
 		return health > 0;
 	}
