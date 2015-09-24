@@ -1,4 +1,7 @@
-package gameObjects;
+package gameObjects.objects;
+
+import gameObjects.player.Character;
+import gameObjects.strategies.InteractStrategy;
 
 /**
  * The tool class describes a type of item that can be "equipped".

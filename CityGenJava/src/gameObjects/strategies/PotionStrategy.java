@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.strategies;
+import gameObjects.player.Character;
+import gameObjects.objects.Item;
 
 public class PotionStrategy implements InteractStrategy {
 	

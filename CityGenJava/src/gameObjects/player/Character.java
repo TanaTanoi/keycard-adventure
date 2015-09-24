@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.player;
+
+import gameObjects.objects.Item;
 
 public interface Character {
 

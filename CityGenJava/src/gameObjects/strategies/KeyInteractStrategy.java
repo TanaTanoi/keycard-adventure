@@ -1,4 +1,8 @@
-package gameObjects;
+package gameObjects.strategies;
+import gameObjects.objects.Key;
+import gameObjects.objects.Item;
+import gameObjects.objects.Container;
+import gameObjects.player.Character;
 
 /**
  * The key interact strategy describes how key objects may

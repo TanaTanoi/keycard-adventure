@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.objects;
+
+import gameObjects.player.Character;
 
 /**
  * The item interface describes objects in the game world that the player can interact with

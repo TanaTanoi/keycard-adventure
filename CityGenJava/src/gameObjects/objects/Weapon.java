@@ -1,4 +1,5 @@
-package gameObjects;
+package gameObjects.objects;
+import gameObjects.strategies.WeaponStrategy;
 
 public class Weapon extends Tool {
 

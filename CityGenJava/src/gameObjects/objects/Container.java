@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.objects;
+
+import gameObjects.player.Character;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +130,11 @@ public class Container implements Item{
 	 */
 	public String getKeyName(){
 		return key.getName();
+	}
+
+	@Override
+	public void interact(Character c) {
+		// See if they can add container to inventory?		
 	}
 
 }

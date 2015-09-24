@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.objects;
+
+import gameObjects.strategies.PotionStrategy;
 
 public class Potion extends Tool{
 

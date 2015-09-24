@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.strategies;
+import gameObjects.objects.Item;
+import gameObjects.player.Character;
 
 /**
  * The interact strategy interface is used to implement a strategy pattern

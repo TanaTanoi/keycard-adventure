@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.player;
+
+import gameObjects.objects.Item;
 
 /**
  * The npc class describes a character that is not playable

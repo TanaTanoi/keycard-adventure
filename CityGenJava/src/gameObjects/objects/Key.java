@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.objects;
+
+import gameObjects.strategies.KeyInteractStrategy;
 
 public class Key extends Tool {
 

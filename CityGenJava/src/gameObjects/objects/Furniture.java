@@ -1,4 +1,4 @@
-package gameObjects;
+package gameObjects.objects;
 
 public abstract class Furniture implements Item {
 	

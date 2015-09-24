@@ -1,4 +1,6 @@
-package gameObjects;
+package gameObjects.player;
+
+import gameObjects.objects.Item;
 
 /**
  * The player class describes a character in the game
