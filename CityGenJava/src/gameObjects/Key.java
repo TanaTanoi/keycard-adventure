@@ -12,22 +12,6 @@ public class Key extends Tool {
 	public void equip() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public boolean canUse() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-		
-	@Override
-	public String getName() {
-		return getName();
-	}
-
-	@Override
-	public String getDescription() {
-		return getDescription();
-	}
+	}		
 
 }

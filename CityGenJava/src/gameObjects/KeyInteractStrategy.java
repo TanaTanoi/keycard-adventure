@@ -31,11 +31,13 @@ public class KeyInteractStrategy implements InteractStrategy {
 				}
 			}
 		}
+		
+		// If a door has been clicked
 
 	}
 
 	@Override
-	public void useOnSelf(Player p) {
+	public void useOnPlayer(Character c) {
 		// Does nothing
 	}
 

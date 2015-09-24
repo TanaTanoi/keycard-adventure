@@ -24,6 +24,6 @@ public interface InteractStrategy {
 	 * 
 	 * @param p is the player using this item
 	 */
-	public void useOnSelf(Player p);
-	
+	public void useOnPlayer(Character c);
+		
 }

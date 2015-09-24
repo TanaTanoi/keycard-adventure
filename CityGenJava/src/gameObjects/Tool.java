@@ -31,17 +31,14 @@ public abstract class Tool implements Item {
 	 */
 	public abstract void equip();
 
-	/**
-	 * canUse determines whether this tool can be used in the
-	 * way the player is trying to use it
-	 * 
-	 * @return a boolean indicating whether the player can use
-	 * this tool
-	 * 
-	 * NOTE: may need click or interact item as param
-	 */
-	public abstract boolean canUse();
-
+	@Override
+	public void interact(Character c){
+		if(interactStrategy != null){
+			interactStrategy.useOnPlayer(c);
+		}
+	}
+	
+	
 	@Override
 	public void interact(Item i){
 		if(interactStrategy != null){
