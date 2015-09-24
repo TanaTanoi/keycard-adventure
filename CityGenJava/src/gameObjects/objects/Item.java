@@ -1,5 +1,6 @@
 package gameObjects.objects;
 
+import javafx.geometry.BoundingBox;
 import gameObjects.player.Character;
 
 /**
@@ -35,4 +36,11 @@ public interface Item {
 	 * @return
 	 */
 	public String getDescription();
+	
+	/**
+	 * Gets bounding box of item.
+	 * This can then be used for collision detection
+	 * or for selecting items
+	 */
+	public BoundingBox getBoundingBox();
 }
