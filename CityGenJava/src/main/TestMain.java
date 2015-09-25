@@ -4,6 +4,12 @@ import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import graphics.Face;
+import graphics.Floor;
+import graphics.Model;
+import graphics.OBJLoader;
+
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -12,6 +18,8 @@ import java.util.List;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.util.vector.Vector3f;
+
 import vec.*;
 public class TestMain {
 	/*glfw callback objects*/
@@ -33,9 +41,11 @@ public class TestMain {
 	private boolean mouse_down = false;
 
 	/*Model transformation fields*/
-	private float zoom = 1;
+	private float zoom = 1f;
 	private float rot_x = 0;
 	private float rot_y = 0;
+
+	private Floor curFloor = new Floor();
 
 	public static void main(String[] args) {
 		new TestMain().run();
@@ -98,7 +108,7 @@ public class TestMain {
 			};
 
 		});
-		glfwSetScrollCallback(window, cbfun_s = new GLFWScrollCallback() {	
+		glfwSetScrollCallback(window, cbfun_s = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
 				ScrollCallback(window,xoffset,yoffset);
@@ -134,21 +144,35 @@ public class TestMain {
 		GL.createCapabilities(false); // valid for latest build
 		//Clear the buffer to this frame
 		glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-		
+
 		//Create a display list of the building
-		int buildings = generateBuildings();
-		
-		
+
+
+
 		/*The primary rendering loop! This is run until closed 
 		 * or the user presses escape (defined in KeyboardCallback)*/
 		while ( glfwWindowShouldClose(window) == GL_FALSE ) {
 			setUpCamera();
-			initialiseLighting();
+			//initialiseLighting();
 			glClear(GL_COLOR_BUFFER_BIT); // clear the frame buffer
 			/*#Insert methods that draw in here #*/
-			
-			renderGrid();
-			glCallList(buildings);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+			glShadeModel(GL_SMOOTH);
+			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+
+			//renderGrid();
+			curFloor.renderRoom();
+			if (mousePos.y > 80){
+				if (mousePos.x > 600){
+					rot_x +=Math.pow((mousePos.x-600)/100,1.2);
+				}
+				else if (mousePos.x < 200){
+					rot_x -=Math.pow((200-mousePos.x)/100,1.2);
+				}
+			}
 			/*----------------------------------*/
 			glFlush();
 			glfwSwapBuffers(window); // swap the color buffers
@@ -172,7 +196,7 @@ public class TestMain {
 		glEnable(GL_LIGHTING);
 	}
 	/**
-	 * Sets up the camera and applies rotations from the mouse. 
+	 * Sets up the camera and applies rotations from the mouse.
 	 * This is called every draw tick
 	 */
 	private void setUpCamera(){
@@ -185,7 +209,8 @@ public class TestMain {
 		glScalef(zoom, zoom, zoom);
 		glRotatef(rot_x, 0, 1, 0);
 		glRotatef(rot_y, 1, 0, 0);
-		
+
+
 	}
 	/**
 	 * Renders a basic 2 by 2 grid along the x/z axis (y is up)
@@ -215,27 +240,7 @@ public class TestMain {
 		glEnd();
 		glEnable(GL_LIGHTING);
 	}
-	private int generateBuildings(){
-		int list = glGenLists(1);
-		glNewList(list,GL_COMPILE);
-		float size= 1f;
-		float disp = 0.15f;
-		for(float i = -size;i<size;i+=disp){
-			for(float j = -size;j<size;j+=disp){
-				
-				List<Vector2> points = new ArrayList<Vector2>();
-				points.add(new Vector2(i,j));
-				points.add(new Vector2(i+0.1f,j));
-				points.add(new Vector2(i+0.1f,j+0.1f));
-				points.add(new Vector2(i,j+0.1f));
-				glColor3f(i+1, j+1, (i+j)/2+1);
-				glColor3f(1,0,0);
-				
-			}
-		}
-		glEndList();
-		return list;
-	}
+
 	private void renderCube(float x, float y, float z){
 		glMatrixMode(GL_MODELVIEW);
 		float w = 0.5f;
@@ -254,6 +259,11 @@ public class TestMain {
 	private void KeyboardCallback(long window, int key, int scancode, int action, int mods){
 		if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
+		char pressed = (char)key;
+		System.out.println("Key Pressed: " + pressed);
+		curFloor.move(pressed, rot_x);
+
+
 	}
 
 	private void MouseButtonCallback(long window, int button, int state, int arg3){
@@ -265,13 +275,12 @@ public class TestMain {
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
 		if(mouse_down){
 			rot_x +=0.3*(xpos-mousePos.x);
-			rot_y +=0.3*(ypos-mousePos.y);
-
+			//			rot_y +=0.3*(ypos-mousePos.y);
 		}
 		mousePos = new Vector2((float)xpos,(float)ypos);
 	}
 	/**
-	 * 
+	 *
 	 * @param window
 	 * @param xoffset
 	 * @param yoffset - Scroll amount (positive if forward/towards computer)
