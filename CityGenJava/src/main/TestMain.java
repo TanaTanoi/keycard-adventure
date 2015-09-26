@@ -7,7 +7,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import graphics.Face;
 import graphics.Floor;
 import graphics.Model;
-import graphics.OBJLoader;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

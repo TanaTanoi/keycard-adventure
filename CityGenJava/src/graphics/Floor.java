@@ -29,7 +29,6 @@ public class Floor {
 	private double gameSize = 10;
 	private float x,y,z;
 	private boolean loaded = false;
-	Model m;
 	public Floor(){
 		setToBlank(26);
 	}
@@ -38,7 +37,7 @@ public class Floor {
 
 	public void renderRoom(){
 		if (!loaded){
-			loadModel("teapot.obj");
+			loadModel("sphere.obj");
 			initaliseLighting();
 		}
 		renderObject();
@@ -48,29 +47,26 @@ public class Floor {
 
 	private void loadModel(String filePath){
 		loaded = true;
-		try {
-			m = OBJLoader.loadModel(filePath);				
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Model m = new Model(filePath);				
+
 		objectDisplayList = glGenLists(1);
 		glNewList(objectDisplayList, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
 
-		for(Face face: m.faces){
-			Vector3f n1 = m.normals.get((int) face.normals.x -1);
+		for(Face face: m.getFaces()){
+			Vector3f n1 = m.getNormals().get((int) face.normals.x -1);
 			glNormal3f(n1.x,n1.y,n1.z);
-			Vector3f v1 = m.vertices.get((int) face.vertex.x -1);
+			Vector3f v1 = m.getVertices().get((int) face.vertex.x -1);
 			glVertex3f(v1.x,v1.y,v1.z);
 
-			Vector3f n2 = m.normals.get((int) face.normals.y -1);
+			Vector3f n2 = m.getNormals().get((int) face.normals.y -1);
 			glNormal3f(n2.x,n2.y,n2.z);
-			Vector3f v2 = m.vertices.get((int) face.vertex.y -1);
+			Vector3f v2 = m.getVertices().get((int) face.vertex.y -1);
 			glVertex3f(v2.x,v2.y,v2.z);
 
-			Vector3f n3 = m.normals.get((int) face.normals.z -1);
+			Vector3f n3 = m.getNormals().get((int) face.normals.z -1);
 			glNormal3f(n3.x,n3.y,n3.z);
-			Vector3f v3 = m.vertices.get((int) face.vertex.z -1);
+			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
 			glVertex3f(v3.x,v3.y,v3.z);	
 
 			System.out.println(v3.x + " " + v3.y + " " + v3.z + " ");
@@ -107,8 +103,8 @@ public class Floor {
 		glColor3f(1f, 0.1f, 0);
 		glPushMatrix();
 
-		glTranslated(x, y, z);
-		glScaled(0.5, 0.5, 0.5);
+		glTranslated(x, y+1, z);
+		glScaled(0.1, 0.5, 0.1);
 		glCallList(objectDisplayList);
 		glPopMatrix();
 	}
@@ -150,7 +146,7 @@ public class Floor {
 
 					glPushMatrix();
 					glTranslated(((ix+1)-room.length/2)*spacing, 0, ((iz+1)-room.length/2)*spacing);
-//					glRectd(0,0,-spacing,2);
+					//					glRectd(0,0,-spacing,2);
 					RenderTools.fillRect(0, 0, -spacing, 2);
 					glPopMatrix();
 
@@ -158,14 +154,14 @@ public class Floor {
 					glPushMatrix();
 					glTranslated((ix-room.length/2)*spacing, 0, (iz-room.length/2)*spacing);
 					glRotated(90, 0, 1, 0);
-//					glRectd(0,0,-spacing,2);
+					//					glRectd(0,0,-spacing,2);
 					RenderTools.fillRect(0, 0, -spacing, 2);
 					glPopMatrix();
 
 					glPushMatrix();
 					glTranslated(((ix+1)-room.length/2)*spacing, 0, (iz-room.length/2)*spacing);
 					glRotated(90, 0, 1, 0);
-//					glRectd(0,0,-spacing,2);
+					//					glRectd(0,0,-spacing,2);
 					RenderTools.fillRect(0, 0, -spacing, 2);
 					glPopMatrix();
 				}
