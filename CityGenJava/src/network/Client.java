@@ -14,18 +14,17 @@ public class Client {
 		Socket clientSocket = new Socket("localhost",port);
 		DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
 		BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		int i = 0;
 		while(true){
 			//send input
-			System.out.print("Enter input: ");
-			userIn = userInput.nextLine();
+			userIn = ":"+i+":"; 
 			serverOut.writeBytes(userIn+"\n");
 			serverOut.flush();
-			System.out.println("Sent");
-			
+			System.out.println("Sending " + userIn);
 			//receive input
 			serverInput = serverIn.readLine();
 			System.out.println("Received: " + serverInput);
-			
+			i++;
 		}
 	}
 	

@@ -11,16 +11,16 @@ public class Server {
 		
 		//initialise client on this port
 		ServerSocket clientSocket = new ServerSocket(port);
-		//Create list of clients
-		List<ClientThread> clients = new ArrayList<ClientThread>();
+		//Set up thread that controls client-server relations
+		ClientThread ct = new ClientThread();
+		ct.start();
+		
+		//Constantly accept clients
 		while(true){
-			//Socket connectionSocket = clientSocket.accept();
-			ClientThread ct = new ClientThread(clientSocket.accept());
-			
+			//Accept a client and add it to the 
+			ct.add(clientSocket.accept());
 			//Add client to list and start receiving client information
 			System.out.println("Accepted client :" +ct.getName());
-			ct.start();
-			clients.add(ct);
 		}
 		
 		
@@ -29,29 +29,58 @@ public class Server {
 }
 
 class ClientThread extends Thread{
-	Socket connection;
+	List<Socket> connections;
 	String clInput;
-	ClientThread(Socket connection){
+	ClientThread(){
 		super();
-		this.connection = connection;
+		this.connections = new ArrayList<Socket>();
 	}
 	
 	public void run(){
 		try{
 			while(true){
-				BufferedReader clientIn =new BufferedReader( 
-						new InputStreamReader(connection.getInputStream()));
+				//get the input from each client
+				for(int i =0;i<connections.size();i++){
+					BufferedReader clientIn =new BufferedReader( 
+							new InputStreamReader(connections.get(i).getInputStream()));
+					clInput = clientIn.readLine();
+					decode(clInput,i);
+				}
 				
-				DataOutputStream clientOut = new DataOutputStream(connection.getOutputStream());
-				clInput = clientIn.readLine();
-				System.out.println("Received :" + clInput+ ".");
-				String output = "Received your input \n";
-				clientOut.writeBytes(output);
+				//Generate ouput to send to all clients
+				String output = prepPackage();
+				
+				//Send output to all clients
+				for(int i = 0; i < connections.size();i++){
+					DataOutputStream clientOut = new DataOutputStream(connections.get(i).getOutputStream());
+					clientOut.writeBytes(output+"\n");
+					System.out.println("Sending " + output);
+				}
 			}
 		}catch(Exception e){
 			
 		}finally{
 		}
+	}
+	
+	public void add(Socket newClient){
+		connections.add(newClient);
+	}
+	
+	/**
+	 * Decode the input from player @player
+	 * @param input - The direct input 
+	 * @param player - The player who sent the input
+	 */
+	public void decode(String input, int player){
+		System.out.println("Received "+ input + " from player " + player);
+	}
+	/**
+	 * Prepares the output to be sent to all clients
+	 * @return
+	 */
+	public String prepPackage(){
+		return "-----";
 	}
 	
 }
