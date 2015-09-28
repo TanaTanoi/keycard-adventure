@@ -7,6 +7,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import graphics.Face;
 import graphics.Floor;
 import graphics.Model;
+import graphics.applicationWindow.Window;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -28,12 +29,8 @@ public class TestMain {
 	private GLFWCursorPosCallback cbfun_c;
 	private GLFWScrollCallback cbfun_s;
 
-	/*Window long*/
-	private long window;
-
-	/*Window properties*/
-	private static int WIDTH = 800;
-	private static int HEIGHT = 800;
+	/** Window **/
+	Window window;
 
 	/*Mouse control fields*/
 	private Vector2 mousePos = new Vector2(0,0);
@@ -59,7 +56,7 @@ public class TestMain {
 			loop();
 
 			// Release window and window callbacks
-			glfwDestroyWindow(window);
+			glfwDestroyWindow(window.getID());
 			keyCallback.release();
 		} finally {
 			// Terminate GLFW and release the GLFWerrorfun
@@ -75,39 +72,33 @@ public class TestMain {
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
 		if ( glfwInit() != GL11.GL_TRUE )
 			throw new IllegalStateException("Unable to initialize GLFW");
-		// Configure our window
-		glfwDefaultWindowHints(); // optional, the current window hints are already the default
-		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
-		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
 
-		// Create the window
-		window = glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL);
-		if ( window == NULL ){
-			throw new RuntimeException("Failed to create the GLFW window");}
+		// Set up window here
+		window = new Window();
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
+		glfwSetKeyCallback(window.getID(), keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				KeyboardCallback(window,key,scancode,action,mods);
 			}
 		});
 
-		glfwSetMouseButtonCallback(window, cbfun_m = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(window.getID(), cbfun_m = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long arg0, int button, int state, int arg3) {
 				MouseButtonCallback(arg0, button, state, arg3);
 			}
 		});
 
-		glfwSetCursorPosCallback(window,cbfun_c = new GLFWCursorPosCallback(){
+		glfwSetCursorPosCallback(window.getID(),cbfun_c = new GLFWCursorPosCallback(){
 			public void invoke(long window, double xpos, double ypos) {
 				MouseMotionCallback(window, xpos, ypos);
 
 			};
 
 		});
-		glfwSetScrollCallback(window, cbfun_s = new GLFWScrollCallback() {
+		glfwSetScrollCallback(window.getID(), cbfun_s = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
 				ScrollCallback(window,xoffset,yoffset);
@@ -118,18 +109,18 @@ public class TestMain {
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		// Center our window relative to primary monitor
 		glfwSetWindowPos(
-				window,
-				(GLFWvidmode.width(vidmode) - WIDTH) / 2,
-				(GLFWvidmode.height(vidmode) - HEIGHT) / 2
+				window.getID(),
+				(GLFWvidmode.width(vidmode) - window.getWidth()) / 2,
+				(GLFWvidmode.height(vidmode) - window.getHeight()) / 2
 				);
 
 		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(window.getID());
 		// Enable v-sync
 		glfwSwapInterval(1);
 
 		// Make the window visible
-		glfwShowWindow(window);
+		glfwShowWindow(window.getID());
 		//Create a context from current (required and important)
 		GLContext.createFromCurrent();
 	}
@@ -148,9 +139,9 @@ public class TestMain {
 
 
 
-		/*The primary rendering loop! This is run until closed 
+		/*The primary rendering loop! This is run until closed
 		 * or the user presses escape (defined in KeyboardCallback)*/
-		while ( glfwWindowShouldClose(window) == GL_FALSE ) {
+		while ( glfwWindowShouldClose(window.getID()) == GL_FALSE ) {
 			setUpCamera();
 			//initialiseLighting();
 			glClear(GL_COLOR_BUFFER_BIT); // clear the frame buffer
@@ -174,7 +165,7 @@ public class TestMain {
 			}
 			/*----------------------------------*/
 			glFlush();
-			glfwSwapBuffers(window); // swap the color buffers
+			glfwSwapBuffers(window.getID()); // swap the color buffers
 			/*This polls for events that happened on the window
 			 * (i.e. keyboard, mouse, scroll events)*/
 			glfwPollEvents();
