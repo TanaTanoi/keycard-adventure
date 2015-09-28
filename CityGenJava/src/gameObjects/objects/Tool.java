@@ -2,6 +2,7 @@ package gameObjects.objects;
 
 import gameObjects.player.Character;
 import gameObjects.strategies.InteractStrategy;
+import gameObjects.world.Location;
 
 /**
  * The tool class describes a type of item that can be "equipped".
@@ -14,11 +15,13 @@ public abstract class Tool implements Item {
 
 	private String name;
 	private String description;
+	private Location loc;
 	private InteractStrategy interactStrategy;
 
-	public Tool(String name, String desc){
+	public Tool(String name, String desc, Location loc){
 		this.name = name;
 		description = desc;		
+		this.loc = loc;
 	}
 
 	/**
@@ -65,6 +68,11 @@ public abstract class Tool implements Item {
 	@Override
 	public String getDescription(){
 		return description;
+	}
+	
+	@Override 
+	public Location getLocation(){
+		return loc;
 	}
 
 }

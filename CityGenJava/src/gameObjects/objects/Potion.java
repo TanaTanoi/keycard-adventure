@@ -2,11 +2,12 @@ package gameObjects.objects;
 
 import javafx.geometry.BoundingBox;
 import gameObjects.strategies.PotionStrategy;
+import gameObjects.world.Location;
 
 public class Potion extends Tool{
 
-	public Potion(String name, String desc, int effect) {
-		super(name, desc);
+	public Potion(String name, String desc, Location loc, int effect) {
+		super(name, desc , loc);
 		super.setStrategy(new PotionStrategy(effect));
 	}
 

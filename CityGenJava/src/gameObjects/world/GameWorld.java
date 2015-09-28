@@ -6,16 +6,20 @@ import gameObjects.player.Player;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class GameWorld {
 	
-	private List<Item> allItems;
 	private List<Player> allPlayers;
 	private List<NPC> allNPCs;
+	private Map<Integer, Floor> floorList;
 	
-	public GameWorld(String filename){
+	public GameWorld(String filename){		
+		init();
 		parseWorld(filename);
 	}
 
@@ -34,6 +38,15 @@ public class GameWorld {
 			}
 		} catch (FileNotFoundException e) {e.printStackTrace(); }	
 		
+	}
+	
+	/**
+	 * Initialises world variables
+	 */
+	public void init(){
+		allPlayers = new ArrayList<Player>();
+		allNPCs = new ArrayList<NPC>();
+		floorList = new HashMap<Integer,Floor>();
 	}
 
 }

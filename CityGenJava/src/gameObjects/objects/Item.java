@@ -2,6 +2,7 @@ package gameObjects.objects;
 
 import javafx.geometry.BoundingBox;
 import gameObjects.player.Character;
+import gameObjects.world.Location;
 
 /**
  * The item interface describes objects in the game world that the player can interact with
@@ -43,4 +44,12 @@ public interface Item {
 	 * or for selecting items
 	 */
 	public BoundingBox getBoundingBox();
+	
+	/**
+	 * Gets location object which describes which
+	 * floor an object is on and whereabouts within 
+	 * that floor they are
+	 */
+	
+	public Location getLocation();
 }
