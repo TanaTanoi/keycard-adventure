@@ -1,6 +1,7 @@
 package gameObjects.player;
 
 import gameObjects.objects.Item;
+import gameObjects.world.Location;
 
 /**
  * The player class describes a character in the game
@@ -15,8 +16,7 @@ public class Player implements Character{
 	private String name; // name selected by user
 	private Item [] inventory; // items  that the player carries 
 	private int health;
-	
-	//Location l; // describes player's whereabouts in the game world
+	private Location loc; // describes player's location in game world	
 	
 	public Player(String name){
 		this.name = name;
@@ -27,8 +27,10 @@ public class Player implements Character{
 	 * @param x is the x direction to move the player
 	 * @param z is the z direction to move the player
 	 */
+	
 	public void move(int x, int z){
-		// Need to do something here
+		loc.setX(x);
+		loc.setY(z);
 	}
 	
 	@Override
@@ -58,6 +60,11 @@ public class Player implements Character{
 	@Override
 	public boolean isAlive() {
 		return health > 0;
+	}
+
+	@Override
+	public Location getLocation() {
+		return loc;
 	}
 	
 }

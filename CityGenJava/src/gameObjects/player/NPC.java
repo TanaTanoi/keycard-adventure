@@ -1,6 +1,7 @@
 package gameObjects.player;
 
 import gameObjects.objects.Item;
+import gameObjects.world.Location;
 
 /**
  * The npc class describes a character that is not playable
@@ -18,10 +19,12 @@ public class NPC implements Character {
 	
 	private String name;
 	private int health;
+	private Location loc;
 	
-	public NPC(String name, int health){
+	public NPC(String name, int health, Location loc){
 		this.name = name;
 		this.health = health;
+		this.loc = loc;
 	}
 
 	@Override
@@ -37,8 +40,8 @@ public class NPC implements Character {
 
 	@Override
 	public void move(int x, int z) {
-		// TODO Auto-generated method stub
-		
+		loc.setX(x);
+		loc.setY(z);		
 	}
 	
 	public void attack(int damage){
@@ -49,5 +52,11 @@ public class NPC implements Character {
 	public boolean isAlive(){
 		return health > 0;
 	}
+
+	@Override
+	public Location getLocation() {
+		return loc;
+	}
+
 
 }

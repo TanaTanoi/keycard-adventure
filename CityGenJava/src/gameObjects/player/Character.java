@@ -1,6 +1,7 @@
 package gameObjects.player;
 
 import gameObjects.objects.Item;
+import gameObjects.world.Location;
 
 public interface Character {
 
@@ -53,10 +54,6 @@ public interface Character {
 	 * is within the floor they are on
 	 */
 	
-	public int getFloor();
-	
-	/**
-	 * Gives
-	 */
+	public Location getLocation();	
 		
 }
