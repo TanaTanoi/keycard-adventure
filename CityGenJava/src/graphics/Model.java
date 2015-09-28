@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.*;
 public class Model {
 	private List<Vector3f> vertices;
 	private List<Vector3f> normals;
+	private List<Vector2f> textureCoordinates;
 	private List<Face> faces;
 	
 	public Model(String filePath){
@@ -42,6 +43,7 @@ public class Model {
 	}
 
 	private void loadOBJModel(String filePath){
+		textureCoordinates = new ArrayList<Vector2f>();
 		vertices = new ArrayList<Vector3f>();
 		normals = new ArrayList<Vector3f>();
 		faces = new ArrayList<Face>();
@@ -55,7 +57,7 @@ public class Model {
 					float x = Float.valueOf(Float.valueOf(broken[1]));
 					float y = Float.valueOf(Float.valueOf(broken[2]));
 					float z = Float.valueOf(Float.valueOf(broken[3]));
-					vertices.add(new Vector3f(x,y,z));
+					vertices.add(new Vector3f(x,y,z)); 
 				}
 				else if (line.startsWith("vn ")) {	
 					String[] broken = line.split(" ");
@@ -64,17 +66,27 @@ public class Model {
 					float z = Float.valueOf(Float.valueOf(broken[3]));
 					normals.add(new Vector3f(x,y,z));
 				} 
+				else if (line.startsWith("vt ")) {	
+					String[] broken = line.split(" ");
+					float x = Float.valueOf(Float.valueOf(broken[1]));
+					float y = Float.valueOf(Float.valueOf(broken[2]));
+					textureCoordinates.add(new Vector2f(x,y));
+				} 
 				else if  (line.startsWith("f ")) {	
 					String[] broken = line.split(" ");
 					Vector3f vertexIndices = new Vector3f(
 							Float.valueOf(broken[1].split("/")[0]),
 							Float.valueOf(broken[2].split("/")[0]),
 							Float.valueOf(broken[3].split("/")[0]));
+					Vector3f textureIndices = new Vector3f(
+							Float.valueOf(broken[1].split("/")[1]),
+							Float.valueOf(broken[2].split("/")[1]),
+							Float.valueOf(broken[3].split("/")[1]));
 					Vector3f normalIndices = new Vector3f(
 							Float.valueOf(broken[1].split("/")[2]),
 							Float.valueOf(broken[2].split("/")[2]),
 							Float.valueOf(broken[3].split("/")[2]));
-					faces.add(new Face(vertexIndices,normalIndices));
+					faces.add(new Face(vertexIndices,normalIndices,textureIndices));
 				}
 			}
 			reader.close();
@@ -83,6 +95,14 @@ public class Model {
 		} catch (IOException e) {
 			System.out.println("File not found");
 		}
+	}
+
+	public List<Vector2f> getTextureCoordinates() {
+		return textureCoordinates;
+	}
+
+	public void setTextureCoordinates(List<Vector2f> textureCoordinates) {
+		this.textureCoordinates = textureCoordinates;
 	}
 	
 }
