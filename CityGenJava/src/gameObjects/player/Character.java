@@ -41,5 +41,22 @@ public interface Character {
 	 * @param damage is the amount of health the NPC loses
 	 */
 	public void attack(int damage);
+	
+	/**
+	 * Gets a location object that stores data about where the
+	 * character is located in the game world. There is an integer
+	 * that represents what floor/level 
+	 * the character is on. In the GameWorld, there is a 
+	 * map of floor levels to floors. 
+	 * 
+	 * It also has the x and y coordinates of where a character 
+	 * is within the floor they are on
+	 */
+	
+	public int getFloor();
+	
+	/**
+	 * Gives
+	 */
 		
 }
