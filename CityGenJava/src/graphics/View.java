@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import graphics.applicationWindow.Window;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -35,6 +36,9 @@ public class View {
 	private boolean loaded = false;
 	private int wallTexture;
 	private int wallDisplayList;
+	
+	private Window w;
+	
 	public View(){
 		setToBlank(26);
 		objectDisplayList = new ArrayList<Integer>();
@@ -46,6 +50,10 @@ public class View {
 
 	public View(Game g){
 		// need to set listeners here
+	}
+	
+	public Window getWindow(){
+		return w;
 	}
 
 	public void renderRoom(){
