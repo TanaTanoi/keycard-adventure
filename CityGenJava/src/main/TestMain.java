@@ -5,7 +5,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import graphics.Face;
-import graphics.Floor;
+import graphics.View;
 import graphics.Model;
 import graphics.applicationWindow.Window;
 
@@ -41,7 +41,7 @@ public class TestMain {
 	private float rot_x = 0;
 	private float rot_y = 0;
 
-	private Floor curFloor = new Floor();
+	private View curFloor = new View();
 
 	public static void main(String[] args) {
 		new TestMain().run();

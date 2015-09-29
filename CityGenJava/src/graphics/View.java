@@ -21,8 +21,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import controller.Game;
 
-public class Floor {
+
+public class View {
 
 	ArrayList<Integer> objectDisplayList;
 	private char[][] room;
@@ -33,7 +35,7 @@ public class Floor {
 	private boolean loaded = false;
 	private int wallTexture;
 	private int wallDisplayList;
-	public Floor(){
+	public View(){
 		setToBlank(26);
 		objectDisplayList = new ArrayList<Integer>();
 		y = -0.75f;
@@ -42,7 +44,9 @@ public class Floor {
 
 	}
 
-
+	public View(Game g){
+		// need to set listeners here
+	}
 
 	public void renderRoom(){
 		if (!loaded){
