@@ -35,13 +35,14 @@ import gameObjects.player.Player;
 import gameObjects.world.GameWorld;
 import graphics.View;
 import graphics.applicationWindow.Window;
+import network.Client;
 
 public class Game {
 	
 	GameWorld world; // Model
 	Player current; // Player giving controls
 	View view; // view
-	
+	private Client client;
 	//** GLFW Listeners **//
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback   keyCallback;
@@ -61,6 +62,12 @@ public class Game {
 	public Game(String filename){
 		world = new GameWorld(filename);
 		view = new View(this);
+		try{
+			client = new Client(this);
+		}catch(Exception e){
+			System.out.println("Unable to connect!");
+			e.printStackTrace();
+		}
 		// need to make a spawn method for new player
 	}	
 
