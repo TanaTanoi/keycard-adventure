@@ -13,12 +13,14 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class GameWorld {
-	
+
 	private List<Player> allPlayers;
 	private List<NPC> allNPCs;
 	private Map<Integer, Floor> floorList;
-	
-	public GameWorld(String filename){		
+
+	private int ID = 0;
+
+	public GameWorld(String filename){
 		init();
 		parseWorld(filename);
 	}
@@ -26,7 +28,7 @@ public class GameWorld {
 	/**
 	 * Open's the given file and parses
 	 * all the information to create the gameworld.
-	 * 
+	 *
 	 * @param filename is the name of the file to parse
 	 */
 	public void parseWorld(String filename) {
@@ -36,10 +38,10 @@ public class GameWorld {
 			while(s.hasNextLine()){
 				// Do actual parsing in here
 			}
-		} catch (FileNotFoundException e) {e.printStackTrace(); }	
-		
+		} catch (FileNotFoundException e) {e.printStackTrace(); }
+
 	}
-	
+
 	/**
 	 * Initialises world variables
 	 */
@@ -47,6 +49,17 @@ public class GameWorld {
 		allPlayers = new ArrayList<Player>();
 		allNPCs = new ArrayList<NPC>();
 		floorList = new HashMap<Integer,Floor>();
+	}
+
+	public int addNewPlayer(String name){
+		Player p = new Player(name, ID++);
+		allPlayers.add(p); // adds player to game world
+
+		// Now adds player to correct floor
+		int floor = p.getLocation().getFloor();
+		floorList.get(floor).addPlayer(p);
+
+		return ID--;
 	}
 
 }
