@@ -76,6 +76,17 @@ public class ClientController {
 		new ClientController("gameWorld.txt");
 	}
 
+	/**
+	 * Sets current player
+	 * @param name
+	 * @param ID
+	 */
+	public void setCurrentPlayer(String name, int ID){
+		current = new Player(name,ID);
+	}
+
+
+
 	private void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
@@ -172,6 +183,8 @@ public class ClientController {
 			zoom/=1.1;
 		}
 	}
+
+
 
 
 
