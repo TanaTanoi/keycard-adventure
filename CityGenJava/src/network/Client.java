@@ -3,7 +3,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
-import controller.Game;
+import controller.ClientController;
 public class Client {
 
 	private  int port = 4444;
@@ -16,7 +16,7 @@ public class Client {
 	 * Standard constructor that uses default port (4444)
 	 * @throws Exception - If unable to connect to the server via standard port (4444)
 	 */
-	public Client(Game game) throws Exception{
+	public Client(ClientController game) throws Exception{
 		String userIn;
 		String serverInput;
 		Scanner userInput = new Scanner(System.in);
@@ -41,7 +41,7 @@ public class Client {
 	 * @param port - The port to connect through
 	 * @throws Exception - If unable to connect to the server via given port
 	 */
-	public Client(Game game,int port) throws Exception{
+	public Client(ClientController game,int port) throws Exception{
 		this.port = port;
 		new Client(game);
 	}

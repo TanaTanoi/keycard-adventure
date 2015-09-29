@@ -37,8 +37,8 @@ import graphics.View;
 import graphics.applicationWindow.Window;
 import network.Client;
 
-public class Game {
-	
+public class ClientController {
+
 	GameWorld world; // Model
 	Player current; // Player giving controls
 	View view; // view
@@ -49,7 +49,7 @@ public class Game {
 	private GLFWMouseButtonCallback cbfun_m;
 	private GLFWCursorPosCallback cbfun_c;
 	private GLFWScrollCallback cbfun_s;
-	
+
 	/*Mouse control fields*/
 	private Vector2 mousePos = new Vector2(0,0);
 	private boolean mouse_down = false;
@@ -58,10 +58,11 @@ public class Game {
 	private float zoom = 1f;
 	private float rot_x = 0;
 	private float rot_y = 0;
-	
-	public Game(String filename){
+
+	public ClientController(String filename){
 		world = new GameWorld(filename);
 		view = new View(this);
+		init();
 		try{
 			client = new Client(this);
 		}catch(Exception e){
@@ -69,12 +70,12 @@ public class Game {
 			e.printStackTrace();
 		}
 		// need to make a spawn method for new player
-	}	
+	}
 
 	public static void main(String[] args) {
-		new Game("gameWorld.txt");
+		new ClientController("gameWorld.txt");
 	}
-	
+
 	private void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
@@ -134,9 +135,9 @@ public class Game {
 		//Create a context from current (required and important)
 		GLContext.createFromCurrent();
 	}
-	
-	
-	
+
+
+
 	private void KeyboardCallback(long window, int key, int scancode, int action, int mods){
 		if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
@@ -172,6 +173,6 @@ public class Game {
 		}
 	}
 
-	
+
 
 }
