@@ -50,12 +50,13 @@ public class View {
 	private Player player;
 	private Window w;
 	private GLFWErrorCallback errorCallback;
-	private double yChange = 0.001;
+	private double yChange = 0.003;
 	private double playersY = 0.5;
 
 	public View(GameWorld g){
 		world = g;
 		g.addNewPlayer("Cullum");
+		g.addNewPlayer("Tana");
 
 		objectDisplayLists = new ArrayList<Integer>();
 		objectTextureList = new ArrayList<Integer>();
@@ -69,7 +70,6 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			//loadModel("box.obj", 0);
 			loadModel("teapot.obj", 0);
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
 			initaliseCamera();
@@ -186,13 +186,13 @@ public class View {
 			x-=dz;
 		}
 		for (int j = -1; j < 2; j++){
-		for (int i = -1; i < 2; i++){
-			int x = (int)((this.x)/squareSize)+49+i;
-			int z = (int)((this.z)/squareSize)+49+j;
-			if (x < 0 || x >= occupiedSpace.length) return;
-			if (z < 0 || z >= occupiedSpace[0].length) return;
-			if (occupiedSpace[x][z] != 'O')return;
-		}
+			for (int i = -1; i < 2; i++){
+				int x = (int)((this.x)/squareSize)+49+i;
+				int z = (int)((this.z)/squareSize)+49+j;
+				if (x < 0 || x >= occupiedSpace.length) return;
+				if (z < 0 || z >= occupiedSpace[0].length) return;
+				if (occupiedSpace[x][z] != 'O')return;
+			}
 		}
 
 		player.move(this.x, this.z);
@@ -206,8 +206,8 @@ public class View {
 		//		glDisable(GL_COLOR);
 		glPushMatrix();
 		glTranslated(x, y, z);
-//				glEnable(GL_TEXTURE_2D);
-//				glBindTexture(GL_TEXTURE_2D, wallTexture);
+		//				glEnable(GL_TEXTURE_2D);
+		//				glBindTexture(GL_TEXTURE_2D, wallTexture);
 		glCallList(objectDisplayLists.get(displayList));
 		//		glDisable(GL_TEXTURE_2D);
 		//		glEnable(GL_COLOR);
@@ -216,24 +216,28 @@ public class View {
 
 	private void renderPlayers(){
 		List<Player> players = world.getPlayers();
-		for(Player p: players){
-			if (p.equals(player)) return;
-			p.move(3, 3);
-			Location playerLoc = p.getLocation();
-			glColor3f(1f, 0, 0);
-			glPushMatrix();
-			System.out.println(playersY+ " " + yChange);
-			if (playersY > 1 ||playersY < 0.3){
-				yChange*=-1;
-				playersY+=yChange;
-			}
-
+		if (playersY > 1 ||playersY < 0.3){
+			yChange*=-1;
 			playersY+=yChange;
-			glTranslated(x+playerLoc.getX(), y+playersY, z+playerLoc.getY());
-			glScaled(0.1, 0.1, 0.1);
-			renderObject(0);
+		}
 
-			glPopMatrix();
+		playersY+=yChange;
+		for(Player p: players){
+			System.out.println(playersY+ " " + yChange);
+			if (!p.equals(player)) {
+				p.move(3, 3);
+				Location playerLoc = p.getLocation();
+
+				glPushMatrix();
+				glColor3f(1f, 0, 0);
+
+				
+				glTranslated(x+playerLoc.getX(), y+playersY, z+playerLoc.getY());
+				glScaled(0.1, 0.1, 0.1);
+				renderObject(0);
+				glColor3f(1, 1, 1);
+				glPopMatrix();
+			}
 		}
 	}
 
