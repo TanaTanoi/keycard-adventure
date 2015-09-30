@@ -31,7 +31,7 @@ public class Player implements Character{
 	 * @param z is the z direction to move the player
 	 */
 
-	public void move(int x, int z){
+	public void move(float x, float z){
 		loc.setX(x);
 		loc.setY(z);
 	}
@@ -73,5 +73,4 @@ public class Player implements Character{
 	public int getID(){
 		return ID;
 	}
-
 }

@@ -17,12 +17,12 @@ public class GameWorld {
 	private List<Player> allPlayers;
 	private List<NPC> allNPCs;
 	private Map<Integer, Floor> floorList;
-
+	private Player currentPlayer;
 	private int ID = 0;
 
 	public GameWorld(String filename){
 		init();
-		parseWorld(filename);
+		//parseWorld(filename);
 	}
 
 	/**
@@ -50,20 +50,21 @@ public class GameWorld {
 		allNPCs = new ArrayList<NPC>();
 		floorList = new HashMap<Integer,Floor>();
 	}
+
 	/**
 	 * Update the player with the provided ID to the new X,Y position
 	 * @param id
 	 * @param x
 	 * @param y
 	 */
-	public void updatePlayerInfo(int id, int x, int y){
+	public void updatePlayerInfo(int id, float x, float y){
 		for(Player p: allPlayers){
 			if(p.getID()==id){
 				p.move(x, y);
 			}
 		}
 	}
-	
+
 	public int addNewPlayer(String name){
 		Player p = new Player(name, ID++);
 		allPlayers.add(p); // adds player to game world
@@ -72,7 +73,17 @@ public class GameWorld {
 		int floor = p.getLocation().getFloor();
 		//floorList.get(floor).addPlayer(p);
 
-		return ID-1;
+		return ID--;
 	}
 
+	public Player getCurrentPlayer(){
+		return currentPlayer;
+	}
+
+	public void setCurrentPlayer(Player p){
+		currentPlayer = p;
+	}
+	public List<Player> getPlayers(){
+		return allPlayers;
+	}
 }

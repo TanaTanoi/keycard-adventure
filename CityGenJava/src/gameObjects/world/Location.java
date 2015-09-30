@@ -1,12 +1,12 @@
 package gameObjects.world;
 
 public class Location {
-	
+
 	private int floor;
-	private int x;
-	private int y;
-	
-	public Location(int x, int y, int floor){
+	private float x;
+	private float y;
+
+	public Location(float x, float y, int floor){
 		this.x = x;
 		this.y = y;
 		this.floor = floor;
@@ -20,19 +20,19 @@ public class Location {
 		this.floor = floor;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 

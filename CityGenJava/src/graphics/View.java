@@ -4,6 +4,9 @@ import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import gameObjects.player.Player;
+import gameObjects.world.GameWorld;
+import gameObjects.world.Location;
 import graphics.applicationWindow.Window;
 
 import java.awt.Image;
@@ -16,73 +19,110 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
+
+import javafx.scene.shape.CullFace;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWvidmode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import controller.ClientController;
+
 
 
 public class View {
 
-	ArrayList<Integer> objectDisplayList;
-	private char[][] room;
+	ArrayList<Integer> objectDisplayLists;
+	ArrayList<Integer> objectTextureList;
 	private char[][] occupiedSpace;
+	private GameWorld world;
+	//	private char[][] occupiedSpace;
 	private double spacing;
-	private double gameSize = 10;
+	private double gameSize = 20;
+	private double squareSize = 0.5;
 	private float x,y,z;
 	private boolean loaded = false;
 	private int wallTexture;
 	private int wallDisplayList;
-	
+	private Player player;
 	private Window w;
-	
-	public View(){
-		setToBlank(26);
-		objectDisplayList = new ArrayList<Integer>();
-		y = -0.75f;
-		initaliseCollisionArray();
-		System.out.println(occupiedSpace.length);
+	private GLFWErrorCallback errorCallback;
+	private double yChange = 0.001;
+	private double playersY = 0.5;
 
+	public View(GameWorld g){
+		world = g;
+		g.addNewPlayer("Cullum");
+
+		objectDisplayLists = new ArrayList<Integer>();
+		objectTextureList = new ArrayList<Integer>();
+		initaliseCollisions(100,100);
+		y = -0.95f;
+		w = new Window();
+		player = g.getCurrentPlayer();
+		
+		player.move(0, -5);
 	}
 
-	public View(ClientController g){
-		// need to set listeners here
+	public void renderView(){
+		if (!loaded){
+			//loadModel("box.obj", 0);
+			loadModel("teapot.obj", 0);
+			objectTextureList.add(new Texture("brick.jpg").getTextureID());
+			initaliseCamera();
+		}
+
+		Location playerLoc = player.getLocation();
+		x = playerLoc.getX();
+		z = playerLoc.getY();
+		renderObject(0);
+		renderPlayers();
+		renderWalls();
 	}
-	
+
+	private void initaliseCollisions(int width, int depth) {
+		occupiedSpace = new char[width][depth];
+		for (int x = 0; x < width; x++){
+			for(int z = 0; z < depth; z++){
+				occupiedSpace[x][z] = 'O';
+				if (x == 0 || x == width-1) occupiedSpace[x][z] = 'X';
+				else if (z == 0 || z == depth-1) occupiedSpace[x][z] = 'X';
+			}
+		}
+		squareSize = gameSize/width;
+	}
+
+	private void printCollisions(){
+		for (int x = 0; x < occupiedSpace.length; x++){
+			for(int z = 0; z < occupiedSpace[0].length; z++){
+				System.out.print(occupiedSpace[x][z]);
+			}
+			System.out.println();
+		}
+	}
+
 	public Window getWindow(){
 		return w;
 	}
 
-	public void renderRoom(){
-		if (!loaded){
-			loadModel("box.obj", 0);
-			loadModel("teapot.obj", 1);
-			initaliseLighting();
-			wallTexture = new Texture("brick.jpg").getTextureID();
-		}
-//		renderObject(0);
-				renderWalls();
-	}
+
 
 	private void loadModel(String filePath, int out){
-		loaded = true;
-		Model m = new Model(filePath);				
-		int[][] occupiesX = new int[occupiedSpace.length][2];
-		for (int z = 0; z < occupiedSpace.length; z+=1){
-			occupiesX[z][0] = Integer.MAX_VALUE;
-			occupiesX[z][1] = Integer.MIN_VALUE;
-		}	
-		//		wallDisplayList = glGenLists(1);
-		objectDisplayList.add(glGenLists(1));
-		glNewList(objectDisplayList.get(out), GL_COMPILE);
-		glBegin(GL_TRIANGLES);
-		int minZ = Integer.MAX_VALUE;
-		int maxZ = Integer.MIN_VALUE;
-		for(Face face: m.getFaces()){
 
+		int maxX = Integer.MIN_VALUE;
+		int minX = Integer.MAX_VALUE;
+		int[][] zValues = new int[100][2];
+		loaded = true;
+		Model m = new Model(filePath);
+		objectDisplayLists.add(glGenLists(1));
+		glNewList(objectDisplayLists.get(out), GL_COMPILE);
+		glBegin(GL_TRIANGLES);
+		for(Face face: m.getFaces()){
 			Vector2f t1 = m.getTextureCoordinates().get((int) face.textures.x -1);
 			glTexCoord2d(t1.x,t1.y);
 			Vector3f n1 = m.getNormals().get((int) face.normals.x -1);
@@ -102,139 +142,149 @@ public class View {
 			Vector3f n3 = m.getNormals().get((int) face.normals.z -1);
 			glNormal3f(n3.x,n3.y,n3.z);
 			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
-			glVertex3f(v3.x,v3.y,v3.z);	
+			glVertex3f(v3.x,v3.y,v3.z);
+
+			maxX = Math.max(maxX, (int)((v3.x/squareSize)+50));
+			minX = Math.min(minX, (int)((v3.x/squareSize)+50));
+			if (zValues[(int)((v3.x/squareSize)+50)][0] == 0){
+				zValues[(int)((v3.x/squareSize)+50)][0] = (int)((v3.z/squareSize)+50);
+				zValues[(int)((v3.x/squareSize)+50)][1] = (int)((v3.z/squareSize)+50);
+			}
+			zValues[(int)((v3.x/squareSize)+50)][0] = Math.min((int)((v3.z/squareSize)+50),zValues[(int)((v3.x/squareSize)+50)][0]);
+			zValues[(int)((v3.x/squareSize)+50)][1] = Math.max((int)((v3.z/squareSize)+50),zValues[(int)((v3.x/squareSize)+50)][1]);
+			occupiedSpace[(int)((v3.x/squareSize)+50)][(int)((v3.z/squareSize)+50)] = 'T';
 		}
+		for (int x = minX; x < maxX;x++){
+			for (int z = zValues[x][0]; z < zValues[x][1];z++){
+				occupiedSpace[x][z] = 'T';
+			}
+		}
+
 		glEnd();
 		glEndList();
+
+
+		printCollisions();
+		System.out.println("min = " + minX + " max = " + maxX);
 	}
 
 	public void move(char pressed, double xRot){
-
-		double dz = Math.cos(Math.toRadians(xRot))/20;
-		double dx = Math.sin(Math.toRadians(xRot))/20;
-
-		if (!isOccupied(pressed,xRot)){
-			if (pressed == 'W'){
-				z+=dz;
-				x-=dx;
-			}
-			else if (pressed == 'A'){
-				z+=dx;
-				x+=dz;
-			}
-			else if (pressed == 'S'){
-				z-=dz;
-				x+=dx;
-			}
-			else if (pressed == 'D'){
-				z-=dx;
-				x-=dz;
-			}
-		}
-	}
-
-	private boolean isOccupied(char pressed, double xRot){
-
-
-
-		int sx = 0;
-		int sz = 0;
-		//		for (double range = 0.5; range < 2; range+=0.1){
-		double dz = Math.cos(Math.toRadians(xRot));
-		double dx = Math.sin(Math.toRadians(xRot));
-		if (Math.abs(dz) < 0.2) dz*=4;
-		if (Math.abs(dx) < 0.2) dx*=4;
+		double dz = Math.cos(Math.toRadians(xRot))/10;
+		double dx = Math.sin(Math.toRadians(xRot))/10;
 		if (pressed == 'W'){
-			sz = (int) ((z+dz)/0.1)+(occupiedSpace.length/2);
-			sx = (int) ((x-dx)/0.1)+(occupiedSpace.length/2);
-
+			z+=dz;
+			x-=dx;
 		}
 		else if (pressed == 'A'){
-			sz = (int) ((z+dz)/0.1)+(occupiedSpace.length/2);
-			sx = (int) ((x+dx)/0.1)+(occupiedSpace.length/2);
+			z+=dx;
+			x+=dz;
 		}
 		else if (pressed == 'S'){
-			sz = (int) ((z-dz)/0.1)+(occupiedSpace.length/2);
-			sx = (int) ((x+dx)/0.1)+(occupiedSpace.length/2);
+			z-=dz;
+			x+=dx;
 		}
 		else if (pressed == 'D'){
-			sz = (int) ((z-dz)/0.1)+(occupiedSpace.length/2);
-			sx = (int) ((x-dx)/0.1)+(occupiedSpace.length/2);
+			z-=dx;
+			x-=dz;
+		}
+		for (int j = -1; j < 2; j++){
+		for (int i = -1; i < 2; i++){
+			int x = (int)((this.x)/squareSize)+49+i;
+			int z = (int)((this.z)/squareSize)+49+j;
+			if (x < 0 || x >= occupiedSpace.length) return;
+			if (z < 0 || z >= occupiedSpace[0].length) return;
+			if (occupiedSpace[x][z] != 'O')return;
+		}
 		}
 
-		//		}
-		if (sx < 0) sx = 0;
-		if (sz < 0) sz = 0;
-		if (sx > occupiedSpace.length) sx = occupiedSpace.length-1;
-		if (sz > occupiedSpace[0].length) sz = occupiedSpace.length-1;
-		System.out.println(dz);
-		return occupiedSpace[sx][sz] != 'O';
+		player.move(this.x, this.z);
 	}
+
+
 
 	private void renderObject(int displayList){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
-		glColor3f(1f, 1f, 1f);
-		glDisable(GL_COLOR);
+		//		glColor3f(0, 0, 1f);
+		//		glDisable(GL_COLOR);
 		glPushMatrix();
 		glTranslated(x, y, z);
-//		glScaled(0.2, 4, 0.2);
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, wallTexture);
-		glCallList(objectDisplayList.get(displayList));
-		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_COLOR);
+//				glEnable(GL_TEXTURE_2D);
+//				glBindTexture(GL_TEXTURE_2D, wallTexture);
+		glCallList(objectDisplayLists.get(displayList));
+		//		glDisable(GL_TEXTURE_2D);
+		//		glEnable(GL_COLOR);
 		glPopMatrix();
 	}
-	
+
+	private void renderPlayers(){
+		List<Player> players = world.getPlayers();
+		for(Player p: players){
+			if (p.equals(player)) return;
+			p.move(3, 3);
+			Location playerLoc = p.getLocation();
+			glColor3f(1f, 0, 0);
+			glPushMatrix();
+			System.out.println(playersY+ " " + yChange);
+			if (playersY > 1 ||playersY < 0.3){
+				yChange*=-1;
+				playersY+=yChange;
+			}
+
+			playersY+=yChange;
+			glTranslated(x+playerLoc.getX(), y+playersY, z+playerLoc.getY());
+			glScaled(0.1, 0.1, 0.1);
+			renderObject(0);
+
+			glPopMatrix();
+		}
+	}
+
 	private void renderWalls(){
-		double sqSize = gameSize/occupiedSpace.length;
-		glPushMatrix();
-		glTranslated(x, y, z);
-		for (int x = 0; x < occupiedSpace.length; x++){
-			for (int z = 0; z < occupiedSpace[0].length; z++){
-				if (occupiedSpace[x][z] == 'X'){
+		//		glColor3f(1f,1f,0);
+
+		//		glColor3f(1f, 0, 0);
+		glDisable(GL_COLOR);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, objectTextureList.get(0));
+		double spacing = gameSize/occupiedSpace.length;
+		for (int ix = 0; ix < occupiedSpace.length; ix++){
+			for (int iz = 0; iz < occupiedSpace[0].length; iz++){
+				glPushMatrix();
+				glTranslated(x, y, z);
+				if (occupiedSpace[ix][iz] == 'X'){
+					//front and back
 					glPushMatrix();
-					
-					glTranslated(x*sqSize-(gameSize/2), 0, z*sqSize-(gameSize/2));
-					glScaled(sqSize/5, 2, sqSize/5);
-					renderObject(0);
-					
+					glTranslated((ix-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
+					RenderTools.fillRect(0, 0, spacing, 2);
+					glPopMatrix();
+
+					glPushMatrix();
+					glTranslated(((ix+1)-occupiedSpace.length/2)*spacing, 0, ((iz+1)-occupiedSpace.length/2)*spacing);
+					RenderTools.fillRect(0, 0, -spacing, 2);
+					glPopMatrix();
+
+					//left and right
+					glPushMatrix();
+					glTranslated((ix-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
+					glRotated(90, 0, 1, 0);
+					RenderTools.fillRect(0, 0, -spacing, 2);
+					glPopMatrix();
+
+					glPushMatrix();
+					glTranslated(((ix+1)-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
+					glRotated(90, 0, 1, 0);
+					RenderTools.fillRect(0, 0, -spacing, 2);
 					glPopMatrix();
 				}
+				glPopMatrix();
 			}
 		}
-		glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_COLOR);
+
 	}
 
-	private void initaliseCollisionArray(){
-		occupiedSpace = new char[(int) (gameSize/0.5)][(int) (gameSize/0.5)];
-
-		for (int x = 0; x < occupiedSpace.length; x++){
-			for (int z = 0; z < occupiedSpace[0].length; z++){
-				if(x == 0 || z == 0 || x == occupiedSpace.length-1 || z == occupiedSpace[0].length-1){
-					occupiedSpace[x][z] = 'X';
-				} 
-				else occupiedSpace[x][z] = 'O';
-			}
-		}
-		printOccupied();
-	}
-
-	private void setToBlank(int size){
-		spacing = gameSize/size;
-		room = new char[size][size];
-		for (int x = 0; x < room.length; x++){
-			for (int y = 0; y < room[0].length; y++){
-				room[x][y] = 'O';
-				if (x == 0 || x == room.length-1) room[x][y] = 'X';
-				if (y == 0 || y == room.length-1) room[x][y] = 'X';
-				//if (Math.random() < 0.01) room[x][y] = 'X';//TODO remove this tester code when done with textures
-			}
-		}
-	}
-
-	private void initaliseLighting() {
-
+	private void initaliseCamera() {
 		glMatrixMode(GL_PROJECTION);
 
 		glLoadIdentity();
@@ -242,6 +292,8 @@ public class View {
 		double far  = 100;
 		double fov  = 0.5; // 1 gives you a 90° field of view. It's tan(fov_angle)/2.
 		glFrustum(-near*fov, near*fov, -fov, fov, near, far); // sets perspective view
+
+
 		//----------- Variables & method calls added for Lighting Test -----------//
 		glShadeModel(GL_SMOOTH);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, asFloatBuffer(new float[]{0.5f,0.5f,0.5f,0.5f}));				// sets specular material color
@@ -250,31 +302,16 @@ public class View {
 		glLightfv(GL_LIGHT0, GL_POSITION, asFloatBuffer(new float[]{0f,10f,0f,0f}));				// sets light position
 		glLightfv(GL_LIGHT0, GL_SPECULAR, asFloatBuffer(new float[]{0.01f,0.01f,0.01f,0.01f}));				// sets specular light to white
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(new float[]{0.1f,0.1f,0.1f,0.5f}));					// sets diffuse light to white
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{0.5f,0.5f,0.5f,1f}));		// global ambient light 
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{0.5f,0.5f,0.5f,1f}));		// global ambient light
 
 		glEnable(GL_LIGHTING);										// enables lighting
 		glEnable(GL_LIGHT0);										// enables light0
 
 		glEnable(GL_COLOR_MATERIAL);								// enables opengl to use glColor3f to define material color
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);			// tell opengl glColor3f effects the ambient and diffuse properties of material
-		//----------- END: Variables & method calls added for Lighting Test -----------/
 	}
-
-	private void printOccupied(){
-		for (int x = 0; x < occupiedSpace.length; x++){
-			for (int z = 0; z < occupiedSpace[0].length; z++){
-				System.out.print(occupiedSpace[x][z]);
-			}
-			System.out.println();
-		}
-	}
-
-
 
 	private FloatBuffer asFloatBuffer(float[] array){
 		return (FloatBuffer)BufferUtils.createFloatBuffer(4).put(array).flip();
 	}
-
-
-
 }

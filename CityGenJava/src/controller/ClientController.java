@@ -62,7 +62,7 @@ public class ClientController {
 
 	public ClientController(String filename){
 		world = new GameWorld(filename);
-		view = new View(this);
+		view = new View(world);
 		//init();
 		try{
 			client = new Client(this);
@@ -88,12 +88,12 @@ public class ClientController {
 
 	public int[] getPlayerInfo(){
 		Location loc = current.getLocation();
-		return new int[]{current.getID(),loc.getX(),loc.getY()};
+		return new int[]{current.getID(),(int)loc.getX(),(int)loc.getY()};
 	}
 
 	/**
 	 * Takes a series of player info arrays and tells the world to update the player's
-	 * associated with an ID 
+	 * associated with an ID
 	 * @param playerInfo
 	 */
 	public void updatePlayers(int[][] playerInfo){
@@ -101,7 +101,7 @@ public class ClientController {
 			world.updatePlayerInfo(player[0], player[1], player[2]);
 		}
 	}
-	
+
 	private void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
