@@ -63,7 +63,7 @@ public class ClientController {
 	public ClientController(String filename){
 		world = new GameWorld(filename);
 		view = new View(world);
-		//init();
+		init();
 		try{
 			client = new Client(this);
 		}catch(Exception e){

@@ -21,8 +21,6 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.shape.CullFace;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWvidmode;
@@ -65,7 +63,7 @@ public class View {
 		y = -0.95f;
 		w = new Window();
 		player = g.getCurrentPlayer();
-		
+
 		player.move(0, -5);
 	}
 

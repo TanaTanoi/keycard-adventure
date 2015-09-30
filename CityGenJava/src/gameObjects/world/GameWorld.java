@@ -68,12 +68,12 @@ public class GameWorld {
 	public int addNewPlayer(String name){
 		Player p = new Player(name, ID++);
 		allPlayers.add(p); // adds player to game world
-
+		if(currentPlayer==null)currentPlayer = p;
 		// Now adds player to correct floor
 		int floor = p.getLocation().getFloor();
 		//floorList.get(floor).addPlayer(p);
 
-		return ID--;
+		return ID-1;
 	}
 
 	public Player getCurrentPlayer(){
