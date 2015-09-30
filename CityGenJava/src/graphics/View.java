@@ -226,10 +226,10 @@ public class View {
 			//System.out.println(playersY+ " " + yChange);
 			if (!p.equals(world.getCurrentPlayer())) {
 
-//				p.move(3, 3);
 				Location playerLoc = p.getLocation();
-				System.out.println(playerLoc.getX() + " " +  playerLoc.getY());
+				//System.out.println(i + " "+ playerLoc.getX() + " " +  playerLoc.getY());
 				glPushMatrix();
+				i = p.getID();
 				if (i == 0) glColor3f(1f,0,0);
 				else if (i == 1) glColor3f(0,1f,0);
 				else if (i == 2) glColor3f(1f,1f,0);
@@ -241,7 +241,6 @@ public class View {
 				glColor3f(1, 1, 1);
 				glPopMatrix();
 			}
-			i++;
 		}
 	}
 

@@ -15,7 +15,7 @@ public class Server {
 	public static void main(String argv[]) throws Exception{
 
 		//initialise client on this port
-		ServerSocket clientSocket = new ServerSocket(port);
+		ServerSocket clientInteractSocket = new ServerSocket(port);
 		//Set up thread that controls client-server relations
 		ClientThread ct = new ClientThread();
 		ct.start();
@@ -24,11 +24,11 @@ public class Server {
 		while(true){
 			//LOGIN PROTOCOL -> Accept user -> take name from user -> send new ID to user -> add user to list
 			//acept a client
-			Socket cl = clientSocket.accept();
+			Socket cl = clientInteractSocket.accept();
 			System.out.println("Accepted client :" +ct.getName());
 			//Accept the name and make a new player for it
 			BufferedReader clientIn =new BufferedReader(
-			new InputStreamReader(cl.getInputStream()));
+								new InputStreamReader(cl.getInputStream()));
 			String clInput = clientIn.readLine();
 
 			//Add player to thee game world

@@ -176,7 +176,7 @@ public class ClientController {
 			//if we have a player of this ID
 			 for(Player p: players){
 				if(p.getID()==player[0]){
-					System.out.println("CHANGED PLAYER " + player[0] + " at " + player[1] + " " + player[2]);
+//					System.out.println("CHANGED PLAYER " + player[0] + " at " + player[1] + " " + player[2]);
 					world.updatePlayerInfo(player[0], player[1], player[2]);
 					break outer;
 				}
@@ -184,7 +184,7 @@ public class ClientController {
 			 System.out.println("Added new player with id " + player[0] + " at " + player[1] + " " + player[2]);
 			 Player p = new Player("ball",player[0]);
 			 p.move(player[1], player[2]);
-			players.add(p);
+			 players.add(p);
 		}
 	}
 

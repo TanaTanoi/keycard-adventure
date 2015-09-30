@@ -35,17 +35,16 @@ public class Client extends Thread{
 
 				String userIn;
 				String serverInput;
-				Scanner userInput = new Scanner(System.in);
 				clientSocket = new Socket("localhost",port);
 				DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
 				BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				//send initial login packet containing name
-				String name  = "Mega-chains";
+				String name  = "testins";
 				serverOut.writeBytes(name+"\n");
 				serverOut.flush();
 				//receive ID number
 				serverInput = serverIn.readLine();
-				System.out.println("Received ID : " + serverInput);
+//				System.out.println("Received ID : " + serverInput);
 				//set game's current player to a new player.
 				game.setCurrentPlayer(name, Integer.parseInt(serverInput));
 
@@ -53,12 +52,11 @@ public class Client extends Thread{
 			while(true){
 				//send input containing player's information
 				userIn = getPlayerOutput();
-				System.out.println("Sending " + userIn);
+//				System.out.println("Sending " + userIn);
 				serverOut.writeBytes(userIn+"\n");
 				serverOut.flush();
 
 				//receive input pertaining to the other players in the system
-				System.out.println("Reading input from server");
 				serverInput = serverIn.readLine();
 				decode(serverInput);
 			}
@@ -85,7 +83,7 @@ public class Client extends Thread{
 	 * @param input
 	 */
 	public void decode(String input){
-		System.out.println("Decoding " + input);
+//		System.out.println("Decoding " + input);
 		List<int[]> players = new ArrayList<int[]>();
 		//int[][] players = new int[][3];
 		//get the players information and place into array
