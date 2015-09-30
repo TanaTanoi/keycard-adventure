@@ -73,4 +73,8 @@ public class Player implements Character{
 	public int getID(){
 		return ID;
 	}
+	
+	public int hashCode(){
+		return getID();
+	}
 }
