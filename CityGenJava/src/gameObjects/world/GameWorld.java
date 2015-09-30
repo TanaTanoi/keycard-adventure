@@ -57,9 +57,9 @@ public class GameWorld {
 
 		// Now adds player to correct floor
 		int floor = p.getLocation().getFloor();
-		floorList.get(floor).addPlayer(p);
+		//floorList.get(floor).addPlayer(p);
 
-		return ID--;
+		return ID-1;
 	}
 
 }

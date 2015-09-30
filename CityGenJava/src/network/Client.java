@@ -7,33 +7,38 @@ import controller.ClientController;
 public class Client {
 
 	private  int port = 4444;
-	
-	public static void main(String args[]) throws Exception{
-		
-		
-	}
+	Socket clientSocket;
+	ClientController game;
 	/**
 	 * Standard constructor that uses default port (4444)
 	 * @throws Exception - If unable to connect to the server via standard port (4444)
 	 */
 	public Client(ClientController game) throws Exception{
+		this.game = game;
 		String userIn;
 		String serverInput;
 		Scanner userInput = new Scanner(System.in);
-		Socket clientSocket = new Socket("localhost",port);
+		clientSocket = new Socket("localhost",port);
 		DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
 		BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		int i = 0;
+		//send initial login packet containing name
+		String name  = "Mega-chains";
+		serverOut.writeBytes(name+"\n");
+		serverOut.flush();
+		//receive ID number
+		serverInput = serverIn.readLine();
+		System.out.println("Received ID : " + serverInput);
+		//set game's current player to a new player.
+		game.setCurrentPlayer(name, Integer.parseInt(serverInput));
 		while(true){
-			//send input
-			userIn = ":"+i+":"; 
+			//send input containing player's information
+			userIn = getPlayerOutput();
 			serverOut.writeBytes(userIn+"\n");
 			serverOut.flush();
 			System.out.println("Sending " + userIn);
-			//receive input
+			//receive input pertaining to the other players in the system
 			serverInput = serverIn.readLine();
-			System.out.println("Received: " + serverInput);
-			i++;
+			decode(serverInput);
 		}
 	}
 	/**
@@ -45,21 +50,25 @@ public class Client {
 		this.port = port;
 		new Client(game);
 	}
-	
+
 	/**
-	 * Get the string to send to the server that represents the player's coordinates
-	 * @return - String containing the current player's x,y
+	 * Get the string to send to the server that represents the player's coordinates and ID
+	 * @return - String containing the current player's x,y and their ID
 	 */
 	public String getPlayerOutput(){
-		return "example 10 14";
+		//0:ID 1:X 2: y
+		int[] info = game.getPlayerInfo();
+		assert info.length == 3;
+		String output = info[0] + " " + info[1] +  " " + info[2];
+		return output;
 	}
-	
+
 	/**
 	 * Decodes an input from the server and applies the changes to the local game
 	 * @param input
 	 */
 	public void decode(String input){
-		
+		System.out.println("Decoding " + input);
 	}
-	
+
 }

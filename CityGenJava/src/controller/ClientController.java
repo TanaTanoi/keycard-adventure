@@ -33,6 +33,7 @@ import org.lwjgl.opengl.GLContext;
 import vec.Vector2;
 import gameObjects.player.Player;
 import gameObjects.world.GameWorld;
+import gameObjects.world.Location;
 import graphics.View;
 import graphics.applicationWindow.Window;
 import network.Client;
@@ -62,7 +63,7 @@ public class ClientController {
 	public ClientController(String filename){
 		world = new GameWorld(filename);
 		view = new View(this);
-		init();
+		//init();
 		try{
 			client = new Client(this);
 		}catch(Exception e){
@@ -85,7 +86,10 @@ public class ClientController {
 		current = new Player(name,ID);
 	}
 
-
+	public int[] getPlayerInfo(){
+		Location loc = current.getLocation();
+		return new int[]{current.getID(),loc.getX(),loc.getY()};
+	}
 
 	private void init() {
 		// Setup an error callback. The default implementation
