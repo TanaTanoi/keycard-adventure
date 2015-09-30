@@ -91,6 +91,17 @@ public class ClientController {
 		return new int[]{current.getID(),loc.getX(),loc.getY()};
 	}
 
+	/**
+	 * Takes a series of player info arrays and tells the world to update the player's
+	 * associated with an ID 
+	 * @param playerInfo
+	 */
+	public void updatePlayers(int[][] playerInfo){
+		for(int[] player:playerInfo){
+			world.updatePlayerInfo(player[0], player[1], player[2]);
+		}
+	}
+	
 	private void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.

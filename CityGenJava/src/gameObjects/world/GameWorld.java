@@ -50,7 +50,20 @@ public class GameWorld {
 		allNPCs = new ArrayList<NPC>();
 		floorList = new HashMap<Integer,Floor>();
 	}
-
+	/**
+	 * Update the player with the provided ID to the new X,Y position
+	 * @param id
+	 * @param x
+	 * @param y
+	 */
+	public void updatePlayerInfo(int id, int x, int y){
+		for(Player p: allPlayers){
+			if(p.getID()==id){
+				p.move(x, y);
+			}
+		}
+	}
+	
 	public int addNewPlayer(String name){
 		Player p = new Player(name, ID++);
 		allPlayers.add(p); // adds player to game world

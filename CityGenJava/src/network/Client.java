@@ -1,6 +1,8 @@
 package network;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import controller.ClientController;
@@ -69,6 +71,23 @@ public class Client {
 	 */
 	public void decode(String input){
 		System.out.println("Decoding " + input);
+		List<int[]> players = new ArrayList<int[]>();
+		//int[][] players = new int[][3];
+		Scanner sc = new Scanner(input);
+		while(sc.hasNext()){
+			//if player ID
+			if(sc.hasNextInt()){
+				int[] p = {sc.nextInt(),sc.nextInt(),sc.nextInt()};
+				players.add(p);
+			}
+		}
+		sc.close();
+		int[][] p = new int[players.size()][3];
+		for(int i =0; i< players.size();i++){
+			p[i] = players.get(i);
+		}
+		//Send updated player pos' to game
+		game.updatePlayers(p);
 	}
 
 }
