@@ -222,6 +222,7 @@ public class View {
 		}
 
 		playersY+=yChange;
+		int i = 0;
 		for(Player p: players){
 			System.out.println(playersY+ " " + yChange);
 			if (!p.equals(player)) {
@@ -229,7 +230,10 @@ public class View {
 				Location playerLoc = p.getLocation();
 
 				glPushMatrix();
-				glColor3f(1f, 0, 0);
+				if (i == 0) glColor3f(1f,0,0);
+				else if (i == 1) glColor3f(0,1f,0);
+				else if (i == 2) glColor3f(1f,1f,0);
+				else if (i == 3) glColor3f(0,0,1f);
 
 				
 				glTranslated(x+playerLoc.getX(), y+playersY, z+playerLoc.getY());
@@ -238,6 +242,7 @@ public class View {
 				glColor3f(1, 1, 1);
 				glPopMatrix();
 			}
+			i++;
 		}
 	}
 
