@@ -32,13 +32,17 @@ public class Client {
 		System.out.println("Received ID : " + serverInput);
 		//set game's current player to a new player.
 		game.setCurrentPlayer(name, Integer.parseInt(serverInput));
+
+		//assume regular packet loop
 		while(true){
 			//send input containing player's information
 			userIn = getPlayerOutput();
+			System.out.println("Sending " + userIn);
 			serverOut.writeBytes(userIn+"\n");
 			serverOut.flush();
-			System.out.println("Sending " + userIn);
+
 			//receive input pertaining to the other players in the system
+			System.out.println("Reading input from server");
 			serverInput = serverIn.readLine();
 			decode(serverInput);
 		}
@@ -77,7 +81,10 @@ public class Client {
 		while(sc.hasNext()){
 			//if player ID
 			if(sc.hasNextInt()){
-				int[] p = {sc.nextInt(),sc.nextInt(),sc.nextInt()};
+				int[] p = new int[3];
+				p[0] = Integer.parseInt(sc.next());
+				p[1] = Integer.parseInt(sc.next());
+				p[2] = Integer.parseInt(sc.next());
 				players.add(p);
 			}
 		}
@@ -88,6 +95,7 @@ public class Client {
 		}
 		//Send updated player pos' to game
 		game.updatePlayers(p);
+		System.out.println("Finished decoding");
 	}
 
 }

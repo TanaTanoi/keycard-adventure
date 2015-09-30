@@ -1,6 +1,7 @@
 package network;
 import gameObjects.player.Player;
 import gameObjects.world.GameWorld;
+import gameObjects.world.Location;
 
 import java.io.*;
 import java.net.*;
@@ -9,7 +10,7 @@ import java.util.List;
 public class Server {
 
 	public static final int port = 4444;
-	private static GameWorld world;
+	static GameWorld world;
 	public static void main(String argv[]) throws Exception{
 
 		//initialise client on this port
@@ -57,22 +58,26 @@ class ClientThread extends Thread{
 	public void run(){
 		try{
 			while(true){
-				//get the input from each client
-				for(int i =0;i<connections.size();i++){
-					BufferedReader clientIn =new BufferedReader(
-							new InputStreamReader(connections.get(i).getInputStream()));
-					clInput = clientIn.readLine();
-					decode(clInput,i);
-				}
+				System.out.print("-");
+				while(!connections.isEmpty()){
+					System.out.println("Reading inputs");
+					//get the input from each client
+					for(int i =0;i<connections.size();i++){
+						BufferedReader clientIn =new BufferedReader(
+								new InputStreamReader(connections.get(i).getInputStream()));
+						clInput = clientIn.readLine();
+						decode(clInput,i);
+					}
 
-				//Generate ouput to send to all clients
-				String output = prepPackage();
-
-				//Send output to all clients
-				for(int i = 0; i < connections.size();i++){
-					DataOutputStream clientOut = new DataOutputStream(connections.get(i).getOutputStream());
-					clientOut.writeBytes(output+"\n");
-					System.out.println("Sending " + output);
+					//Generate ouput to send to all clients
+					String output = prepPackage();
+					System.out.println("Writing outputs");
+					//Send output to all clients
+					for(int i = 0; i < connections.size();i++){
+						DataOutputStream clientOut = new DataOutputStream(connections.get(i).getOutputStream());
+						clientOut.writeBytes(output+"\n");
+						System.out.println("Sending " + output);
+					}
 				}
 			}
 		}catch(Exception e){
@@ -98,7 +103,16 @@ class ClientThread extends Thread{
 	 * @return
 	 */
 	public String prepPackage(){
-		return "-----";
+		List<Player> players = Server.world.getPlayers();
+		StringBuilder sb = new StringBuilder();
+		for(Player p: players){
+			sb.append((int)p.getID());
+			sb.append(" ");
+			Location loc = p.getLocation();
+			sb.append((int)loc.getX() + " ");
+			sb.append((int)loc.getY() + " ");
+		}
+		return sb.toString();
 	}
 
 }
