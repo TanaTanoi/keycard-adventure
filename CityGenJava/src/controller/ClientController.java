@@ -8,6 +8,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
@@ -16,8 +17,29 @@ import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FALSE;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NICEST;
+import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glFlush;
+import static org.lwjgl.opengl.GL11.glHint;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glShadeModel;
 
 import java.nio.ByteBuffer;
 
@@ -27,6 +49,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWvidmode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
@@ -57,7 +80,7 @@ public class ClientController {
 
 	/*Model transformation fields*/
 	private float zoom = 1f;
-	private float rot_x = 0;
+	private float xRot = 0;
 	private float rot_y = 0;
 
 	public ClientController(String filename){
@@ -71,7 +94,50 @@ public class ClientController {
 			e.printStackTrace();
 		}
 		// need to make a spawn method for new player
+		GL.createCapabilities(false); // valid for latest build
+		//Clear the buffer to this frame
+		glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+
+		while ( glfwWindowShouldClose(view.getWindow().getID()) == GL_FALSE ) {
+			renderLoop();
+		}
 	}
+
+	private void renderLoop(){
+		setUpCamera();
+	
+		glClear(GL_COLOR_BUFFER_BIT); // clear the frame buffer
+		/*#Insert methods that draw in here #*/
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glShadeModel(GL_SMOOTH);
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+		//Render the current view
+		view.renderView();
+		if (mousePos.y > 80){
+			if (mousePos.x > 600){
+				xRot +=Math.pow((mousePos.x-600)/100,1.2);
+			}
+			else if (mousePos.x < 200){
+				xRot -=Math.pow((200-mousePos.x)/100,1.2);
+			}
+		}
+		/*----------------------------------*/
+		glFlush();
+		glfwSwapBuffers(view.getWindow().getID()); // swap the color buffers
+		/*This polls for events that happened on the window
+		 * (i.e. keyboard, mouse, scroll events)*/
+		glfwPollEvents();
+	}
+
+	private void setUpCamera(){
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glRotatef(xRot, 0, 1, 0);
+	}
+
 
 	public static void main(String[] args) {
 		new ClientController("gameWorld.txt");
@@ -169,7 +235,7 @@ public class ClientController {
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
 		char pressed = (char)key;
 		System.out.println("Key Pressed: " + pressed);
-		view.move(pressed, rot_x);
+		view.move(pressed, xRot);
 	}
 
 	private void MouseButtonCallback(long window, int button, int state, int arg3){
@@ -180,7 +246,7 @@ public class ClientController {
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
 		if(mouse_down){
-			rot_x +=0.3*(xpos-mousePos.x);
+			xRot +=0.3*(xpos-mousePos.x);
 			//			rot_y +=0.3*(ypos-mousePos.y);
 		}
 		mousePos = new Vector2((float)xpos,(float)ypos);
