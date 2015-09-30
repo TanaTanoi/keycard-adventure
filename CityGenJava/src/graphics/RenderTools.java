@@ -17,15 +17,18 @@ public class RenderTools {
 //		glBindTexture(GL_TEXTURE_2D, wallTexture.getTextureID());
 		glBegin(GL_QUADS);	//Set mode to fill spaces within vertices
 
-		glTexCoord2d(x,height);
+		glTexCoord2d(0,1);
 		glVertex3d(x,height,y);
-		glTexCoord2d(x+width,height);
-		glVertex3d(x+width,height,y);
-		glTexCoord2d(x+width,0f);
-		glVertex3d(x+width,0f,y);
-		glTexCoord2d(x,0f);
+
+		glTexCoord2d(0,0);
 		glVertex3d(x,0f,y);
-		
+
+		glTexCoord2d(1,0);
+		glVertex3d(x+width,0f,y);
+
+		glTexCoord2d(1,1);
+		glVertex3d(x+width,height,y);
+
 		glEnd();//End quad mode
 	}
 }
