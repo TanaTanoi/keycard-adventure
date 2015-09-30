@@ -42,6 +42,7 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glShadeModel;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -85,14 +86,17 @@ public class ClientController {
 
 	public ClientController(String filename){
 		world = new GameWorld(filename);
-		view = new View(world);
-		init();
+
+
+
 		try{
 			client = new Client(this);
 		}catch(Exception e){
 			System.out.println("Unable to connect!");
 			e.printStackTrace();
 		}
+		view = new View(world);
+		init();
 		// need to make a spawn method for new player
 		GL.createCapabilities(false); // valid for latest build
 		//Clear the buffer to this frame
@@ -101,11 +105,13 @@ public class ClientController {
 		while ( glfwWindowShouldClose(view.getWindow().getID()) == GL_FALSE ) {
 			renderLoop();
 		}
+
+
 	}
 
 	private void renderLoop(){
 		setUpCamera();
-	
+
 		glClear(GL_COLOR_BUFFER_BIT); // clear the frame buffer
 		/*#Insert methods that draw in here #*/
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -150,10 +156,12 @@ public class ClientController {
 	 */
 	public void setCurrentPlayer(String name, int ID){
 		current = new Player(name,ID);
+		current.move(0, -5);
+		world.setCurrentPlayer(current);
 	}
 
 	public int[] getPlayerInfo(){
-		Location loc = current.getLocation();
+		Location loc = world.getCurrentPlayer().getLocation();
 		return new int[]{current.getID(),(int)loc.getX(),(int)loc.getY()};
 	}
 
@@ -163,8 +171,20 @@ public class ClientController {
 	 * @param playerInfo
 	 */
 	public void updatePlayers(int[][] playerInfo){
-		for(int[] player:playerInfo){
-			world.updatePlayerInfo(player[0], player[1], player[2]);
+		List<Player> players = world.getPlayers();
+		outer: for(int[] player:playerInfo){
+			//if we have a player of this ID
+			 for(Player p: players){
+				if(p.getID()==player[0]){
+					System.out.println("CHANGED PLAYER " + player[0] + " at " + player[1] + " " + player[2]);
+					world.updatePlayerInfo(player[0], player[1], player[2]);
+					break outer;
+				}
+			}
+			 System.out.println("Added new player with id " + player[0] + " at " + player[1] + " " + player[2]);
+			 Player p = new Player("ball",player[0]);
+			 p.move(player[1], player[2]);
+			players.add(p);
 		}
 	}
 

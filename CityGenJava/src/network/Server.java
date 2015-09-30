@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 public class Server {
 
 	public static final int port = 4444;
@@ -58,7 +59,7 @@ class ClientThread extends Thread{
 	public void run(){
 		try{
 			while(true){
-				System.out.print("-");
+				Thread.sleep(100);
 				while(!connections.isEmpty()){
 					System.out.println("Reading inputs");
 					//get the input from each client
@@ -97,6 +98,19 @@ class ClientThread extends Thread{
 	 */
 	public void decode(String input, int player){
 		System.out.println("Received "+ input + " from player " + player);
+		Scanner sc = new Scanner(input);
+		int[] p = new int[3];
+		while(sc.hasNext()){
+			//if player ID
+			if(sc.hasNextInt()){
+
+				p[0] = Integer.parseInt(sc.next());
+				p[1] = Integer.parseInt(sc.next());
+				p[2] = Integer.parseInt(sc.next());
+			}
+		}
+		sc.close();
+		Server.world.updatePlayerInfo(p[0], p[1], p[2]);
 	}
 	/**
 	 * Prepares the output to be sent to all clients

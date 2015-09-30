@@ -55,8 +55,6 @@ public class View {
 
 	public View(GameWorld g){
 		world = g;
-		g.addNewPlayer("Cullum");
-		g.addNewPlayer("Tana");
 
 		objectDisplayLists = new ArrayList<Integer>();
 		objectTextureList = new ArrayList<Integer>();
@@ -98,9 +96,9 @@ public class View {
 	private void printCollisions(){
 		for (int x = 0; x < occupiedSpace.length; x++){
 			for(int z = 0; z < occupiedSpace[0].length; z++){
-				System.out.print(occupiedSpace[x][z]);
+				//System.out.print(occupiedSpace[x][z]);
 			}
-			System.out.println();
+			//System.out.println();
 		}
 	}
 
@@ -163,7 +161,7 @@ public class View {
 
 
 		printCollisions();
-		System.out.println("min = " + minX + " max = " + maxX);
+		//System.out.println("min = " + minX + " max = " + maxX);
 	}
 
 	public void move(char pressed, double xRot){
@@ -196,6 +194,7 @@ public class View {
 		}
 
 		player.move(this.x, this.z);
+		world.getCurrentPlayer().move(this.x, this.z);
 	}
 
 
@@ -224,18 +223,18 @@ public class View {
 		playersY+=yChange;
 		int i = 0;
 		for(Player p: players){
-			System.out.println(playersY+ " " + yChange);
-			if (!p.equals(player)) {
-				p.move(3, 3);
-				Location playerLoc = p.getLocation();
+			//System.out.println(playersY+ " " + yChange);
+			if (!p.equals(world.getCurrentPlayer())) {
 
+//				p.move(3, 3);
+				Location playerLoc = p.getLocation();
+				System.out.println(playerLoc.getX() + " " +  playerLoc.getY());
 				glPushMatrix();
 				if (i == 0) glColor3f(1f,0,0);
 				else if (i == 1) glColor3f(0,1f,0);
 				else if (i == 2) glColor3f(1f,1f,0);
 				else if (i == 3) glColor3f(0,0,1f);
 
-				
 				glTranslated(x+playerLoc.getX(), y+playersY, z+playerLoc.getY());
 				glScaled(0.1, 0.1, 0.1);
 				renderObject(0);
