@@ -111,7 +111,7 @@ class ClientThread extends Thread{
 			}
 		}
 		sc.close();
-		Server.world.updatePlayerInfo(p[0], p[1], p[2]);
+		Server.world.updatePlayerInfo(p[0], (float)(p[1]/100.0f), (float)(p[2]/100.0f));
 	}
 	/**
 	 * Prepares the output to be sent to all clients
@@ -124,8 +124,8 @@ class ClientThread extends Thread{
 			sb.append((int)p.getID());
 			sb.append(" ");
 			Location loc = p.getLocation();
-			sb.append((int)loc.getX() + " ");
-			sb.append((int)loc.getY() + " ");
+			sb.append((int)(loc.getX()*100.0f) + " ");
+			sb.append((int)(loc.getY()*100.0f) + " ");
 		}
 		return sb.toString();
 	}

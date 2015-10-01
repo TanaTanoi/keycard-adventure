@@ -21,7 +21,7 @@ public class Client extends Thread{
 		start();
 
 	}
-	
+
 	/**
 	 * Constructor that takes a different IP to standard
 	 * @throws Exception - If unable to connect to the server via standard port (4444)
@@ -31,7 +31,7 @@ public class Client extends Thread{
 		gameHost = InetAddress.getByName(IP);
 		new Client(game);
 	}
-	
+
 	/**
 	 * Constructor that takes a different port to standard.
 	 * @param port - The port to connect through
@@ -81,13 +81,17 @@ public class Client extends Thread{
 
 	/**
 	 * Get the string to send to the server that represents the player's coordinates and ID
+	 * The coordanites are multiplied by 100 and casted to ints for simple broadcasting.
+	 * The server is expected to dividie it by 100 when received
 	 * @return - String containing the current player's x,y and their ID
 	 */
 	public String getPlayerOutput(){
 		//0:ID 1:X 2: y
-		int[] info = game.getPlayerInfo();
+		float[] info = game.getPlayerInfo();
 		assert info.length == 3;
-		String output = info[0] + " " + info[1] +  " " + info[2];
+		info[1]*=100.0f;
+		info[2]*=100.0f;
+		String output = ((int)info[0]) + " " + ((int)info[1]) +  " " + ((int)info[2]);
 		return output;
 	}
 
@@ -97,17 +101,17 @@ public class Client extends Thread{
 	 */
 	public void decode(String input){
 		System.out.println("Decoding " + input);
-		List<int[]> players = new ArrayList<int[]>();
+		List<float[]> players = new ArrayList<float[]>();
 		//int[][] players = new int[][3];
 		//get the players information and place into array
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){
 			//if player ID
 			if(sc.hasNextInt()){
-				int[] p = new int[3];
+				float[] p = new float[3];
 				p[0] = Integer.parseInt(sc.next());
-				p[1] = Integer.parseInt(sc.next());
-				p[2] = Integer.parseInt(sc.next());
+				p[1] = (float)(Integer.parseInt(sc.next())/100.0f);
+				p[2] = (float)(Integer.parseInt(sc.next())/100.0f);
 				if(p[0]!=game.getPlayerInfo()[0]){
 					players.add(p);
 				}
@@ -115,7 +119,7 @@ public class Client extends Thread{
 		}
 		sc.close();
 		//copy all players information apart from self, into array
-		int[][] p = new int[players.size()][3];
+		float[][] p = new float[players.size()][3];
 		for(int i =0; i< players.size();i++){
 			p[i] = players.get(i);
 		}

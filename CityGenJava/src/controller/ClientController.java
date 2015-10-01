@@ -162,9 +162,9 @@ public class ClientController {
 		world.addPlayer(current);
 	}
 
-	public int[] getPlayerInfo(){
+	public float[] getPlayerInfo(){
 		Location loc = current.getLocation();
-		return new int[]{current.getID(),(int)loc.getX(),(int)loc.getY()};
+		return new float[]{current.getID(),loc.getX(),loc.getY()};
 	}
 	public Player getCurrentPlayer(){
 		return current;
@@ -175,19 +175,19 @@ public class ClientController {
 	 * associated with an ID
 	 * @param playerInfo
 	 */
-	public void updatePlayers(int[][] playerInfo){
+	public void updatePlayers(float[][] playerInfo){
 		List<Player> players = world.getPlayers();
-		outer: for(int[] player:playerInfo){
+		outer: for(float[] player:playerInfo){
 			//if we have a player of this ID
 			 for(Player p: players){
 				if(p.getID()==player[0]){
 					System.out.println("CHANGED PLAYER " + player[0] + " at " + player[1] + " " + player[2]);
-					world.updatePlayerInfo(player[0], player[1], player[2]);
+					world.updatePlayerInfo((int)player[0], player[1], player[2]);
 					break outer;
 				}
 			}
 			 System.out.println("Added new player with id " + player[0] + " at " + player[1] + " " + player[2]);
-			 Player p = new Player("ball",player[0]);
+			 Player p = new Player("ball",(int)player[0]);
 			 p.move(player[1], player[2]);
 			 world.addPlayer(p);
 		}
