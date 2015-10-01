@@ -17,7 +17,6 @@ public class GameWorld {
 	private List<Player> allPlayers;
 	private List<NPC> allNPCs;
 	private Map<Integer, Floor> floorList;
-	private Player currentPlayer;
 	private int ID = 0;
 
 	public GameWorld(String filename){
@@ -58,17 +57,14 @@ public class GameWorld {
 	 * @param y
 	 */
 	public void updatePlayerInfo(int id, float x, float y){
-		for(Player p: allPlayers){
-			if(p.getID()==id){
-				p.move(x, y);
-			}
+		if(allPlayers.size()>id){
+			allPlayers.get(id).move(x, y);
 		}
 	}
 
 	public int addNewPlayer(String name){
 		Player p = new Player(name, ID++);
 		allPlayers.add(p); // adds player to game world
-		if(currentPlayer==null)currentPlayer = p;
 		// Now adds player to correct floor
 		int floor = p.getLocation().getFloor();
 		//floorList.get(floor).addPlayer(p);
@@ -76,13 +72,6 @@ public class GameWorld {
 		return ID-1;
 	}
 
-	public Player getCurrentPlayer(){
-		return currentPlayer;
-	}
-
-	public void setCurrentPlayer(Player p){
-		currentPlayer = p;
-	}
 	public List<Player> getPlayers(){
 		return allPlayers;
 	}

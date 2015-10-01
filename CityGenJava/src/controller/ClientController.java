@@ -86,16 +86,20 @@ public class ClientController {
 
 	public ClientController(String filename){
 		world = new GameWorld(filename);
-
-
-
+		//wait until we have been accepted
 		try{
 			client = new Client(this);
 		}catch(Exception e){
 			System.out.println("Unable to connect!");
 			e.printStackTrace();
 		}
-		view = new View(world);
+		start();
+
+
+	}
+
+	private void start(){
+		view = new View(world,this);
 		init();
 		// need to make a spawn method for new player
 		GL.createCapabilities(false); // valid for latest build
@@ -105,8 +109,6 @@ public class ClientController {
 		while ( glfwWindowShouldClose(view.getWindow().getID()) == GL_FALSE ) {
 			renderLoop();
 		}
-
-
 	}
 
 	private void renderLoop(){
@@ -157,12 +159,14 @@ public class ClientController {
 	public void setCurrentPlayer(String name, int ID){
 		current = new Player(name,ID);
 		current.move(0, -5);
-		world.setCurrentPlayer(current);
 	}
 
 	public int[] getPlayerInfo(){
-		Location loc = world.getCurrentPlayer().getLocation();
+		Location loc = current.getLocation();
 		return new int[]{current.getID(),(int)loc.getX(),(int)loc.getY()};
+	}
+	public Player getCurrentPlayer(){
+		return current;
 	}
 
 	/**

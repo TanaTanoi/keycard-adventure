@@ -30,6 +30,8 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import controller.ClientController;
+
 
 
 
@@ -39,6 +41,7 @@ public class View {
 	ArrayList<Integer> objectTextureList;
 	private char[][] occupiedSpace;
 	private GameWorld world;
+	private ClientController control;
 	//	private char[][] occupiedSpace;
 	private double spacing;
 	private double gameSize = 20;
@@ -47,23 +50,20 @@ public class View {
 	private boolean loaded = false;
 	private int wallTexture;
 	private int wallDisplayList;
-	private Player player;
 	private Window w;
 	private GLFWErrorCallback errorCallback;
 	private double yChange = 0.003;
 	private double playersY = 0.5;
 
-	public View(GameWorld g){
+	public View(GameWorld g,ClientController control){
 		world = g;
-
+		this.control = control;
 		objectDisplayLists = new ArrayList<Integer>();
 		objectTextureList = new ArrayList<Integer>();
 		initaliseCollisions(100,100);
 		y = -0.95f;
 		w = new Window();
-		player = g.getCurrentPlayer();
-
-		player.move(0, -5);
+		this.control.getCurrentPlayer().move(0, -5);
 	}
 
 	public void renderView(){
@@ -73,7 +73,7 @@ public class View {
 			initaliseCamera();
 		}
 
-		Location playerLoc = player.getLocation();
+		Location playerLoc = control.getCurrentPlayer().getLocation();
 		x = playerLoc.getX();
 		z = playerLoc.getY();
 		renderObject(0);
@@ -193,8 +193,7 @@ public class View {
 			}
 		}
 
-		player.move(this.x, this.z);
-		world.getCurrentPlayer().move(this.x, this.z);
+		control.getCurrentPlayer().move(this.x, this.z);
 	}
 
 
@@ -224,7 +223,7 @@ public class View {
 		int i = 0;
 		for(Player p: players){
 			//System.out.println(playersY+ " " + yChange);
-			if (!p.equals(world.getCurrentPlayer())) {
+			if (!p.equals(control.getCurrentPlayer())) {
 
 				Location playerLoc = p.getLocation();
 				//System.out.println(i + " "+ playerLoc.getX() + " " +  playerLoc.getY());
