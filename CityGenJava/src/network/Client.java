@@ -11,17 +11,27 @@ public class Client extends Thread{
 	private  int port = 4444;
 	Socket clientSocket;
 	ClientController game;
-	InetAddress gameHost;
+	InetAddress gameHost = InetAddress.getLocalHost();
 	/**
-	 * Standard constructor that uses default port (4444)
+	 * Standard constructor that uses default port (4444) and local host as IP
+	 * @throws Exception - If unable to connect to the server via standard port (4444)
+	 */
+	public Client(ClientController game) throws Exception {
+		this.game = game;
+		start();
+
+	}
+	
+	/**
+	 * Constructor that takes a different IP to standard
 	 * @throws Exception - If unable to connect to the server via standard port (4444)
 	 */
 	public Client(ClientController game, String IP) throws Exception {
 		this.game = game;
 		gameHost = InetAddress.getByName(IP);
-		start();
-
+		new Client(game);
 	}
+	
 	/**
 	 * Constructor that takes a different port to standard.
 	 * @param port - The port to connect through
