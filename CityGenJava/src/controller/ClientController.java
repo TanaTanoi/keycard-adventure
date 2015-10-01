@@ -159,6 +159,7 @@ public class ClientController {
 	public void setCurrentPlayer(String name, int ID){
 		current = new Player(name,ID);
 		current.move(0, -5);
+		world.addPlayer(current);
 	}
 
 	public int[] getPlayerInfo(){
@@ -180,7 +181,7 @@ public class ClientController {
 			//if we have a player of this ID
 			 for(Player p: players){
 				if(p.getID()==player[0]){
-//					System.out.println("CHANGED PLAYER " + player[0] + " at " + player[1] + " " + player[2]);
+					System.out.println("CHANGED PLAYER " + player[0] + " at " + player[1] + " " + player[2]);
 					world.updatePlayerInfo(player[0], player[1], player[2]);
 					break outer;
 				}
@@ -188,7 +189,7 @@ public class ClientController {
 			 System.out.println("Added new player with id " + player[0] + " at " + player[1] + " " + player[2]);
 			 Player p = new Player("ball",player[0]);
 			 p.move(player[1], player[2]);
-			 players.add(p);
+			 world.addPlayer(p);
 		}
 	}
 
@@ -258,7 +259,7 @@ public class ClientController {
 		if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
 		char pressed = (char)key;
-		System.out.println("Key Pressed: " + pressed);
+//		System.out.println("Key Pressed: " + pressed);
 		view.move(pressed, xRot);
 	}
 

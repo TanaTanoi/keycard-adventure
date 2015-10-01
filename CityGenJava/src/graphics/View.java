@@ -63,7 +63,7 @@ public class View {
 		initaliseCollisions(100,100);
 		y = -0.95f;
 		w = new Window();
-		this.control.getCurrentPlayer().move(0, -5);
+//		this.control.getCurrentPlayer().move(0, -5);
 	}
 
 	public void renderView(){
@@ -224,7 +224,7 @@ public class View {
 		for(Player p: players){
 			//System.out.println(playersY+ " " + yChange);
 			if (!p.equals(control.getCurrentPlayer())) {
-
+//				System.out.println("Rendering Player " + p.getID());
 				Location playerLoc = p.getLocation();
 				//System.out.println(i + " "+ playerLoc.getX() + " " +  playerLoc.getY());
 				glPushMatrix();

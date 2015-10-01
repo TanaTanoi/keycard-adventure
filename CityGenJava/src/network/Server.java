@@ -74,10 +74,11 @@ class ClientThread extends Thread{
 					String output = prepPackage();
 					System.out.println("Writing outputs");
 					//Send output to all clients
+					System.out.println("Sending " + output);
 					for(int i = 0; i < connections.size();i++){
 						DataOutputStream clientOut = new DataOutputStream(connections.get(i).getOutputStream());
 						clientOut.writeBytes(output+"\n");
-						System.out.println("Sending " + output);
+
 					}
 				}
 			}

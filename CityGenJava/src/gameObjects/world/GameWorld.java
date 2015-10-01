@@ -58,7 +58,10 @@ public class GameWorld {
 	 */
 	public void updatePlayerInfo(int id, float x, float y){
 		if(allPlayers.size()>id){
-			allPlayers.get(id).move(x, y);
+//			System.out.println("Updating player " + id + " to " + x + " " +y);
+			for(Player p:allPlayers){
+				if(p.getID() == id)p.move(x, y);
+			}
 		}
 	}
 
@@ -68,11 +71,15 @@ public class GameWorld {
 		// Now adds player to correct floor
 		int floor = p.getLocation().getFloor();
 		//floorList.get(floor).addPlayer(p);
-
 		return ID-1;
 	}
 
 	public List<Player> getPlayers(){
 		return allPlayers;
+	}
+
+	public void addPlayer(Player p){
+		allPlayers.add(p);
+		System.out.println("Added player " + allPlayers.size());
 	}
 }

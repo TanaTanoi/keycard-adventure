@@ -74,6 +74,7 @@ public class Client extends Thread{
 			}
 		}catch(Exception e){
 			System.out.println("PROBLEM");
+			e.printStackTrace();
 		}
 	}
 
@@ -95,7 +96,7 @@ public class Client extends Thread{
 	 * @param input
 	 */
 	public void decode(String input){
-//		System.out.println("Decoding " + input);
+		System.out.println("Decoding " + input);
 		List<int[]> players = new ArrayList<int[]>();
 		//int[][] players = new int[][3];
 		//get the players information and place into array
