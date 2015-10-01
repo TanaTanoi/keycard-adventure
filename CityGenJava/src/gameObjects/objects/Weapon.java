@@ -5,15 +5,15 @@ import gameObjects.world.Location;
 
 public class Weapon extends Tool {
 
-	public Weapon(String name, String desc, Location loc, int damage) {
-		super(name, desc, loc);
+	public Weapon(String name, String desc, Location loc, int damage, String model) {
+		super(name, desc, loc, model);
 		super.setStrategy(new WeaponStrategy(damage));
 	}
 
 	@Override
 	public void equip() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

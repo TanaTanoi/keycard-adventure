@@ -15,13 +15,15 @@ public abstract class Tool implements Item {
 
 	private String name;
 	private String description;
+	private String model;
 	private Location loc;
 	private InteractStrategy interactStrategy;
 
-	public Tool(String name, String desc, Location loc){
+	public Tool(String name, String desc, Location loc, String model){
 		this.name = name;
-		description = desc;		
+		description = desc;
 		this.loc = loc;
+		this.model = model;
 	}
 
 	/**
@@ -43,21 +45,21 @@ public abstract class Tool implements Item {
 			interactStrategy.useOnPlayer(c);
 		}
 	}
-	
-	
+
+
 	@Override
 	public void interact(Item i){
 		if(interactStrategy != null){
 			interactStrategy.interact(i);
 		}
 	}
-	
+
 	/**
 	 * Drop releases the object from a player
 	 * and places it in the game world
 	 */
 	public void drop(){
-		
+
 	}
 
 	@Override
@@ -69,10 +71,20 @@ public abstract class Tool implements Item {
 	public String getDescription(){
 		return description;
 	}
-	
-	@Override 
+
+	@Override
 	public Location getLocation(){
 		return loc;
+	}
+
+	@Override
+	public void setLocation(Location l){
+		loc = l;
+	}
+
+	@Override
+	public String getModelName(){
+		return model;
 	}
 
 }

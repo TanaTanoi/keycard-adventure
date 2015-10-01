@@ -1,5 +1,8 @@
 package gameObjects.player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gameObjects.objects.Item;
 import gameObjects.world.Location;
 
@@ -14,7 +17,8 @@ import gameObjects.world.Location;
 public class Player implements Character{
 
 	private String name; // name selected by user
-	private Item [] inventory; // items  that the player carries
+	private List<Item> inventory; // items  that the player carries
+	private static int MAX_ITEMS = 1;
 	private int health = 100;
 	private Location loc; // describes player's location in game world
 	private int ID;
@@ -23,6 +27,7 @@ public class Player implements Character{
 		this.name = name;
 		this.ID = ID;
 		loc = new Location(0,0,0);
+		inventory = new ArrayList<Item>();
 	}
 
 	/**
@@ -73,8 +78,32 @@ public class Player implements Character{
 	public int getID(){
 		return ID;
 	}
-	
+
 	public int hashCode(){
 		return getID();
+	}
+
+	/**
+	 * Picks up an item (if there is enough room)
+	 * and adds it to the player's inventory
+	 *
+	 * @param i is the item
+	 * @return a boolean indicating whether the action was succesful
+	 */
+	public boolean pickUp(Item i){
+		if(inventory.size() < MAX_ITEMS){
+			inventory.add(i);
+			return true;
+		}
+		System.out.println("No more room!");
+		return false;
+	}
+
+	/**
+	 * Drops an item from a player's inventory
+	 * @param i
+	 */
+	public void drop(Item i){
+		inventory.remove(i);
 	}
 }

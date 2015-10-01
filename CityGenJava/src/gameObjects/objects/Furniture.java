@@ -9,6 +9,14 @@ public class Furniture implements Item {
 	private String name;
 	private String description;
 	private Location loc;
+	private String model;
+
+	public Furniture(String name, String desc, Location loc, String model){
+		this.name = name;
+		description = desc;
+		this.loc = loc;
+		this.model = model;
+	}
 
 	@Override
 	public String getName(){
@@ -41,6 +49,16 @@ public class Furniture implements Item {
 	@Override
 	public Location getLocation() {
 		return loc;
+	}
+
+	@Override
+	public void setLocation(Location l) {
+		loc = l;
+	}
+
+	@Override
+	public String getModelName() {
+		return model;
 	}
 
 }

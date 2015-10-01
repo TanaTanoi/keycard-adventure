@@ -74,6 +74,26 @@ public class GameWorld {
 		return ID-1;
 	}
 
+	/**
+	 * Picks up an item for a player.
+	 * @param p
+	 * @param i
+	 */
+	public void pickUpItem(Player p, Item i){
+		p.pickUp(i);
+		i.setLocation(null);
+	}
+
+	/**
+	 * Drops an item from a player at the player's current location
+	 * @param p
+	 * @param i
+	 */
+	public void dropItem(Player p, Item i){
+		p.drop(i);
+		i.setLocation(p.getLocation());
+	}
+
 	public List<Player> getPlayers(){
 		return allPlayers;
 	}
