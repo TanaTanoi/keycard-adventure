@@ -11,12 +11,14 @@ public class Client extends Thread{
 	private  int port = 4444;
 	Socket clientSocket;
 	ClientController game;
+	InetAddress gameHost;
 	/**
 	 * Standard constructor that uses default port (4444)
 	 * @throws Exception - If unable to connect to the server via standard port (4444)
 	 */
-	public Client(ClientController game) throws Exception {
+	public Client(ClientController game, String IP) throws Exception {
 		this.game = game;
+		gameHost = InetAddress.getByName(IP);
 		start();
 
 	}
@@ -25,9 +27,9 @@ public class Client extends Thread{
 	 * @param port - The port to connect through
 	 * @throws Exception - If unable to connect to the server via given port
 	 */
-	public Client(ClientController game,int port) throws Exception{
+	public Client(ClientController game, String IP,int port) throws Exception{
 		this.port = port;
-		new Client(game);
+		new Client(game, IP);
 	}
 
 	public void run() {
@@ -35,7 +37,7 @@ public class Client extends Thread{
 
 				String userIn;
 				String serverInput;
-				clientSocket = new Socket("localhost",port);
+				clientSocket = new Socket(gameHost,port);
 				DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
 				BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				//send initial login packet containing name
