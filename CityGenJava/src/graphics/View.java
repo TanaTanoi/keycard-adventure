@@ -222,9 +222,7 @@ public class View {
 		playersY+=yChange;
 		int i = 0;
 		for(Player p: players){
-			//System.out.println(playersY+ " " + yChange);
 			if (!p.equals(control.getCurrentPlayer())) {
-//				System.out.println("Rendering Player " + p.getID());
 				Location playerLoc = p.getLocation();
 				//System.out.println(i + " "+ playerLoc.getX() + " " +  playerLoc.getY());
 				glPushMatrix();
@@ -235,6 +233,7 @@ public class View {
 				else if (i == 3) glColor3f(0,0,1f);
 
 				glTranslated(x+playerLoc.getX(), y+playersY, z+playerLoc.getY());
+//				glTranslated(playerLoc.getX(), y+playersY, playerLoc.getY());
 				glScaled(0.1, 0.1, 0.1);
 				renderObject(0);
 				glColor3f(1, 1, 1);
