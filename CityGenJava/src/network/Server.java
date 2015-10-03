@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Server {
 
 	public static final int port = 4444;
-	static GameWorld world;
+	static GameWorld world;//FIXME Find a way to have this private. Its not great having it package level
 	public static void main(String argv[]) throws Exception{
 
 		//initialise client on this port
@@ -67,11 +67,11 @@ class ClientThread extends Thread{
 						BufferedReader clientIn =new BufferedReader(
 								new InputStreamReader(connections.get(i).getInputStream()));
 						clInput = clientIn.readLine();
-						decode(clInput,i);
+						NetworkDecoder.decode(Server.world,clInput,i);
 					}
 
 					//Generate ouput to send to all clients
-					String output = prepPackage();
+					String output = NetworkDecoder.prepPackage(Server.world);
 					System.out.println("Writing outputs");
 					//Send output to all clients
 					System.out.println("Sending " + output);
@@ -92,42 +92,5 @@ class ClientThread extends Thread{
 		connections.add(newClient);
 	}
 
-	/**
-	 * Decode the input from player @player
-	 * @param input - The direct input
-	 * @param player - The player who sent the input
-	 */
-	public void decode(String input, int player){
-		System.out.println("Received "+ input + " from player " + player);
-		Scanner sc = new Scanner(input);
-		int[] p = new int[3];
-		while(sc.hasNext()){
-			//if player ID
-			if(sc.hasNextInt()){
-
-				p[0] = Integer.parseInt(sc.next());
-				p[1] = Integer.parseInt(sc.next());
-				p[2] = Integer.parseInt(sc.next());
-			}
-		}
-		sc.close();
-		Server.world.updatePlayerInfo(p[0], (float)(p[1]/100.0f), (float)(p[2]/100.0f));
-	}
-	/**
-	 * Prepares the output to be sent to all clients
-	 * @return
-	 */
-	public String prepPackage(){
-		List<Player> players = Server.world.getPlayers();
-		StringBuilder sb = new StringBuilder();
-		for(Player p: players){
-			sb.append((int)p.getID());
-			sb.append(" ");
-			Location loc = p.getLocation();
-			sb.append((int)(loc.getX()*100.0f) + " ");
-			sb.append((int)(loc.getY()*100.0f) + " ");
-		}
-		return sb.toString();
-	}
 
 }
