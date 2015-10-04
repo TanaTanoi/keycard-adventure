@@ -1,6 +1,7 @@
 package gameObjects.objects;
 
 import gameObjects.player.Character;
+import gameObjects.world.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public abstract class Container implements Item{
 	private String name;
 	private String desc;
 	private int limit;
+	private Location loc;
+	private String modelName;
 	private boolean isLocked;
 
 	// All the items the container has
@@ -41,8 +44,8 @@ public abstract class Container implements Item{
 	 * @param desc describes the container
 	 * @param limit is how many items the container may have
 	 */
-	public Container(String name, String desc, int limit){
-		init(name,desc,limit);
+	public Container(String name, String desc, int limit, Location loc, String model){
+		init(name,desc,limit,loc,model);
 	}
 
 	/**
@@ -55,8 +58,8 @@ public abstract class Container implements Item{
 	 * @param locked determines whether the container is locked
 	 * @param k is the key that can open/lock a container
 	 */
-	public Container(String name, String desc, int limit, boolean locked, Key k){
-		init(name,desc,limit,locked,k);
+	public Container(String name, String desc, int limit, boolean locked, Key k, Location loc, String model){
+		init(name,desc,limit,locked,k,loc, model);
 	}
 	
 	/**
@@ -66,10 +69,12 @@ public abstract class Container implements Item{
 	 * @param desc
 	 * @param limit
 	 */
-	public void init(String name, String desc, int limit){
+	public void init(String name, String desc, int limit, Location loc, String model){
 		this.name = name;
 		this.desc = desc;
 		this.limit = limit;
+		this.loc = loc;
+		modelName = model;
 		inventory = new ArrayList<Item>();
 	}
 	
@@ -82,8 +87,8 @@ public abstract class Container implements Item{
 	 * @param locked
 	 * @param k
 	 */
-	public void init(String name, String desc, int limit, boolean locked, Key k){
-		init(name,desc,limit);
+	public void init(String name, String desc, int limit, boolean locked, Key k, Location loc, String model){
+		init(name,desc,limit, loc, model);
 		isLocked = locked;
 		key = k;
 	}
@@ -130,5 +135,20 @@ public abstract class Container implements Item{
 	 */
 	public String getKeyName(){
 		return key.getName();
+	}
+	
+	@Override
+	public void setLocation(Location loc){
+		this.loc = loc;
+	}
+	
+	@Override
+	public Location getLocation(){
+		return loc;
+	}
+	
+	@Override
+	public String getModelName(){
+		return modelName;
 	}
 }

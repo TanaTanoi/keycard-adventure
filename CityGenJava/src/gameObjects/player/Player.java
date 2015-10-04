@@ -22,6 +22,8 @@ public class Player implements Character{
 	private int health = 100;
 	private Location loc; // describes player's location in game world
 	private int ID;
+	private int orientation;
+	
 
 	public Player(String name, int ID){
 		this.name = name;
@@ -105,5 +107,27 @@ public class Player implements Character{
 	 */
 	public void drop(Item i){
 		inventory.remove(i);
+	}
+	
+	@Override
+	public int getOrientation(){
+		return orientation;
+	}
+
+	@Override
+	public void setOrientation(int orientation) {
+		this.orientation = orientation;		
+	}
+
+	@Override
+	public void changeOrientation(int change) {
+		orientation += change;
+		
+		if(orientation < 0){
+			orientation += 360;
+		}
+		else if(orientation > 359){
+			orientation -= 360;
+		}		
 	}
 }

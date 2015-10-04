@@ -55,5 +55,26 @@ public interface Character {
 	 */
 
 	public Location getLocation();
+	
+	/**
+	 * Gets an integer representing which way the player is facing
+	 * with values between 0 and 360 for full circular vision
+	 * @return
+	 */
+	public int getOrientation();
+	
+	/**
+	 * Sets the given orientation value to the players
+	 * orientation	 *
+	 */
+	public void setOrientation(int orientation);
+	
+	/**
+	 * Adjusts the current player's orientation
+	 * by the given change making sure the updated
+	 * value lies between 0 and 360
+	 * @param change
+	 */
+	public void changeOrientation(int change);
 
 }

@@ -20,6 +20,7 @@ public class NPC implements Character {
 	private String name;
 	private int health;
 	private Location loc;
+	private int orientation;
 
 	public NPC(String name, int health, Location loc){
 		this.name = name;
@@ -57,6 +58,27 @@ public class NPC implements Character {
 	public Location getLocation() {
 		return loc;
 	}
+	
+	@Override
+	public int getOrientation(){
+		return orientation;
+	}
 
+	@Override
+	public void setOrientation(int orientation) {
+		this.orientation = orientation;		
+	}
+
+	@Override
+	public void changeOrientation(int change) {
+		orientation += change;
+		
+		if(orientation < 0){
+			orientation += 360;
+		}
+		else if(orientation > 359){
+			orientation -= 360;
+		}		
+	}
 
 }
