@@ -164,7 +164,7 @@ public class ClientController {
 
 	public float[] getPlayerInfo(){
 		Location loc = current.getLocation();
-		return new float[]{current.getID(),loc.getX(),loc.getY()};
+		return new float[]{current.getID(),loc.getX(),loc.getY(),current.getOrientation()};
 	}
 	public Player getCurrentPlayer(){
 		return current;
@@ -172,25 +172,30 @@ public class ClientController {
 
 	/**
 	 * Takes a series of player info arrays and tells the world to update the player's
-	 * associated with an ID
+	 * associated with an ID.
+	 * If the ID isn't present, the player will be added.
 	 * @param playerInfo
 	 */
-	public void updatePlayers(float[][] playerInfo){
+	public void updatePlayer(int ID, float x, float y, int rotation){
+		//Ignore the call if it wants to change our current player
+		if(current.getID()==ID){return;}
 		List<Player> players = world.getPlayers();
-		outer: for(float[] player:playerInfo){
-			//if we have a player of this ID
-			 for(Player p: players){
-				if(p.getID()==player[0]){
-					System.out.println("CHANGED PLAYER " + player[0] + " at " + player[1] + " " + player[2]);
-					world.updatePlayerInfo((int)player[0], player[1], player[2]);
-					break outer;
-				}
+		
+		for(Player p: players){
+			if(p.getID()==ID){
+				p.move(x, y);
+				p.setOrientation(rotation);
+				return;
 			}
-			 System.out.println("Added new player with id " + player[0] + " at " + player[1] + " " + player[2]);
-			 Player p = new Player("ball",(int)player[0]);
-			 p.move(player[1], player[2]);
-			 world.addPlayer(p);
 		}
+		//if we get to the end and we haven't found and modified the player
+		//then it is a player we haven't got in the array, and thus need to add a new one
+		//Make the player, apply their movements and rotation, then add to client
+		System.out.println("Adding player " + ID);
+		Player newP = new Player("Dave",ID);
+		newP.move(x, y);
+		newP.setOrientation(rotation);
+		world.addPlayer(newP);
 	}
 
 	private void init() {

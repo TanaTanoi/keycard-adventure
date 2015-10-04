@@ -51,16 +51,20 @@ public class GameWorld {
 	}
 
 	/**
-	 * Update the player with the provided ID to the new X,Y position
-	 * @param id
-	 * @param x
-	 * @param y
+	 * Update the player with the provided ID to the new X,Y position, and rotation
+	 * @param id -ID of the player who will be changed
+	 * @param x - actual x value of the player
+	 * @param y - actual y value of the player 
+	 * @param rotation - direction of the player
 	 */
-	public void updatePlayerInfo(int id, float x, float y){
+	public void updatePlayerInfo(int id, float x, float y, int rotation){
 		if(allPlayers.size()>id){
 			//			System.out.println("Updating player " + id + " to " + x + " " +y);
 			for(Player p:allPlayers){
-				if(p.getID() == id)p.move(x, y);
+				if(p.getID() == id){
+					p.move(x, y);
+					p.setOrientation(rotation);
+				}
 			}
 		}
 	}
@@ -100,7 +104,19 @@ public class GameWorld {
 	public List<Player> getPlayers(){
 		return allPlayers;
 	}
-
+	/**
+	 * Gets all of the player information and returns them in the following format:
+	 * ID X Y ROTATION
+	 * @return - List of Player information arrays
+	 */
+	public List<float[]> getPlayerInfos(){
+		List<float[]> toReturn = new ArrayList<float[]>();
+		for(Player p:allPlayers){
+			Location loc = p.getLocation();
+			toReturn.add( new float[]{p.getID(),loc.getX(),loc.getY(),p.getOrientation()});
+		}
+		return toReturn;
+	}
 	public void addPlayer(Player p){
 		allPlayers.add(p);
 		System.out.println("Added player " + allPlayers.size());

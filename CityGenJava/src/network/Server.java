@@ -37,7 +37,7 @@ public class Server {
 			//Return an ID associated with this player.
 			DataOutputStream clientOut = new DataOutputStream(cl.getOutputStream());
 			clientOut.writeBytes(pID+"\n");
-			System.out.println("Sending " + pID);
+			//System.out.println("Sending " + pID);
 
 			//Accept a client and add it to the
 			ct.add(cl);
@@ -67,14 +67,13 @@ class ClientThread extends Thread{
 						BufferedReader clientIn =new BufferedReader(
 								new InputStreamReader(connections.get(i).getInputStream()));
 						clInput = clientIn.readLine();
-						NetworkDecoder.decode(Server.world,clInput,i);
+						NetworkDecoder.decodeClientInput(Server.world,clInput,i);
 					}
 
 					//Generate ouput to send to all clients
 					String output = NetworkDecoder.prepPackage(Server.world);
-					System.out.println("Writing outputs");
 					//Send output to all clients
-					System.out.println("Sending " + output);
+					//System.out.println("Sending " + output);
 					for(int i = 0; i < connections.size();i++){
 						DataOutputStream clientOut = new DataOutputStream(connections.get(i).getOutputStream());
 						clientOut.writeBytes(output+"\n");

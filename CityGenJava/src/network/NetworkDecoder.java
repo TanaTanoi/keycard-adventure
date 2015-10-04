@@ -1,9 +1,6 @@
 package network;
 
-import gameObjects.player.Player;
 import gameObjects.world.GameWorld;
-import gameObjects.world.Location;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,19 +19,14 @@ public class NetworkDecoder {
 	/**
 	 * Get the string to send to the server that represents the player's coordinates and ID
 	 * The coordanites are multiplied by 100 and casted to ints for simple broadcasting.
-	 * The server is expected to dividie it by 100 when received.
+	 * The server is expected to divide it by 100 when received.
 	 *
 	 * @param game_client - The game client in which to get an output from.
 	 * @return - String containing the current player's x,y and their ID
 	 */
 	public static String getPlayerOutput(ClientController game_client){
-		//0:ID 1:X 2: y
 		float[] info = game_client.getPlayerInfo();
-		assert info.length == 3;
-		info[1]*=100.0f;
-		info[2]*=100.0f;
-		String output = ((int)info[0]) + " " + ((int)info[1]) +  " " + ((int)info[2]);
-		return output;
+		return getPlayerString(info);
 	}
 
 	/**
@@ -45,30 +37,37 @@ public class NetworkDecoder {
 	 */
 	public static void decode(ClientController game_client, String input){
 		System.out.println("Decoding " + input);
-		List<float[]> players = new ArrayList<float[]>();
-		//int[][] players = new int[][3];
-		//get the players information and place into array
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){
-			//if player ID
-			if(sc.hasNextInt()){
-				float[] p = new float[3];
-				p[0] = Integer.parseInt(sc.next());
-				p[1] = (float)(Integer.parseInt(sc.next())/100.0f);
-				p[2] = (float)(Integer.parseInt(sc.next())/100.0f);
-				if(p[0]!=game_client.getPlayerInfo()[0]){
-					players.add(p);
-				}
+			String next = sc.next();
+			//if input is player
+			if(next.equals("P")){
+				parsePlayer(sc,game_client);
 			}
 		}
 		sc.close();
-		//copy all players information apart from self, into array
-		float[][] p = new float[players.size()][3];
-		for(int i =0; i< players.size();i++){
-			p[i] = players.get(i);
+	}
+	/**
+	 * This method parses a player string which is taken from the format:
+	 * 			P [Player ID] [Player X *100] [Player Y * 100] [Player Rotation]
+	 * Scanner assumes the P has already been consumed, i.e. the next token should be the ID
+	 * The *100 is to convert from float to int with an accuracy of 0.01, then back to floats
+	 * @param sc - Scanner of the input from the client
+	 * @param game_client - Game client to modify to update the players
+	 */
+	public static void parsePlayer(Scanner sc,ClientController game_client){
+		//if(sc.next()!="P"){throw new IllegalArgumentException("Expected P as first input! -->" + sc.next() + " " + sc.next() );}
+		try{
+			game_client.updatePlayer(
+					Integer.parseInt(sc.next()),
+					Integer.parseInt(sc.next())/100.0f,
+					Integer.parseInt(sc.next())/100.0f,
+					Integer.parseInt(sc.next()));
+		}catch(NumberFormatException e){
+			//if one of the things fail, print as problem and skip it
+			System.out.println("Error! Package was not correct. Expected int,int,int,int");
+			e.printStackTrace();
 		}
-		//Send updated player pos' to game
-		game_client.updatePlayers(p);
 	}
 
 
@@ -77,29 +76,31 @@ public class NetworkDecoder {
 	\*----------------------------------*/
 
 	/**
-	 * Decode the input from player provided.
-	 * If the input is invalid, can throw exceptions. FIXME
+	 * Decode the input from a certain player.
+	 * If the input is invalid, can throw exceptions. 
 	 * @param game - The Game World that will be updated by this method call.
 	 * @param input - The direct input from the client
 	 * @param player - The player who sent the input
 	 */
-	public static void decode(GameWorld game,String input, int player){
+	public static void decodeClientInput(GameWorld game,String input, int player){
 		System.out.println("Received "+ input + " from player " + player);
 		Scanner sc = new Scanner(input);
-		int[] p = new int[3];
 		while(sc.hasNext()){
-			//if player ID
-			if(sc.hasNextInt()){
-
-				p[0] = Integer.parseInt(sc.next());
-				p[1] = Integer.parseInt(sc.next());
-				p[2] = Integer.parseInt(sc.next());
+			String next = sc.next();
+			//Decode the player's Player update input
+			if(next.equals("P")){
+				try{
+					game.updatePlayerInfo(Integer.parseInt(sc.next()),	//ID
+							Integer.parseInt(sc.next())/100.0f,			//X*100
+							Integer.parseInt(sc.next())/100.0f,			//y*100
+							Integer.parseInt(sc.next()));				//Rotation
+				}catch(NumberFormatException e){
+					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int,int,int,int) ");
+				}
 			}
 		}
 		sc.close();
-		game.updatePlayerInfo(p[0], (float)(p[1]/100.0f), (float)(p[2]/100.0f));
 	}
-
 
 	/**
 	 * Prepares the output to be sent to all clients, based on the input GameWorld
@@ -108,17 +109,42 @@ public class NetworkDecoder {
 	 * @return - A string that can be sent to all clients connected to the server.
 	 */
 	public static String prepPackage(GameWorld world){
-		List<Player> players = world.getPlayers();
+		//Firstly, add all player positions to the string
+		List<float[]> players = world.getPlayerInfos();
 		StringBuilder sb = new StringBuilder();
-		for(Player p: players){
-			sb.append((int)p.getID());
+		for(float[] p: players){
+			sb.append(getPlayerString(p));
 			sb.append(" ");
-			Location loc = p.getLocation();
-			sb.append((int)(loc.getX()*100.0f) + " ");
-			sb.append((int)(loc.getY()*100.0f) + " ");
 		}
+		/* Room for extra sections of the string can go here*/
 		return sb.toString();
 	}
 
+	/*----------------------------------*\
+	 * 		GENERAL HELPER METHODS 		*
+	\*----------------------------------*/
+
+	/**
+	 * Prepares a string that can be sent to a client or server based on the provided information
+	 * @param playerInfo
+	 * @return
+	 */
+	public static String getPlayerString(float[] playerInfo){
+		if(playerInfo.length!=4)throw new IllegalArgumentException("Method only accepts playerinfo of length 4: ID,X,Y,ROT");
+
+		playerInfo[1]*=100.0f;
+		playerInfo[2]*=100.0f;
+		//P [ID] [X*100] [Y*100] [ROT]
+		StringBuilder sb = new StringBuilder();
+		sb.append("P ");
+		sb.append((int)playerInfo[0]);
+		sb.append(" ");
+		sb.append((int)playerInfo[1]);
+		sb.append(" ");
+		sb.append((int)playerInfo[2]);
+		sb.append(" ");
+		sb.append((int)playerInfo[3]);
+		return sb.toString();
+	}
 
 }
