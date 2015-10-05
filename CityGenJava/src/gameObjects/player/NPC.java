@@ -15,7 +15,7 @@ import gameObjects.world.Location;
  * @author Hannah
  *
  */
-public class NPC implements Character {
+public abstract class NPC implements Character {
 
 	private String name;
 	private int health;
@@ -58,7 +58,7 @@ public class NPC implements Character {
 	public Location getLocation() {
 		return loc;
 	}
-	
+
 	@Override
 	public int getOrientation(){
 		return orientation;
@@ -66,19 +66,19 @@ public class NPC implements Character {
 
 	@Override
 	public void setOrientation(int orientation) {
-		this.orientation = orientation;		
+		this.orientation = orientation;
 	}
 
 	@Override
 	public void changeOrientation(int change) {
 		orientation += change;
-		
+
 		if(orientation < 0){
 			orientation += 360;
 		}
 		else if(orientation > 359){
 			orientation -= 360;
-		}		
+		}
 	}
 
 }
