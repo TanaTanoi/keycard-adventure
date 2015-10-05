@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import gameObjects.objects.Furniture;
 import gameObjects.player.Player;
 import gameObjects.world.GameWorld;
 import gameObjects.world.Location;
@@ -53,7 +54,8 @@ public class View {
 	private Window w;
 	private GLFWErrorCallback errorCallback;
 	private double yChange = 0.003;
-	private double playersY = 0.5;
+	private float playersY = 0.5f;
+	Furniture teapot;
 
 	public View(GameWorld g,ClientController control){
 		world = g;
@@ -63,7 +65,7 @@ public class View {
 		initaliseCollisions(100,100);
 		y = -0.95f;
 		w = new Window();
-//		this.control.getCurrentPlayer().move(0, -5);
+//		teapot = new Furniture("teapot", "teapot.obj");
 	}
 
 	public void renderView(){
@@ -72,10 +74,11 @@ public class View {
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
 			initaliseCamera();
 		}
-
+		
 		Location playerLoc = control.getCurrentPlayer().getLocation();
 		x = playerLoc.getX();
 		z = playerLoc.getY();
+//		System.out.println(z);
 		renderObject(0);
 		renderPlayers();
 		renderWalls();
@@ -96,9 +99,9 @@ public class View {
 	private void printCollisions(){
 		for (int x = 0; x < occupiedSpace.length; x++){
 			for(int z = 0; z < occupiedSpace[0].length; z++){
-				//System.out.print(occupiedSpace[x][z]);
+				System.out.print(occupiedSpace[x][z]);
 			}
-			//System.out.println();
+			System.out.println();
 		}
 	}
 
@@ -150,6 +153,8 @@ public class View {
 			zValues[(int)((v3.x/squareSize)+50)][1] = Math.max((int)((v3.z/squareSize)+50),zValues[(int)((v3.x/squareSize)+50)][1]);
 			occupiedSpace[(int)((v3.x/squareSize)+50)][(int)((v3.z/squareSize)+50)] = 'T';
 		}
+		
+		
 		for (int x = minX; x < maxX;x++){
 			for (int z = zValues[x][0]; z < zValues[x][1];z++){
 				occupiedSpace[x][z] = 'T';
@@ -161,7 +166,6 @@ public class View {
 
 
 		printCollisions();
-		//System.out.println("min = " + minX + " max = " + maxX);
 	}
 
 	public void move(char pressed, double xRot){
@@ -213,6 +217,7 @@ public class View {
 	}
 
 	private void renderPlayers(){
+		double spacing = gameSize/occupiedSpace.length;
 		List<Player> players = world.getPlayers();
 		if (playersY > 1 ||playersY < 0.3){
 			yChange*=-1;
@@ -224,19 +229,24 @@ public class View {
 		for(Player p: players){
 			if (!p.equals(control.getCurrentPlayer())) {
 				Location playerLoc = p.getLocation();
-				//System.out.println(i + " "+ playerLoc.getX() + " " +  playerLoc.getY());
 				glPushMatrix();
 				i = p.getID();
 				if (i == 0) glColor3f(1f,0,0);
 				else if (i == 1) glColor3f(0,1f,0);
-				else if (i == 2) glColor3f(1f,1f,0);
+				else if (p.equals(control.getCurrentPlayer())) glColor3f(1f,1f,0);
 				else if (i == 3) glColor3f(0,0,1f);
 
-				glTranslated(x+playerLoc.getX(), y+playersY, z+playerLoc.getY());
-//				glTranslated(playerLoc.getX(), y+playersY, playerLoc.getY());
+				glTranslatef(x, y, z);
+				
+				glTranslatef(-playerLoc.getX(),playersY,-playerLoc.getY());
+				
+				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
+				
+				
 				glScaled(0.1, 0.1, 0.1);
 				renderObject(0);
 				glColor3f(1, 1, 1);
+				glPopMatrix();
 				glPopMatrix();
 			}
 		}
