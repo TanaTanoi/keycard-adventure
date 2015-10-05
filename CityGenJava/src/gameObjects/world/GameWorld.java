@@ -99,6 +99,8 @@ public class GameWorld {
 	public void dropItem(Player p, Item i){
 		p.drop(i);
 		i.setLocation(p.getLocation());
+		Floor f = floorList.get(i.getLocation().getFloor());
+		f.addItem(i);
 	}
 
 	public List<Player> getPlayers(){
