@@ -275,10 +275,7 @@ public class ClientController {
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
-		if(mouse_down){
-			xRot +=0.3*(xpos-mousePos.x);
-			//			rot_y +=0.3*(ypos-mousePos.y);
-		}
+		current.setOrientation((int)xRot);
 		mousePos = new Vector2((float)xpos,(float)ypos);
 	}
 	/**

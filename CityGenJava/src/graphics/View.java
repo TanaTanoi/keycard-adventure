@@ -198,6 +198,7 @@ public class View {
 		}
 
 		control.getCurrentPlayer().move(this.x, this.z);
+//		control.getCurrentPlayer().setOrientation((int)xRot);
 	}
 
 
@@ -240,9 +241,9 @@ public class View {
 				
 				glTranslatef(-playerLoc.getX(),playersY,-playerLoc.getY());
 				
-				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
-				
-				
+//				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
+				//System.out.println("rot " + p.getOrientation());
+				glRotated(p.getOrientation(),0,1,0);
 				glScaled(0.1, 0.1, 0.1);
 				renderObject(0);
 				glColor3f(1, 1, 1);
