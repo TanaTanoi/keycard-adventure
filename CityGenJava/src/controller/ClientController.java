@@ -131,6 +131,8 @@ public class ClientController {
 			else if (mousePos.x < 200){
 				xRot -=Math.pow((200-mousePos.x)/100,1.2);
 			}
+			xRot %= 360;
+			current.setOrientation((int)xRot);
 		}
 		/*----------------------------------*/
 		glFlush();
@@ -275,7 +277,6 @@ public class ClientController {
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
-		current.setOrientation((int)xRot);
 		mousePos = new Vector2((float)xpos,(float)ypos);
 	}
 	/**
