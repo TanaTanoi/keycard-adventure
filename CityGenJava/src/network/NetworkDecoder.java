@@ -87,13 +87,15 @@ public class NetworkDecoder {
 	\*----------------------------------*/
 
 	/**
-	 * Decode the input from a certain player.
+	 * Decode the input from a certain player. Returns false if the player 
+	 * has made a formal disconnect
 	 * If the input is invalid, can throw exceptions.
 	 * @param game - The Game World that will be updated by this method call.
 	 * @param input - The direct input from the client
 	 * @param player - The player who sent the input
+	 * @return - True if the player is still connected.
 	 */
-	public static void decodeClientInput(GameWorld game,String input, int player){
+	public static boolean decodeClientInput(GameWorld game,String input, int player){
 		System.out.println("Received "+ input + " from player " + player);
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){
@@ -111,7 +113,8 @@ public class NetworkDecoder {
 			}else if(next.equals("DISC")){
 				try{
 					int playerID = Integer.parseInt(sc.next());
-					//TODO handle disconnect
+					//TODO handle disconnect of this player
+					return false;
 				}catch(NumberFormatException e){
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
 				}
@@ -119,6 +122,7 @@ public class NetworkDecoder {
 			}
 		}
 		sc.close();
+		return true;
 	}
 
 	/**

@@ -66,7 +66,9 @@ class ClientThread extends Thread{
 						BufferedReader clientIn =new BufferedReader(
 								new InputStreamReader(connections.get(i).getInputStream()));
 						clInput = clientIn.readLine();
-						NetworkDecoder.decodeClientInput(Server.world,clInput,i);
+						if(!NetworkDecoder.decodeClientInput(Server.world,clInput,i)){
+							//TODO Heidi, write code for disconnecting a player from the server here
+						}
 					}
 
 					//Generate ouput to send to all clients
