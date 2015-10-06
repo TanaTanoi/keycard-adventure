@@ -22,24 +22,7 @@ public class GameWorld {
 
 	public GameWorld(String filename){
 		init();
-		//parseWorld(filename);
-	}
-
-	/**
-	 * Open's the given file and parses
-	 * all the information to create the gameworld.
-	 *
-	 * @param filename is the name of the file to parse
-	 */
-	public void parseWorld(String filename) {
-		File f = new File(filename);
-		try {
-			Scanner s = new Scanner(f);
-			while(s.hasNextLine()){
-				// Do actual parsing in here
-			}
-		} catch (FileNotFoundException e) {e.printStackTrace(); }
-
+		Parser.parseWorld(filename,this);
 	}
 
 	/**
@@ -78,6 +61,11 @@ public class GameWorld {
 		//floorList.get(floor).addPlayer(p);
 		return playerID-1;
 	}
+
+	// ADD SEVERAL ITEM CONSTRUCTORS HERE
+	// i.e. tool, container etc
+
+
 
 	/**
 	 * Picks up an item for a player.
