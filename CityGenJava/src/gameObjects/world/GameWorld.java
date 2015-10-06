@@ -14,6 +14,10 @@ import java.util.Scanner;
 
 public class GameWorld {
 
+	// For testing
+
+	private char[][] fakeFloor;
+
 	private List<Player> allPlayers;
 	private List<NPC> allNPCs;
 	private Map<Integer, Floor> floorList;
@@ -64,6 +68,16 @@ public class GameWorld {
 
 	// ADD SEVERAL ITEM CONSTRUCTORS HERE
 	// i.e. tool, container etc
+
+	// Actaully make this
+	public void setFloor(char[][] floor, int level){
+		fakeFloor = floor;
+		//Floor f = new Floor();
+	}
+
+	public char[][] getFloor(){
+		return fakeFloor;
+	}
 
 
 

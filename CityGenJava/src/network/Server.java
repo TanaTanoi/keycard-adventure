@@ -21,15 +21,15 @@ public class Server {
 		//Set up thread that controls client-server relations
 		ClientThread ct = new ClientThread();
 		ct.start();
-		world = new GameWorld("fake.txt");
+		world = new GameWorld("Basefloor.txt");
 		//Constantly accept clients
 		while(true){
 			//LOGIN PROTOCOL -> Accept user -> take name from user -> send new ID to user -> add user to list
-			
+
 			//Accept a client
 			Socket cl = clientInteractSocket.accept();
 			System.out.println("Accepted client :" +ct.getName());
-			
+
 			//Accept the name and make a new player for it
 			BufferedReader clientIn =new BufferedReader(
 					new InputStreamReader(cl.getInputStream()));
@@ -64,7 +64,7 @@ class ClientThread extends Thread{
 				Thread.sleep(100);
 				while(!connections.isEmpty()){
 					System.out.println("Reading inputs");
-					
+
 					//get the input from each client
 					for(int i =0;i<connections.size();i++){
 						BufferedReader clientIn =new BufferedReader(
@@ -85,9 +85,9 @@ class ClientThread extends Thread{
 				}
 			}
 		}catch(Exception e){
-			
+
 		}finally{
-			
+
 		}
 	}
 

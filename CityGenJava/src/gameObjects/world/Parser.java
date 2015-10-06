@@ -15,7 +15,10 @@ public class Parser {
 	 *
 	 * @param filename is the name of the file to parse
 	 */
-	public static char[][] parseWorld(String filename, GameWorld g) {
+	public static void parseWorld(String filename, GameWorld g) {
+
+		// write config file with all floors to download
+
 		char[][] world = new char[WORLD_SIZE][WORLD_SIZE];
 		for(char[] ca:world){
 			Arrays.fill(ca,'-');
@@ -36,8 +39,10 @@ public class Parser {
 				}
 			}
 		} catch (FileNotFoundException e) {e.printStackTrace(); }
+		g.setFloor(world, 0);//TODO make this actualy do floor stuff
+		// create and add floor at floor number specified in file
+		// then attach char array to floor
 
-		return world;
 	}
 
 	private static void parseWall(Scanner s, char[][]world){
@@ -55,14 +60,5 @@ public class Parser {
 		}
 	}
 
-	public static void main(String args[]){
-		char[][] test = parseWorld("Basefloor.txt",null);
-		for(char[] ca: test){
-			for(char c:ca){
-				System.out.print(c);
-			}
-			System.out.println();
-		}
-	}
 
 }

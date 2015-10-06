@@ -98,6 +98,7 @@ public class ClientController {
 
 	private void start(){
 		view = new View(world,this);
+		view.setMap(world.getFloor());
 		init();
 		// need to make a spawn method for new player
 		GL.createCapabilities(false); // valid for latest build
@@ -152,7 +153,7 @@ public class ClientController {
 	}
 
 	public static void main(String[] args) {
-		new ClientController("gameWorld.txt");
+		new ClientController("Basefloor.txt");
 	}
 
 	/**
