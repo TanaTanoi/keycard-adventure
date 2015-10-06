@@ -24,6 +24,14 @@ public class Floor {
 	 *
 	 */
 
+	public List<Item> getItems(){
+		return items;
+	}
+
+	public List<Character> getPlayers(){
+		return players;
+	}
+
 	public void addPlayer(Character c){
 		players.add(c);
 	}

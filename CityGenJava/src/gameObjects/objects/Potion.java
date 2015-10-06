@@ -6,8 +6,8 @@ import gameObjects.world.Location;
 
 public class Potion extends Tool{
 
-	public Potion(String name, String desc, Location loc, int effect, String model) {
-		super(name, desc , loc, model);
+	public Potion(String name, String desc, Location loc, int effect, String model, int ID) {
+		super(name, desc , loc, model, ID);
 		super.setStrategy(new PotionStrategy(effect));
 	}
 

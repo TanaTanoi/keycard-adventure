@@ -68,4 +68,10 @@ public interface Item {
 	 * @return
 	 */
 	public String getModelName();
+
+	/**
+	 * Returns ID assigned to the item
+	 * @return
+	 */
+	public int getID();
 }

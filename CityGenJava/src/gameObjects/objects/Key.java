@@ -7,8 +7,8 @@ import gameObjects.world.Location;
 public class Key extends Tool {
 
 
-	public Key(String name, String desc, Location loc, String model) {
-		super(name, desc, loc, model);
+	public Key(String name, String desc, Location loc, String model, int ID) {
+		super(name, desc, loc, model, ID);
 		super.setStrategy(new KeyInteractStrategy(this));
 	}
 

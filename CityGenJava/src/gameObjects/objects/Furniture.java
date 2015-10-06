@@ -6,16 +6,19 @@ import javafx.geometry.BoundingBox;
 
 public class Furniture implements Item {
 
+	private int ID;
+
 	private String name;
 	private String description;
 	private Location loc;
 	private String model;
 
-	public Furniture(String name, String desc, Location loc, String model){
+	public Furniture(String name, String desc, Location loc, String model, int ID){
 		this.name = name;
 		description = desc;
 		this.loc = loc;
 		this.model = model;
+		this.ID = ID;
 	}
 
 	@Override
@@ -59,6 +62,11 @@ public class Furniture implements Item {
 	@Override
 	public String getModelName() {
 		return model;
+	}
+
+	@Override
+	public int getID() {
+		return ID;
 	}
 
 }

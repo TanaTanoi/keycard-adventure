@@ -13,17 +13,20 @@ import gameObjects.world.Location;
 
 public abstract class Tool implements Item {
 
+	private int ID;
+
 	private String name;
 	private String description;
 	private String model;
 	private Location loc;
 	private InteractStrategy interactStrategy;
 
-	public Tool(String name, String desc, Location loc, String model){
+	public Tool(String name, String desc, Location loc, String model, int ID){
 		this.name = name;
 		description = desc;
 		this.loc = loc;
 		this.model = model;
+		this.ID = ID;
 	}
 
 	/**
@@ -85,6 +88,11 @@ public abstract class Tool implements Item {
 	@Override
 	public String getModelName(){
 		return model;
+	}
+
+	@Override
+	public int getID(){
+		return ID;
 	}
 
 }

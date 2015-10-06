@@ -5,8 +5,8 @@ import gameObjects.world.Location;
 
 public class Weapon extends Tool {
 
-	public Weapon(String name, String desc, Location loc, int damage, String model) {
-		super(name, desc, loc, model);
+	public Weapon(String name, String desc, Location loc, int damage, String model, int ID) {
+		super(name, desc, loc, model, ID);
 		super.setStrategy(new WeaponStrategy(damage));
 	}
 
