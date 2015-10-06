@@ -29,6 +29,11 @@ public class NetworkDecoder {
 		return getPlayerString(info);
 	}
 
+
+	public static String getPlayerDisconnect(ClientController game_client){
+
+		return "";
+	}
 	/**
 	 * Decodes an input from the server and applies the changes to the supplied game client.
 	 *
@@ -77,7 +82,7 @@ public class NetworkDecoder {
 
 	/**
 	 * Decode the input from a certain player.
-	 * If the input is invalid, can throw exceptions. 
+	 * If the input is invalid, can throw exceptions.
 	 * @param game - The Game World that will be updated by this method call.
 	 * @param input - The direct input from the client
 	 * @param player - The player who sent the input
@@ -119,6 +124,7 @@ public class NetworkDecoder {
 		/* Room for extra sections of the string can go here*/
 		return sb.toString();
 	}
+
 
 	/*----------------------------------*\
 	 * 		GENERAL HELPER METHODS 		*

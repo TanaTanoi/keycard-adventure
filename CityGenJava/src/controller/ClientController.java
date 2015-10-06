@@ -109,6 +109,8 @@ public class ClientController {
 		while ( glfwWindowShouldClose(view.getWindow().getID()) == GL_FALSE ) {
 			renderLoop();
 		}
+		client.disconenct();
+
 	}
 
 	private void renderLoop(){
@@ -182,7 +184,7 @@ public class ClientController {
 		//Ignore the call if it wants to change our current player
 		if(current.getID()==ID){return;}
 		List<Player> players = world.getPlayers();
-		
+
 		for(Player p: players){
 			if(p.getID()==ID){
 				p.move(x, y);

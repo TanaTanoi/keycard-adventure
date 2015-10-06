@@ -12,6 +12,7 @@ public class Client extends Thread{
 	Socket clientSocket;
 	ClientController game;
 	InetAddress gameHost = InetAddress.getLocalHost();
+	private boolean connected = true;
 	/**
 	 * Standard constructor that uses default port (4444) and local host as IP
 	 * @throws Exception - If unable to connect to the server via standard port (4444)
@@ -42,6 +43,12 @@ public class Client extends Thread{
 		new Client(game, IP);
 	}
 
+	/**
+	 * Disconects this client from the server by stopping the client loop and sending a disconect message
+	 */
+	public void disconenct(){
+		connected = false;
+	}
 	public void run() {
 		try{
 
@@ -61,7 +68,7 @@ public class Client extends Thread{
 				game.setCurrentPlayer(name, Integer.parseInt(serverInput));
 
 				//assume regular packet loop
-			while(true){
+			while(connected){
 				//send input containing player's information
 				userIn = NetworkDecoder.getPlayerOutput(game);
 //				System.out.println("Sending " + userIn);
@@ -72,6 +79,9 @@ public class Client extends Thread{
 				serverInput = serverIn.readLine();
 				NetworkDecoder.decode(game,serverInput);
 			}
+
+			//TODO create a method that sends a disconnect to the server
+
 		}catch(Exception e){
 			System.out.println("PROBLEM");
 			e.printStackTrace();
