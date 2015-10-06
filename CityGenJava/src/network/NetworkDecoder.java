@@ -32,7 +32,7 @@ public class NetworkDecoder {
 
 	public static String getPlayerDisconnect(ClientController game_client){
 
-		return "";
+		return "DISC " + (int)game_client.getPlayerInfo()[0];
 	}
 	/**
 	 * Decodes an input from the server and applies the changes to the supplied game client.
@@ -102,6 +102,8 @@ public class NetworkDecoder {
 				}catch(NumberFormatException e){
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int,int,int,int) ");
 				}
+			}else if(next.equals("DISC")){
+				//TODO handle disconnect
 			}
 		}
 		sc.close();
