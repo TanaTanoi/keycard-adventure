@@ -94,8 +94,6 @@ public class ClientController {
 			e.printStackTrace();
 		}
 		start();
-
-
 	}
 
 	private void start(){
@@ -110,7 +108,6 @@ public class ClientController {
 			renderLoop();
 		}
 		client.disconenct();
-
 	}
 
 	private void renderLoop(){
@@ -150,6 +147,9 @@ public class ClientController {
 		glRotatef(xRot, 0, 1, 0);
 	}
 
+	public float getRotation(){
+		return xRot;
+	}
 
 	public static void main(String[] args) {
 		new ClientController("gameWorld.txt");

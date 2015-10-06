@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.*; 
+import org.lwjgl.util.vector.*;
 
 public class Model {
 	private List<Vector3f> vertices;
 	private List<Vector3f> normals;
 	private List<Vector2f> textureCoordinates;
 	private List<Face> faces;
-	
+
 	public Model(String filePath){
 		loadOBJModel(filePath);
 	}
@@ -57,22 +57,22 @@ public class Model {
 					float x = Float.valueOf(Float.valueOf(broken[1]));
 					float y = Float.valueOf(Float.valueOf(broken[2]));
 					float z = Float.valueOf(Float.valueOf(broken[3]));
-					vertices.add(new Vector3f(x,y,z)); 
+					vertices.add(new Vector3f(x,y,z));
 				}
-				else if (line.startsWith("vn ")) {	
+				else if (line.startsWith("vn ")) {
 					String[] broken = line.split(" ");
 					float x = Float.valueOf(Float.valueOf(broken[1]));
 					float y = Float.valueOf(Float.valueOf(broken[2]));
 					float z = Float.valueOf(Float.valueOf(broken[3]));
 					normals.add(new Vector3f(x,y,z));
-				} 
-				else if (line.startsWith("vt ")) {	
+				}
+				else if (line.startsWith("vt ")) {
 					String[] broken = line.split(" ");
 					float x = Float.valueOf(Float.valueOf(broken[1]));
 					float y = Float.valueOf(Float.valueOf(broken[2]));
 					textureCoordinates.add(new Vector2f(x,y));
-				} 
-				else if  (line.startsWith("f ")) {	
+				}
+				else if  (line.startsWith("f ")) {
 					String[] broken = line.split(" ");
 					Vector3f vertexIndices = new Vector3f(
 							Float.valueOf(broken[1].split("/")[0]),
@@ -104,6 +104,6 @@ public class Model {
 	public void setTextureCoordinates(List<Vector2f> textureCoordinates) {
 		this.textureCoordinates = textureCoordinates;
 	}
-	
+
 }
 

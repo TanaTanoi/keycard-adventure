@@ -41,7 +41,7 @@ public class NetworkDecoder {
 	 * @param input - String directly from the server.
 	 */
 	public static void decode(ClientController game_client, String input){
-		System.out.println("Decoding " + input);
+//		System.out.println("Decoding " + input);
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){
 			String next = sc.next();

@@ -70,11 +70,11 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			loadModel("teapot.obj", 0);
+			loadModel("Table.obj", 0);
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
 			initaliseCamera();
 		}
-		
+
 		Location playerLoc = control.getCurrentPlayer().getLocation();
 		x = playerLoc.getX();
 		z = playerLoc.getY();
@@ -82,6 +82,48 @@ public class View {
 		renderObject(0);
 		renderPlayers();
 		renderWalls();
+		drawMinimap(0.25);
+	}
+
+	private void drawMinimap(double size){
+		List<Player> players = world.getPlayers();
+		Location playerLoc = control.getCurrentPlayer().getLocation();
+		glDisable(GL_DEPTH_TEST);
+//		int angle = control.getCurrentPlayer().getOrientation();
+		glPushMatrix();
+//		glTranslated(playerLoc.getX(), mapY, playerLoc.getY());
+		glRotated(-control.getRotation(), 0, 1, 0);
+
+		glTranslated(-0.45, -0.45, -1.0001);
+
+		glColor3f(1f, 0.6f, 0.1f);
+		glBegin(GL_QUADS);	//Draw map background
+
+		glTexCoord2d(0,1);
+		glVertex3d(0,size,0);
+
+		glTexCoord2d(0,0);
+		glVertex3d(0,0,0);
+
+		glTexCoord2d(1,0);
+		glVertex3d(size,0,0);
+
+		glTexCoord2d(1,1);
+		glVertex3d(size,size,0);
+
+		glEnd();
+
+		double sqSize = size/gameSize;
+		glBegin(GL_POINTS);
+		glColor3f(0f, 1f, 1f);
+		glPointSize(10);
+		for (Player p: players){
+			glVertex3d(0,0,0);
+		}
+		glEnd();
+		glColor3f(1, 1, 1);
+		glPopMatrix();
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	private void initaliseCollisions(int width, int depth) {
@@ -153,8 +195,8 @@ public class View {
 			zValues[(int)((v3.x/squareSize)+50)][1] = Math.max((int)((v3.z/squareSize)+50),zValues[(int)((v3.x/squareSize)+50)][1]);
 			occupiedSpace[(int)((v3.x/squareSize)+50)][(int)((v3.z/squareSize)+50)] = 'T';
 		}
-		
-		
+
+
 		for (int x = minX; x < maxX;x++){
 			for (int z = zValues[x][0]; z < zValues[x][1];z++){
 				occupiedSpace[x][z] = 'T';
@@ -237,12 +279,12 @@ public class View {
 				else if (i == 3) glColor3f(0,0,1f);
 
 				glTranslatef(x, y, z);
-				
+
 				glTranslatef(-playerLoc.getX(),playersY,-playerLoc.getY());
-				
+
 //				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
 				//System.out.println("rot " + p.getOrientation());
-				glRotated(p.getOrientation()-90,0,1,0); // -90 to make the spout point in the direction the player is facing
+				glRotated(p.getOrientation()+90,0,1,0); // -90 to make the spout point in the direction the player is facing
 				glScaled(0.1, 0.1, 0.1);
 				renderObject(0);
 				glColor3f(1, 1, 1);
@@ -322,6 +364,10 @@ public class View {
 
 		glEnable(GL_COLOR_MATERIAL);								// enables opengl to use glColor3f to define material color
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);			// tell opengl glColor3f effects the ambient and diffuse properties of material
+	}
+
+	public void setMap(char[][] map){
+		occupiedSpace = map;
 	}
 
 	private FloatBuffer asFloatBuffer(float[] array){
