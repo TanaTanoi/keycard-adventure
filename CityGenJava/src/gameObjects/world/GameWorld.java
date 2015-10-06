@@ -17,7 +17,8 @@ public class GameWorld {
 	private List<Player> allPlayers;
 	private List<NPC> allNPCs;
 	private Map<Integer, Floor> floorList;
-	private int ID = 0;
+	private int playerID = 0;
+	private int itemID = 0;
 
 	public GameWorld(String filename){
 		init();
@@ -54,7 +55,7 @@ public class GameWorld {
 	 * Update the player with the provided ID to the new X,Y position, and rotation
 	 * @param id -ID of the player who will be changed
 	 * @param x - actual x value of the player
-	 * @param y - actual y value of the player 
+	 * @param y - actual y value of the player
 	 * @param rotation - direction of the player
 	 */
 	public void updatePlayerInfo(int id, float x, float y, int rotation){
@@ -70,12 +71,12 @@ public class GameWorld {
 	}
 
 	public int addNewPlayer(String name){
-		Player p = new Player(name, ID++);
+		Player p = new Player(name, playerID++);
 		allPlayers.add(p); // adds player to game world
 		// Now adds player to correct floor
 		int floor = p.getLocation().getFloor();
 		//floorList.get(floor).addPlayer(p);
-		return ID-1;
+		return playerID-1;
 	}
 
 	/**
