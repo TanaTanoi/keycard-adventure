@@ -20,7 +20,6 @@ public class Client extends Thread{
 	public Client(ClientController game) throws Exception {
 		this.game = game;
 		start();
-
 	}
 
 	/**
@@ -44,34 +43,35 @@ public class Client extends Thread{
 	}
 
 	/**
-	 * Disconects this client from the server by stopping the client loop and sending a disconect message
+	 * Disconnects this client from the server by stopping the client loop and sending a disconnect message
 	 */
 	public void disconenct(){
 		connected = false;
 	}
+
 	public void run() {
 		try{
+			String userIn;
+			String serverInput;
+			clientSocket = new Socket(gameHost,port);
+			DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-				String userIn;
-				String serverInput;
-				clientSocket = new Socket(gameHost,port);
-				DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
-				BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				//send initial login packet containing name
-				String name  = "testins";
-				serverOut.writeBytes(name+"\n");
-				serverOut.flush();
-				//receive ID number
-				serverInput = serverIn.readLine();
-//				System.out.println("Received ID : " + serverInput);
-				//set game's current player to a new player.
-				game.setCurrentPlayer(name, Integer.parseInt(serverInput));
+			//send initial login packet containing name
+			String name  = "George";
+			serverOut.writeBytes(name+"\n");
+			serverOut.flush();
 
-				//assume regular packet loop
+			//receive ID number
+			serverInput = serverIn.readLine();
+
+			//set game's current player to a new player.
+			game.setCurrentPlayer(name, Integer.parseInt(serverInput));
+
+			//assume regular packet loop
 			while(connected){
 				//send input containing player's information
 				userIn = NetworkDecoder.getPlayerOutput(game);
-//				System.out.println("Sending " + userIn);
 				serverOut.writeBytes(userIn+"\n");
 				serverOut.flush();
 
@@ -87,12 +87,6 @@ public class Client extends Thread{
 			e.printStackTrace();
 		}
 	}
-
-
-
-
-
-
 }
 
 

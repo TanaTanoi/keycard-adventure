@@ -15,7 +15,9 @@ public class Server {
 	public static void main(String argv[]) throws Exception{
 
 		//initialise client on this port
-		ServerSocket clientInteractSocket = new ServerSocket(port);
+		ServerSocket clientInteractSocket = new ServerSocket(port,10,InetAddress.getLocalHost());
+		String IPInfo = clientInteractSocket.getInetAddress().getHostAddress();
+		System.out.println(IPInfo);
 		//Set up thread that controls client-server relations
 		ClientThread ct = new ClientThread();
 		ct.start();
@@ -23,26 +25,26 @@ public class Server {
 		//Constantly accept clients
 		while(true){
 			//LOGIN PROTOCOL -> Accept user -> take name from user -> send new ID to user -> add user to list
-			//acept a client
+			
+			//Accept a client
 			Socket cl = clientInteractSocket.accept();
 			System.out.println("Accepted client :" +ct.getName());
+			
 			//Accept the name and make a new player for it
 			BufferedReader clientIn =new BufferedReader(
-								new InputStreamReader(cl.getInputStream()));
+					new InputStreamReader(cl.getInputStream()));
 			String clInput = clientIn.readLine();
 
-			//Add player to thee game world
+			//Add player to the game world
 			int pID = world.addNewPlayer(clInput);
 
 			//Return an ID associated with this player.
 			DataOutputStream clientOut = new DataOutputStream(cl.getOutputStream());
 			clientOut.writeBytes(pID+"\n");
-			//System.out.println("Sending " + pID);
 
-			//Accept a client and add it to the
+			//Accept a client and add it to the client thread
 			ct.add(cl);
 		}
-
 
 	}
 
@@ -62,6 +64,7 @@ class ClientThread extends Thread{
 				Thread.sleep(100);
 				while(!connections.isEmpty()){
 					System.out.println("Reading inputs");
+					
 					//get the input from each client
 					for(int i =0;i<connections.size();i++){
 						BufferedReader clientIn =new BufferedReader(
@@ -82,14 +85,14 @@ class ClientThread extends Thread{
 				}
 			}
 		}catch(Exception e){
-
+			
 		}finally{
+			
 		}
 	}
 
 	public void add(Socket newClient){
 		connections.add(newClient);
 	}
-
 
 }
