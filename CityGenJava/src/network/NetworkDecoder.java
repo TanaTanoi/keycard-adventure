@@ -29,15 +29,21 @@ public class NetworkDecoder {
 		return getPlayerString(info);
 	}
 
-
+	/**
+	 * Gets a disconnection string that is sent when a player disconnects,
+	 * formally, from the server. 
+	 * The message is as follows
+	 * 			DISC [Player ID]
+	 * @param game_client - Current player to get the ID from
+	 * @return - String that can be sent to the server 
+	 */
 	public static String getPlayerDisconnect(ClientController game_client){
-
 		return "DISC " + (int)game_client.getPlayerInfo()[0];
 	}
 	/**
 	 * Decodes an input from the server and applies the changes to the supplied game client.
 	 *
-	 *@param game_client - The game client that the changes will be appleid to.
+	 *@param game_client - The game client that the changes will be applied to.
 	 * @param input - String directly from the server.
 	 */
 	public static void decode(ClientController game_client, String input){
@@ -103,7 +109,13 @@ public class NetworkDecoder {
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int,int,int,int) ");
 				}
 			}else if(next.equals("DISC")){
-				//TODO handle disconnect
+				try{
+					int playerID = Integer.parseInt(sc.next());
+					//TODO handle disconnect
+				}catch(NumberFormatException e){
+					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
+				}
+				
 			}
 		}
 		sc.close();

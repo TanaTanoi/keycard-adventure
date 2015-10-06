@@ -1,13 +1,9 @@
 package network;
-import gameObjects.player.Player;
 import gameObjects.world.GameWorld;
-import gameObjects.world.Location;
-
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 public class Server {
 
 	public static final int port = 4444;
