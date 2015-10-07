@@ -2,6 +2,10 @@ package gameObjects.world;
 
 import gameObjects.objects.Furniture;
 import gameObjects.objects.Item;
+import gameObjects.objects.Key;
+import gameObjects.objects.Potion;
+import gameObjects.objects.Tool;
+import gameObjects.objects.Weapon;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,8 +57,10 @@ public class Parser {
 						break;
 						case("PROP"): // describes furniture
 							items.add(parseProp(s,level,g.setItemID()));
-							break;
-
+						break;
+						case("TOOL"):
+							items.add(parseTool(s,level,g.setItemID()));
+						break;
 						}
 					}
 					s.close();	
@@ -66,12 +72,42 @@ public class Parser {
 
 	}
 
+	private static Item parseTool(Scanner s, int level, int setItemID) {
+		Tool t;
+
+		String type = s.next();
+		String name = s.nextLine();
+		String description = s.nextLine();
+		int x = s.nextInt();
+		int y = s.nextInt();
+		Location l = new Location(x,y,level);
+		String modelName = s.next();
+
+		switch(type){
+		case("key"):
+			t = new Key(name, description, l, modelName, setItemID);
+			break;
+		case("potion"):
+			int effectP = s.nextInt();
+			t = new Potion(name, description, l, effectP, modelName, level); 
+			break;
+		case("weapon"):
+			int effectW = s.nextInt();
+			t = new Weapon(name, description, l, effectW, modelName, level);
+			break;
+		default:
+			t = null;
+		}		
+
+		return t;
+	}
+
 	private static Item parseProp(Scanner s, int level, int ID) {
 		int x = s.nextInt();
 		int y = s.nextInt();
 		Location l = new Location(x,y, level);
 		String modelName = s.next();
-		
+
 		Furniture f = new Furniture(l,modelName,ID);
 		return f;
 	}
