@@ -9,9 +9,13 @@ public class Floor {
 
 	private List<Character> players;
 	private List<Item> items;
-
-
-
+	private int level;
+	private char[][] floor;
+	
+	public Floor(int level, char[][] floorPlan){
+		this.level = level;
+		floor = floorPlan;
+	}
 
 	/**
 	 * HELPER METHODS
@@ -23,6 +27,13 @@ public class Floor {
 	 * by the players in the area
 	 *
 	 */
+	public int getLevel(){
+		return level;
+	}	
+	
+	public char[][] getFloorPlan(){
+		return floor;
+	}
 
 	public List<Item> getItems(){
 		return items;

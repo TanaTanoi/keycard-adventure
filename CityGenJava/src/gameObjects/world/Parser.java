@@ -1,48 +1,79 @@
 package gameObjects.world;
 
+import gameObjects.objects.Furniture;
+import gameObjects.objects.Item;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Parser {
 
 	private static final int WORLD_SIZE = 100;
+	GameWorld g;
 
 	/**
-	 * Open's the given file and parses
-	 * all the information to create the gameworld.
+	 * Open's the given file which contains a list
+	 * a series of lines. Each line has a number indicating
+	 * what floor level the file is to be for and a filepath/filename
+	 * for the text file representing that floor
 	 *
 	 * @param filename is the name of the file to parse
 	 */
-	public static void parseWorld(String filename, GameWorld g) {
+	public static void parseWorld(String floorFiles, GameWorld g) {
 
-		// write config file with all floors to download
-
-		char[][] world = new char[WORLD_SIZE][WORLD_SIZE];
-		for(char[] ca:world){
-			Arrays.fill(ca,'-');
-		}
-		File f = new File(filename);
-
+		File config = new File(floorFiles); // opens config file
+		Scanner outer;
 		try {
-			Scanner s = new Scanner(f);
-			while(s.hasNextLine()){
-				switch(s.next()){
-				case("WALL"):
-					parseWall(s,world);
-				break;
-				case("PROP"):
+			outer = new Scanner(config);
 
-					break;
+			while(outer.hasNextLine()){ // while there are still files to parse
 
+				char[][] world = new char[WORLD_SIZE][WORLD_SIZE]; // creates new floorplan
+
+				for(char[] ca:world){
+					Arrays.fill(ca,'-'); // fills world plan with empty world character
 				}
-			}
-		} catch (FileNotFoundException e) {e.printStackTrace(); }
-		g.setFloor(world, 0);//TODO make this actualy do floor stuff
-		// create and add floor at floor number specified in file
-		// then attach char array to floor
 
+				int level = outer.nextInt(); // gets floor level
+				String filename = outer.next(); // gets file path describing floor			 
+
+				File f = new File(filename);
+
+				try {
+					Scanner s = new Scanner(f);
+					List<Item> items = new ArrayList<Item>();
+					while(s.hasNextLine()){
+						switch(s.next()){
+						case("WALL"): // line describes wall in world
+							parseWall(s,world);
+						break;
+						case("PROP"): // describes furniture
+							items.add(parseProp(s,level,g.setItemID()));
+							break;
+
+						}
+					}
+					s.close();	
+				} catch (FileNotFoundException e) {e.printStackTrace(); }
+
+				g.setFloor(world, level); // adds floor to game 
+			}
+		} catch (FileNotFoundException e1) {e1.printStackTrace();}
+
+	}
+
+	private static Item parseProp(Scanner s, int level, int ID) {
+		int x = s.nextInt();
+		int y = s.nextInt();
+		Location l = new Location(x,y, level);
+		String modelName = s.next();
+		
+		Furniture f = new Furniture(l,modelName,ID);
+		return f;
 	}
 
 	private static void parseWall(Scanner s, char[][]world){

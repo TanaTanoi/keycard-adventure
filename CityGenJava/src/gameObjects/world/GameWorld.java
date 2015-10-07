@@ -72,7 +72,7 @@ public class GameWorld {
 	// Actaully make this
 	public void setFloor(char[][] floor, int level){
 		fakeFloor = floor;
-		//Floor f = new Floor();
+		Floor f = new Floor(level, floor);		
 	}
 
 	public char[][] getFloor(){
@@ -125,5 +125,13 @@ public class GameWorld {
 	public void addPlayer(Player p){
 		allPlayers.add(p);
 		System.out.println("Added player " + allPlayers.size());
+	}
+	
+	public void addFloor(Floor f){
+		floorList.put(f.getLevel(), f);
+	}
+	
+	public int setItemID(){
+		return itemID++;
 	}
 }

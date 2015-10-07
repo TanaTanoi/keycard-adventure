@@ -8,14 +8,14 @@ public class Furniture implements Item {
 
 	private int ID;
 
-	private String name;
-	private String description;
+	//private String name;
+	//private String description;
 	private Location loc;
 	private String model;
 
-	public Furniture(String name, String desc, Location loc, String model, int ID){
-		this.name = name;
-		description = desc;
+	public Furniture(Location loc, String model, int ID){
+		//this.name = name;
+		//description = desc;
 		this.loc = loc;
 		this.model = model;
 		this.ID = ID;
@@ -23,12 +23,12 @@ public class Furniture implements Item {
 
 	@Override
 	public String getName(){
-		return name;
+		return "";
 	}
 
 	@Override
 	public String getDescription(){
-		return description;
+		return "";
 	}
 
 	@Override
