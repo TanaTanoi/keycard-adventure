@@ -17,7 +17,7 @@ public class Server {
 		//Set up thread that controls client-server relations
 		ClientThread ct = new ClientThread();
 		ct.start();
-		world = new GameWorld("Basefloor.txt");
+		world = new GameWorld("testConfig.txt");
 		//Constantly accept clients
 		while(true){
 			//LOGIN PROTOCOL -> Accept user -> take name from user -> send new ID to user -> add user to list

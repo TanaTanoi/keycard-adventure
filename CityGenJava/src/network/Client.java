@@ -43,12 +43,17 @@ public class Client extends Thread{
 	}
 
 	/**
-	 * Disconnects this client from the server by stopping the client loop and sending a disconnect message
+	 * Disconnects this client from the server by stopping the client loop and sending a disconnect message.
+	 * Currently no way to reconnect afterwards.
 	 */
 	public void disconenct(){
 		connected = false;
 	}
-
+	/**
+	 * This is the thread's main loop. It will set up the connection to the server,
+	 * send an intro package, then continuously send player-position related packages.
+	 *
+	 */
 	public void run() {
 		try{
 			String userIn;

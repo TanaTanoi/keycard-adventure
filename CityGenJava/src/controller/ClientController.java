@@ -153,7 +153,7 @@ public class ClientController {
 	}
 
 	public static void main(String[] args) {
-		new ClientController("Basefloor.txt");
+		new ClientController("testConfig.txt");
 	}
 
 	/**
