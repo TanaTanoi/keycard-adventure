@@ -31,9 +31,10 @@ public class Floor {
 	private int level;
 	private char[][] floor;
 
-	public Floor(int level, char[][] floorPlan){
+	public Floor(int level, char[][] floorPlan, List<Item> items){
 		this.level = level;
 		floor = floorPlan;
+		this.items = items;
 	}
 
 	/**

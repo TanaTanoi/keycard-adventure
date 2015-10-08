@@ -70,9 +70,9 @@ public class GameWorld {
 	// i.e. tool, container etc
 
 	// Actaully make this
-	public void setFloor(char[][] floor, int level){
+	public void setFloor(char[][] floor, int level, List<Item> items){
 		fakeFloor = floor;
-		Floor f = new Floor(level, floor);		
+		Floor f = new Floor(level, floor, items);
 	}
 
 	public char[][] getFloor(){
@@ -126,11 +126,11 @@ public class GameWorld {
 		allPlayers.add(p);
 		System.out.println("Added player " + allPlayers.size());
 	}
-	
+
 	public void addFloor(Floor f){
 		floorList.put(f.getLevel(), f);
 	}
-	
+
 	public int setItemID(){
 		return itemID++;
 	}

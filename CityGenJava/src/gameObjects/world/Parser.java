@@ -43,7 +43,7 @@ public class Parser {
 				}
 
 				int level = outer.nextInt(); // gets floor level
-				String filename = outer.next(); // gets file path describing floor			 
+				String filename = outer.next(); // gets file path describing floor
 
 				File f = new File(filename);
 
@@ -63,10 +63,10 @@ public class Parser {
 						break;
 						}
 					}
-					s.close();	
+					s.close();
+					g.setFloor(world, level, items); // adds floor to game
 				} catch (FileNotFoundException e) {e.printStackTrace(); }
 
-				g.setFloor(world, level); // adds floor to game 
 			}
 		} catch (FileNotFoundException e1) {e1.printStackTrace();}
 
@@ -89,7 +89,7 @@ public class Parser {
 			break;
 		case("potion"):
 			int effectP = s.nextInt();
-			t = new Potion(name, description, l, effectP, modelName, level); 
+			t = new Potion(name, description, l, effectP, modelName, level);
 			break;
 		case("weapon"):
 			int effectW = s.nextInt();
@@ -97,7 +97,7 @@ public class Parser {
 			break;
 		default:
 			t = null;
-		}		
+		}
 
 		return t;
 	}
