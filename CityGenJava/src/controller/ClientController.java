@@ -84,11 +84,15 @@ public class ClientController {
 	private float xRot = 0;
 	private float rot_y = 0;
 
-	public ClientController(String filename){
+	public ClientController(String filename,String IP){
 		world = new GameWorld(filename);
 		//wait until we have been accepted
 		try{
-			client = new Client(this,"130.195.6.164");
+			if(IP.equals("LOCAL")){
+				client = new Client(this);//ENTER IP HERE TODO
+			}else{
+				client = new Client(this,IP);//ENTER IP HERE TODO
+			}
 		}catch(Exception e){
 			System.out.println("Unable to connect!");
 			e.printStackTrace();
@@ -153,7 +157,7 @@ public class ClientController {
 	}
 
 	public static void main(String[] args) {
-		new ClientController("testConfig.txt");
+		new ClientController("testConfig.txt",args[0]);
 	}
 
 	/**
