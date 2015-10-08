@@ -8,10 +8,10 @@ import java.util.Scanner;
 import controller.ClientController;
 public class Client extends Thread{
 
-	private  int port = 4444;
+	private  int port = 32768;
 	Socket clientSocket;
 	ClientController game;
-	InetAddress gameHost = InetAddress.getLocalHost();
+	String  gameHost = InetAddress.getLocalHost().getHostAddress();
 	private boolean connected = true;
 	/**
 	 * Standard constructor that uses default port (4444) and local host as IP
@@ -27,9 +27,10 @@ public class Client extends Thread{
 	 * @throws Exception - If unable to connect to the server via standard port (4444)
 	 */
 	public Client(ClientController game, String IP) throws Exception {
+		System.out.println("Conneting to " +IP);
+		gameHost = IP;
 		this.game = game;
-		gameHost = InetAddress.getByName(IP);
-		new Client(game);
+		start();
 	}
 
 	/**
@@ -41,7 +42,6 @@ public class Client extends Thread{
 		this.port = port;
 		new Client(game, IP);
 	}
-
 	/**
 	 * Disconnects this client from the server by stopping the client loop and sending a disconnect message.
 	 * Currently no way to reconnect afterwards.
@@ -58,6 +58,7 @@ public class Client extends Thread{
 		try{
 			String userIn;
 			String serverInput;
+			System.out.println("Connecting to " + gameHost);
 			clientSocket = new Socket(gameHost,port);
 			DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
 			BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

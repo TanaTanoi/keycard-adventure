@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 public class Server {
 
-	public static final int port = 4444;
+	public static final int port = 32768;
 	static GameWorld world;//FIXME Find a way to have this private. Its not great having it package level
 	public static void main(String argv[]) throws Exception{
 
 		//initialise client on this port
-		ServerSocket clientInteractSocket = new ServerSocket(port,10,InetAddress.getLocalHost());
+		ServerSocket clientInteractSocket = new ServerSocket(port);
 		String IPInfo = clientInteractSocket.getInetAddress().getHostAddress();
 		System.out.println(IPInfo);
 		//Set up thread that controls client-server relations

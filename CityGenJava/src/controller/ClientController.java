@@ -88,7 +88,7 @@ public class ClientController {
 		world = new GameWorld(filename);
 		//wait until we have been accepted
 		try{
-			client = new Client(this);
+			client = new Client(this,"130.195.6.164");
 		}catch(Exception e){
 			System.out.println("Unable to connect!");
 			e.printStackTrace();
