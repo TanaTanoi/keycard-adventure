@@ -70,7 +70,7 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			loadModel("Table.obj", 0);
+			loadModel("teapot.obj", 0);
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
 			initaliseCamera();
 		}
@@ -114,11 +114,9 @@ public class View {
 		glEnd();
 
 		double sqSize = size/gameSize;
-		glBegin(GL_POINTS);
-		glColor3f(0f, 1f, 1f);
-		glPointSize(10);
 		for (Player p: players){
-			glVertex3d(0,0,0);
+			glScaled(0.01, 0.01, 0.01);
+			//renderObject(0);
 		}
 		glEnd();
 		glColor3f(1, 1, 1);
@@ -235,7 +233,11 @@ public class View {
 				int z = (int)((this.z)/squareSize)+49+j;
 				if (x < 0 || x >= occupiedSpace.length) return;
 				if (z < 0 || z >= occupiedSpace[0].length) return;
-				if (occupiedSpace[x][z] != 'O')return;
+				if (occupiedSpace[100-x][100-z] != '-'){
+					
+					System.out.println(x + " " + z);
+					return;
+				}
 			}
 		}
 
