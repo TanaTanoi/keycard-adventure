@@ -87,6 +87,7 @@ public class ClientController {
 	private float rot_y = 0;
 
 	public ClientController(String filename,String IP){
+
 		world = new GameWorld(filename);
 		//wait until we have been accepted
 		try{
@@ -104,7 +105,7 @@ public class ClientController {
 
 	private void start(){
 		view = new View(world,this);
-		view.setMap(world.getFloor());
+		view.setMap(world.getCollisions());
 		init();
 		// need to make a spawn method for new player
 		GL.createCapabilities(false); // valid for latest build
@@ -210,7 +211,7 @@ public class ClientController {
 	}
 
 	public Floor getFloor(){
-		return floor;
+		return world.getFloor();
 	}
 
 	private void init() {
@@ -290,7 +291,7 @@ public class ClientController {
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
-		mousePos = new Vector2((float)xpos,(float)ypos);
+		//mousePos = new Vector2((float)xpos,(float)ypos);
 	}
 	/**
 	 *

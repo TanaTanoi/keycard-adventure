@@ -73,9 +73,13 @@ public class GameWorld {
 	public void setFloor(char[][] floor, int level, List<Item> items){
 		fakeFloor = floor;
 		Floor f = new Floor(level, floor, items);
+		System.out.println("Adding floor at " + level + " with " + items.size() + " items");
+		floorList.put(level, f);
 	}
-
-	public char[][] getFloor(){
+	public Floor getFloor(){
+		return floorList.get(1);
+	}
+	public char[][] getCollisions(){
 		return fakeFloor;
 	}
 

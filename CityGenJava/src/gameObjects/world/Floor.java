@@ -15,6 +15,7 @@ import gameObjects.player.Character;
 import graphics.Face;
 import graphics.Model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,17 +25,22 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Floor {
 	//Filepaths to Display lists
-	private static final Map<String, Integer> displayLists = new HashMap<String,Integer>();
-	private static final float SQUARE_SIZE = 0.02f;
+	private Map<String, Integer> displayLists;
+	private static final float SQUARE_SIZE = 0.5f;
 	private List<Character> players;
 	private List<Item> items;
 	private int level;
 	private char[][] floor;
 
 	public Floor(int level, char[][] floorPlan, List<Item> items){
+		displayLists = new HashMap<String,Integer>();
 		this.level = level;
 		floor = floorPlan;
-		this.items = items;
+		this.items = new ArrayList<Item>();
+		for(Item i:items){
+			this.addItem(i);
+		}
+
 	}
 
 	/**
@@ -72,9 +78,11 @@ public class Floor {
 	}
 
 	public void addItem(Item i){
+		System.out.println("Adding item to floor " + i.getModelName());
 		items.add(i);
 		Location l = i.getLocation();
-		loadModel(i.getModelName(),new Vector3f(l.getX(),0,l.getY()));
+//		loadModel(i.getModelName(),new Vector3f(l.getX()/10,0,l.getY()/10));
+		loadModel(i.getModelName(),new Vector3f(0,0,0));
 	}
 
 	public void removeItem(Item i){
@@ -121,7 +129,7 @@ public class Floor {
 	}
 
 	private void updateCollisions(Model m, Vector3f offset){
-
+		System.out.println("Offset " + offset.x + " " + offset.z);
 		int maxX = Integer.MIN_VALUE;
 		int minX = Integer.MAX_VALUE;
 		int[][] zValues = new int[100][2];
@@ -135,6 +143,8 @@ public class Floor {
 			v3 = new Vector3f(v3.x+offset.x,v3.y+offset.y,v3.z+offset.z);
 			maxX = Math.max(maxX, (int)((v3.x/SQUARE_SIZE)+50));
 			minX = Math.min(minX, (int)((v3.x/SQUARE_SIZE)+50));
+
+
 			if (zValues[(int)((v3.x/SQUARE_SIZE)+50)][0] == 0){
 				zValues[(int)((v3.x/SQUARE_SIZE)+50)][0] = (int)((v3.z/SQUARE_SIZE)+50);
 				zValues[(int)((v3.x/SQUARE_SIZE)+50)][1] = (int)((v3.z/SQUARE_SIZE)+50);

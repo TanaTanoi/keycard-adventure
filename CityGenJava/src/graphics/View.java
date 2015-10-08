@@ -36,8 +36,6 @@ import org.lwjgl.util.vector.Vector3f;
 import controller.ClientController;
 
 
-
-
 public class View {
 
 	ArrayList<Integer> objectDisplayLists;
@@ -74,23 +72,26 @@ public class View {
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
 			initaliseCamera();
 		}
-		for(Item i: control.getFloor().getItems()){
-			glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
-			glPushMatrix();
-			glTranslated(x, y, z);
-			glPushMatrix();
-			Location l = i.getLocation();
-			glTranslatef(l.getX(), y,l.getY());
-			glCallList(control.getFloor().getDisplayList(i));
-			glPopMatrix();
-			glPopMatrix();
+		if(control.getFloor()!=null){
+			for(Item i: control.getFloor().getItems()){
+				glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
+				glPushMatrix();
+				glTranslated(x, y, z);
+				glPushMatrix();
+				System.out.println("Drawing object " + i.getModelName());
+				Location l = i.getLocation();
+				glTranslatef(l.getX(), y,l.getY());
+				glCallList(control.getFloor().getDisplayList(i));
+				glPopMatrix();
+				glPopMatrix();
+			}
 		}
 		Location playerLoc = control.getCurrentPlayer().getLocation();
 		x = playerLoc.getX();
 		z = playerLoc.getY();
 //		System.out.println(z);
-		renderObject(0);
-		renderPlayers();
+//		renderObject(0);
+//		renderPlayers();
 		renderWalls();
 		drawMinimap(0.25);
 	}

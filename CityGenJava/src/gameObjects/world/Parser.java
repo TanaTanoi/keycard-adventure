@@ -65,6 +65,7 @@ public class Parser {
 					}
 					s.close();
 					g.setFloor(world, level, items); // adds floor to game
+					
 				} catch (FileNotFoundException e) {e.printStackTrace(); }
 
 			}
