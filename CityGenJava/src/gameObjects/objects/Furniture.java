@@ -2,7 +2,6 @@ package gameObjects.objects;
 
 import gameObjects.player.Character;
 import gameObjects.world.Location;
-import javafx.geometry.BoundingBox;
 
 public class Furniture implements Item {
 
@@ -41,12 +40,6 @@ public class Furniture implements Item {
 	public void interact(Item i) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public BoundingBox getBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

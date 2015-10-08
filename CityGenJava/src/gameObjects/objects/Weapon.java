@@ -1,5 +1,4 @@
 package gameObjects.objects;
-import javafx.geometry.BoundingBox;
 import gameObjects.strategies.WeaponStrategy;
 import gameObjects.world.Location;
 
@@ -14,12 +13,6 @@ public class Weapon extends Tool {
 	public void equip() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public BoundingBox getBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

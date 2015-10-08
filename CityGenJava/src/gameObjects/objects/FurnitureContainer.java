@@ -2,7 +2,6 @@ package gameObjects.objects;
 
 import gameObjects.player.Character;
 import gameObjects.world.Location;
-import javafx.geometry.BoundingBox;
 
 /**
  * A funiture container is a type of container that can store any kind of item.
@@ -27,13 +26,6 @@ public class FurnitureContainer extends Container{
 	public void interact(Character c) {
 		// Does nothing
 	}
-
-	@Override
-	public BoundingBox getBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
 	public String getModelName() {

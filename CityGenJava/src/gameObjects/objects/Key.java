@@ -1,6 +1,6 @@
 package gameObjects.objects;
 
-import javafx.geometry.BoundingBox;
+
 import gameObjects.strategies.KeyInteractStrategy;
 import gameObjects.world.Location;
 
@@ -16,12 +16,6 @@ public class Key extends Tool {
 	public void equip() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public BoundingBox getBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
