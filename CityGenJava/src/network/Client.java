@@ -85,8 +85,9 @@ public class Client extends Thread{
 				serverInput = serverIn.readLine();
 				NetworkDecoder.decode(game,serverInput);
 			}
-
-			//TODO create a method that sends a disconnect to the server
+			//Player has disconnected
+			serverOut.writeBytes(NetworkDecoder.getPlayerDisconnect(game));
+			serverOut.flush();
 
 		}catch(Exception e){
 			System.out.println("PROBLEM");
