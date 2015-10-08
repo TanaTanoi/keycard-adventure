@@ -56,6 +56,7 @@ import org.lwjgl.opengl.GLContext;
 
 import vec.Vector2;
 import gameObjects.player.Player;
+import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
 import gameObjects.world.Location;
 import graphics.View;
@@ -65,6 +66,7 @@ import network.Client;
 public class ClientController {
 
 	GameWorld world; // Model
+	Floor floor;
 	Player current; // Player giving controls
 	View view; // view
 	private Client client;
@@ -205,6 +207,10 @@ public class ClientController {
 		newP.move(x, y);
 		newP.setOrientation(rotation);
 		world.addPlayer(newP);
+	}
+
+	public Floor getFloor(){
+		return floor;
 	}
 
 	private void init() {

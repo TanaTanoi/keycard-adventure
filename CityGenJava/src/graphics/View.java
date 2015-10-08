@@ -5,7 +5,9 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import gameObjects.objects.Furniture;
+import gameObjects.objects.Item;
 import gameObjects.player.Player;
+import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
 import gameObjects.world.Location;
 import graphics.applicationWindow.Window;
@@ -55,7 +57,6 @@ public class View {
 	private GLFWErrorCallback errorCallback;
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
-	Furniture teapot;
 
 	public View(GameWorld g,ClientController control){
 		world = g;
@@ -70,11 +71,20 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			loadModel("teapot.obj", 0);
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
 			initaliseCamera();
 		}
-
+		for(Item i: control.getFloor().getItems()){
+			glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
+			glPushMatrix();
+			glTranslated(x, y, z);
+			glPushMatrix();
+			Location l = i.getLocation();
+			glTranslatef(l.getX(), y,l.getY());
+			glCallList(control.getFloor().getDisplayList(i));
+			glPopMatrix();
+			glPopMatrix();
+		}
 		Location playerLoc = control.getCurrentPlayer().getLocation();
 		x = playerLoc.getX();
 		z = playerLoc.getY();
@@ -149,65 +159,6 @@ public class View {
 		return w;
 	}
 
-
-
-	private void loadModel(String filePath, int out){
-
-		int maxX = Integer.MIN_VALUE;
-		int minX = Integer.MAX_VALUE;
-		int[][] zValues = new int[100][2];
-		loaded = true;
-		Model m = new Model(filePath);
-		objectDisplayLists.add(glGenLists(1));
-		glNewList(objectDisplayLists.get(out), GL_COMPILE);
-		glBegin(GL_TRIANGLES);
-		for(Face face: m.getFaces()){
-			Vector2f t1 = m.getTextureCoordinates().get((int) face.textures.x -1);
-			glTexCoord2d(t1.x,t1.y);
-			Vector3f n1 = m.getNormals().get((int) face.normals.x -1);
-			glNormal3f(n1.x,n1.y,n1.z);
-			Vector3f v1 = m.getVertices().get((int) face.vertex.x -1);
-			glVertex3f(v1.x,v1.y,v1.z);
-
-			Vector2f t2 = m.getTextureCoordinates().get((int) face.textures.y -1);
-			glTexCoord2d(t2.x,t2.y);
-			Vector3f n2 = m.getNormals().get((int) face.normals.y -1);
-			glNormal3f(n2.x,n2.y,n2.z);
-			Vector3f v2 = m.getVertices().get((int) face.vertex.y -1);
-			glVertex3f(v2.x,v2.y,v2.z);
-
-			Vector2f t3 = m.getTextureCoordinates().get((int) face.textures.z -1);
-			glTexCoord2d(t3.x,t3.y);
-			Vector3f n3 = m.getNormals().get((int) face.normals.z -1);
-			glNormal3f(n3.x,n3.y,n3.z);
-			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
-			glVertex3f(v3.x,v3.y,v3.z);
-
-			maxX = Math.max(maxX, (int)((v3.x/squareSize)+50));
-			minX = Math.min(minX, (int)((v3.x/squareSize)+50));
-			if (zValues[(int)((v3.x/squareSize)+50)][0] == 0){
-				zValues[(int)((v3.x/squareSize)+50)][0] = (int)((v3.z/squareSize)+50);
-				zValues[(int)((v3.x/squareSize)+50)][1] = (int)((v3.z/squareSize)+50);
-			}
-			zValues[(int)((v3.x/squareSize)+50)][0] = Math.min((int)((v3.z/squareSize)+50),zValues[(int)((v3.x/squareSize)+50)][0]);
-			zValues[(int)((v3.x/squareSize)+50)][1] = Math.max((int)((v3.z/squareSize)+50),zValues[(int)((v3.x/squareSize)+50)][1]);
-			occupiedSpace[(int)((v3.x/squareSize)+50)][(int)((v3.z/squareSize)+50)] = 'T';
-		}
-
-
-		for (int x = minX; x < maxX;x++){
-			for (int z = zValues[x][0]; z < zValues[x][1];z++){
-				occupiedSpace[x][z] = 'T';
-			}
-		}
-
-		glEnd();
-		glEndList();
-
-
-		printCollisions();
-	}
-
 	public void move(char pressed, double xRot){
 		double dz = Math.cos(Math.toRadians(xRot))/10;
 		double dx = Math.sin(Math.toRadians(xRot))/10;
@@ -234,7 +185,7 @@ public class View {
 				if (x < 0 || x >= occupiedSpace.length) return;
 				if (z < 0 || z >= occupiedSpace[0].length) return;
 				if (occupiedSpace[100-x][100-z] != '-'){
-					
+
 					System.out.println(x + " " + z);
 					return;
 				}
