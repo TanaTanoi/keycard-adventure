@@ -67,7 +67,9 @@ class ClientThread extends Thread{
 								new InputStreamReader(connections.get(i).getInputStream()));
 						clInput = clientIn.readLine();
 						if(!NetworkDecoder.decodeClientInput(Server.world,clInput,i)){
-							//TODO Heidi, write code for disconnecting a player from the server here
+							connections.get(i).close();
+							connections.remove(i);
+							i--;
 						}
 					}
 
