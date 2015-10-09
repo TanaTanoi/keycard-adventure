@@ -1,15 +1,20 @@
 package network;
 import gameObjects.world.GameWorld;
+import graphics.applicationWindow.Window;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.lwjgl.opengl.GL;
 public class Server {
 
 	public static final int port = 32768;
 	static GameWorld world;//FIXME Find a way to have this private. Its not great having it package level
 	public static void main(String argv[]) throws Exception{
-
+		Window w = new Window();
+		GL.createCapabilities(true); // valid for latest build
 		//initialise client on this port
 		ServerSocket clientInteractSocket = new ServerSocket(port);
 		String IPInfo = clientInteractSocket.getInetAddress().getHostAddress();
@@ -19,6 +24,7 @@ public class Server {
 		ct.start();
 		world = new GameWorld("testConfig.txt");
 		//Constantly accept clients
+		w.destory();
 		while(true){
 			//LOGIN PROTOCOL -> Accept user -> take name from user -> send new ID to user -> add user to list
 
