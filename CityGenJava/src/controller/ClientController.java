@@ -59,6 +59,7 @@ import gameObjects.player.Player;
 import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
 import gameObjects.world.Location;
+import gameObjects.world.Parser;
 import graphics.View;
 import graphics.applicationWindow.Window;
 import network.Client;
@@ -87,14 +88,15 @@ public class ClientController {
 	private float rot_y = 0;
 
 	public ClientController(String filename,String IP){
-
 		world = new GameWorld(filename);
+		view = new View(world,this);
+		Parser.parseWorld(filename,world);
 		//wait until we have been accepted
 		try{
 			if(IP.equals("LOCAL")){
-				client = new Client(this);//ENTER IP HERE TODO
+				client = new Client(this);
 			}else{
-				client = new Client(this,IP);//ENTER IP HERE TODO
+				client = new Client(this,IP);
 			}
 		}catch(Exception e){
 			System.out.println("Unable to connect!");
@@ -104,7 +106,7 @@ public class ClientController {
 	}
 
 	private void start(){
-		view = new View(world,this);
+		
 		view.setMap(world.getCollisions());
 		init();
 		// need to make a spawn method for new player
@@ -291,7 +293,7 @@ public class ClientController {
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
-		//mousePos = new Vector2((float)xpos,(float)ypos);
+		mousePos = new Vector2((float)xpos,(float)ypos);
 	}
 	/**
 	 *

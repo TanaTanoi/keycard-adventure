@@ -18,8 +18,6 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import graphics.View;
-
 import java.nio.ByteBuffer;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -99,7 +97,10 @@ public class Window {
 	public static int getHeight() {
 		return HEIGHT;
 	}
-
+	/**
+	 * Destroys the current window, removing it and preventing all 
+	 * GL calls. 
+	 */
 	public void destory(){
 		glfwDestroyWindow(window);
 	}

@@ -56,8 +56,8 @@ public class View {
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
 
-	public View(GameWorld g,ClientController control){
-		world = g;
+	public View(GameWorld world,ClientController control){
+		this.world = world;
 		this.control = control;
 		objectDisplayLists = new ArrayList<Integer>();
 		objectTextureList = new ArrayList<Integer>();

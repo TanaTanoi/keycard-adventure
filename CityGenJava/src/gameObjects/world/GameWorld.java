@@ -26,7 +26,7 @@ public class GameWorld {
 
 	public GameWorld(String filename){
 		init();
-		Parser.parseWorld(filename,this);
+		//Parser is called on ClientController now
 	}
 
 	/**
