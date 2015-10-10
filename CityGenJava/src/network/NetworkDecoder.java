@@ -119,6 +119,10 @@ public class NetworkDecoder {
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
 				}
 				
+			}else if(next.equals("ITEM")){
+				//ITEM [ITEM ID] [PLAYER ID of play who will receive item]
+				int playerID = sc.nextInt();
+				int itemID = sc.nextInt();
 			}
 		}
 		sc.close();
