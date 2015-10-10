@@ -64,7 +64,7 @@ public class View {
 		initaliseCollisions(100,100);
 		y = -0.95f;
 		w = new Window();
-//		teapot = new Furniture("teapot", "teapot.obj");
+		//		teapot = new Furniture("teapot", "teapot.obj");
 	}
 
 	public void renderView(){
@@ -72,6 +72,8 @@ public class View {
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
 			initaliseCamera();
 		}
+		float delta = control.getRotation();
+		glRotatef(delta, 0, 1, 0);
 		if(control.getFloor()!=null){
 			for(Item i: control.getFloor().getItems()){
 				glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
@@ -81,6 +83,7 @@ public class View {
 				System.out.println("Drawing object " + i.getModelName());
 				Location l = i.getLocation();
 				glTranslatef(l.getX(), y,l.getY());
+				glScalef(0.1f, 0.1f, 0.1f);
 				glCallList(control.getFloor().getDisplayList(i));
 				glPopMatrix();
 				glPopMatrix();
@@ -89,45 +92,48 @@ public class View {
 		Location playerLoc = control.getCurrentPlayer().getLocation();
 		x = playerLoc.getX();
 		z = playerLoc.getY();
-//		System.out.println(z);
-//		renderObject(0);
-//		renderPlayers();
+
+	
+		renderPlayers();
 		renderWalls();
-		drawMinimap(0.25);
+
+		//drawMinimap(0.25);
 	}
 
 	private void drawMinimap(double size){
 		List<Player> players = world.getPlayers();
 		Location playerLoc = control.getCurrentPlayer().getLocation();
 		glDisable(GL_DEPTH_TEST);
-//		int angle = control.getCurrentPlayer().getOrientation();
+		//		int angle = control.getCurrentPlayer().getOrientation();
 		glPushMatrix();
-//		glTranslated(playerLoc.getX(), mapY, playerLoc.getY());
+		//		glTranslated(playerLoc.getX(), mapY, playerLoc.getY());
 		glRotated(-control.getRotation(), 0, 1, 0);
 
 		glTranslated(-0.45, -0.45, -1.0001);
 
 		glColor3f(1f, 0.6f, 0.1f);
-		glBegin(GL_QUADS);	//Draw map background
 
-		glTexCoord2d(0,1);
-		glVertex3d(0,size,0);
+		fillRect(0, 0, size, size);
 
-		glTexCoord2d(0,0);
-		glVertex3d(0,0,0);
-
-		glTexCoord2d(1,0);
-		glVertex3d(size,0,0);
-
-		glTexCoord2d(1,1);
-		glVertex3d(size,size,0);
-
-		glEnd();
+		//		glBegin(GL_QUADS);	//Draw map background
+		//
+		//		glTexCoord2d(0,1);
+		//		glVertex3d(0,size,0);
+		//
+		//		glTexCoord2d(0,0);
+		//		glVertex3d(0,0,0);
+		//
+		//		glTexCoord2d(1,0);
+		//		glVertex3d(size,0,0);
+		//
+		//		glTexCoord2d(1,1);
+		//		glVertex3d(size,size,0);
+		//
+		//		glEnd();
 
 		double sqSize = size/gameSize;
 		for (Player p: players){
-			glScaled(0.01, 0.01, 0.01);
-			//renderObject(0);
+
 		}
 		glEnd();
 		glColor3f(1, 1, 1);
@@ -200,15 +206,9 @@ public class View {
 
 	private void renderObject(int displayList){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
-		//		glColor3f(0, 0, 1f);
-		//		glDisable(GL_COLOR);
 		glPushMatrix();
 		glTranslated(x, y, z);
-		//				glEnable(GL_TEXTURE_2D);
-		//				glBindTexture(GL_TEXTURE_2D, wallTexture);
 		glCallList(objectDisplayLists.get(displayList));
-		//		glDisable(GL_TEXTURE_2D);
-		//		glEnable(GL_COLOR);
 		glPopMatrix();
 	}
 
@@ -236,22 +236,26 @@ public class View {
 
 				glTranslatef(-playerLoc.getX(),playersY,-playerLoc.getY());
 
-//				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
+				//				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
 				//System.out.println("rot " + p.getOrientation());
 				glRotated(p.getOrientation()+90,0,1,0); // -90 to make the spout point in the direction the player is facing
 				glScaled(0.1, 0.1, 0.1);
-				renderObject(0);
+				for(Item it : control.getFloor().getItems()){
+					
+					if (it.getModelName().contains("tea")){
+						System.out.println("cunt " + it.getModelName());
+						glCallList(control.getFloor().getDisplayList(it));
+						break;
+					}
+				}
 				glColor3f(1, 1, 1);
 				glPopMatrix();
-				glPopMatrix();
+				//				glPopMatrix();
 			}
 		}
 	}
 
 	private void renderWalls(){
-		//		glColor3f(1f,1f,0);
-
-		//		glColor3f(1f, 0, 0);
 		glDisable(GL_COLOR);
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, objectTextureList.get(0));
@@ -264,25 +268,25 @@ public class View {
 					//front and back
 					glPushMatrix();
 					glTranslated((ix-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
-					RenderTools.fillRect(0, 0, spacing, 2);
+					fillRect(0, 0, spacing, 2);
 					glPopMatrix();
 
 					glPushMatrix();
 					glTranslated(((ix+1)-occupiedSpace.length/2)*spacing, 0, ((iz+1)-occupiedSpace.length/2)*spacing);
-					RenderTools.fillRect(0, 0, -spacing, 2);
+					fillRect(0, 0, -spacing, 2);
 					glPopMatrix();
 
 					//left and right
 					glPushMatrix();
 					glTranslated((ix-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
 					glRotated(90, 0, 1, 0);
-					RenderTools.fillRect(0, 0, -spacing, 2);
+					fillRect(0, 0, -spacing, 2);
 					glPopMatrix();
 
 					glPushMatrix();
 					glTranslated(((ix+1)-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
 					glRotated(90, 0, 1, 0);
-					RenderTools.fillRect(0, 0, -spacing, 2);
+					fillRect(0, 0, -spacing, 2);
 					glPopMatrix();
 				}
 				glPopMatrix();
@@ -322,6 +326,24 @@ public class View {
 
 	public void setMap(char[][] map){
 		occupiedSpace = map;
+	}
+
+	public void fillRect(double x, double y, double width, double height){
+		glBegin(GL_QUADS);	//Set mode to fill spaces within vertices
+
+		glTexCoord2d(0,1);
+		glVertex3d(x,height,y);
+
+		glTexCoord2d(0,0);
+		glVertex3d(x,0f,y);
+
+		glTexCoord2d(1,0);
+		glVertex3d(x+width,0f,y);
+
+		glTexCoord2d(1,1);
+		glVertex3d(x+width,height,y);
+
+		glEnd();//End quad mode
 	}
 
 	private FloatBuffer asFloatBuffer(float[] array){

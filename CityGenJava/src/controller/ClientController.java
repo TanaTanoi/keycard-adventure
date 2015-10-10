@@ -140,7 +140,7 @@ public class ClientController {
 			else if (mousePos.x < 200){
 				xRot -=Math.pow((200-mousePos.x)/100,1.2);
 			}
-			xRot %= 360;
+			//xRot %= 360;
 			current.setOrientation((int)xRot);
 		}
 		/*----------------------------------*/
@@ -154,7 +154,7 @@ public class ClientController {
 	private void setUpCamera(){
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glRotatef(xRot, 0, 1, 0);
+		//glRotatef(xRot, 0, 1, 0);
 	}
 
 	public float getRotation(){
