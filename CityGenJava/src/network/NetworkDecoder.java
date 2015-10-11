@@ -82,8 +82,15 @@ public class NetworkDecoder {
 					throw new IllegalArgumentException("Game has already started. Connection refused.");
 				}
 			}else if(next.equals("ITEM")){
-				System.out.println("Received Item call :" + sc.nextLine());
 				//TODO pickup item in the world
+				int itemID = sc.nextInt();
+				int playerID = sc.nextInt();
+				for(Item i:game_client.getFloor().getItems()){
+					System.out.println(i.getID() + ": " +i.getName());
+					if(i.getID() == itemID){
+						System.out.println("Item is " + itemID + ": "+ i.getName());
+					}
+				}
 			}
 		}
 		sc.close();
