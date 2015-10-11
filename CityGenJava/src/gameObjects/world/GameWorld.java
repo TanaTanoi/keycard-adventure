@@ -20,7 +20,7 @@ public class GameWorld {
 
 	private char[][] fakeFloor;
 
-	private List<Player> allPlayers;
+	private Map<Integer,Player> allPlayers;
 	private List<NPC> allNPCs;
 	private Map<Integer, Floor> floorList;
 	private int playerID = 0;
@@ -35,7 +35,7 @@ public class GameWorld {
 	 * Initialises world variables
 	 */
 	public void init(){
-		allPlayers = new ArrayList<Player>();
+		allPlayers = new HashMap<Integer,Player>();
 		allNPCs = new ArrayList<NPC>();
 		floorList = new HashMap<Integer,Floor>();
 	}
@@ -49,7 +49,7 @@ public class GameWorld {
 	 */
 	public void updatePlayerInfo(int id, float x, float y, int rotation){
 		if(allPlayers.size()>id){
-			Player p = getPlayer(id);
+			Player p = allPlayers.get(id);//getPlayer(id);
 			p.move(x, y);
 			p.setOrientation(rotation);
 		}
@@ -69,7 +69,7 @@ public class GameWorld {
 		if(allPlayers.size()==MAX_PLAYERS)return-1;
 		//TODO add condition for if the game has already started.
 		Player p = new Player(name, playerID++);
-		allPlayers.add(p); // adds player to game world
+		allPlayers.put(p.getID(),p); // adds player to game world
 		// Now adds player to correct floor
 		int floor = p.getLocation().getFloor();
 		//floorList.get(floor).addPlayer(p);
@@ -92,14 +92,14 @@ public class GameWorld {
 	public char[][] getCollisions(){
 		return fakeFloor;
 	}
-	
-	
+
+
 	/**
 	 * Finds the closest item to a player that is also within the
-	 * given radius. 
+	 * given radius.
 	 * This method is used for selection of items.
 	 * @param l - Center of the radius
-	 * @param radius - Max search distance 
+	 * @param radius - Max search distance
 	 * @return - The closest item to a player within the radius. Null if no objects within the radius
 	 */
 	public Item closestItem(Location l, float radius){
@@ -114,14 +114,14 @@ public class GameWorld {
 					//if next object is closer
 					toReturn = i;
 				}
-				
+
 			}
 		}
 		return toReturn;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Adds an item given by a certain item ID to a player specified  by an ID
 	 * (Delegates work to PickUpItem(Player,Item) method.
@@ -130,9 +130,9 @@ public class GameWorld {
 	 * @param itemID
 	 */
 	public void pickUpItem(int playerID, int itemID){
-		Player p = getPlayer(playerID);
+		Player p = allPlayers.get(playerID);
 		if(p==null){throw new IllegalArgumentException("Invalid Player ID");}
-		pickUpItem(p,null);//TODO implement a get Item from ID method
+		pickUpItem(p,itemID);//TODO implement a get Item from ID method
 	}
 
 	/**
@@ -140,9 +140,10 @@ public class GameWorld {
 	 * @param p
 	 * @param i
 	 */
-	public void pickUpItem(Player p, Item i){
+	public void pickUpItem(Player p, int itemID){
+		Floor f = floorList.get(p.getLocation().getFloor());
+		Item i = f.getItem(itemID);
 		if(p.pickUp(i)){
-			Floor f = floorList.get(i.getLocation().getFloor());
 			f.removeItem(i);
 			i.setLocation(null);
 		}
@@ -161,7 +162,7 @@ public class GameWorld {
 	}
 
 	public List<Player> getPlayers(){
-		return allPlayers;
+		return (List<Player>) allPlayers.values();
 	}
 	/**
 	 * Gets all of the player information and returns them in the following format:
@@ -171,7 +172,7 @@ public class GameWorld {
 	 */
 	public List<float[]> getPlayerInfos(){
 		List<float[]> toReturn = new ArrayList<float[]>();
-		for(Player p:allPlayers){
+		for(Player p:allPlayers.values()){
 			Location loc = p.getLocation();
 			toReturn.add( new float[]{p.getID(),loc.getX(),loc.getY(),p.getOrientation()});
 		}
@@ -179,7 +180,7 @@ public class GameWorld {
 	}
 
 	public void addPlayer(Player p){
-		allPlayers.add(p);
+		allPlayers.put(p.getID(),p);
 		System.out.println("Added player " + allPlayers.size());
 	}
 
@@ -195,14 +196,14 @@ public class GameWorld {
 	 * @param playerID - Global ID of player
 	 * @return - Player associated with parameter: playerID or null if player isn't present.
 	 */
-	private Player getPlayer(int playerID){
-		for(Player p:allPlayers){
-			if(p.getID()==playerID){
-				return p;
-			}
-		}
-		return null;
-	}
+//	private Player getPlayer(int playerID){
+//		for(Player p:allPlayers){
+//			if(p.getID()==playerID){
+//				return p;
+//			}
+//		}
+//		return null;
+//	}
 }
 
 

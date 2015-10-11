@@ -28,7 +28,7 @@ public class Floor {
 	private Map<String, Integer> displayLists;
 	private static final float SQUARE_SIZE = 0.5f;
 	private List<Character> players;
-	private List<Item> items;
+	private Map<Integer,Item> items;
 	private int level;
 	private char[][] floor;
 
@@ -36,7 +36,7 @@ public class Floor {
 		displayLists = new HashMap<String,Integer>();
 		this.level = level;
 		floor = floorPlan;
-		this.items = new ArrayList<Item>();
+		this.items = new HashMap<Integer,Item>();
 		for(Item i:items){
 			this.addItem(i);
 		}
@@ -62,7 +62,7 @@ public class Floor {
 	}
 
 	public List<Item> getItems(){
-		return items;
+		return (List<Item>) items.values();
 	}
 
 	public List<Character> getPlayers(){
@@ -79,7 +79,7 @@ public class Floor {
 
 	public void addItem(Item i){
 		System.out.println("Adding item to floor " + i.getModelName());
-		items.add(i);
+		items.put(i.getID(),i);
 		Location l = i.getLocation();
 //		loadModel(i.getModelName(),new Vector3f(l.getX()/10,0,l.getY()/10));
 		loadModel(i.getModelName(),new Vector3f(0,0,0));
@@ -160,6 +160,10 @@ public class Floor {
 			}
 		}
 
+	}
+
+	public Item getItem(int itemID) {
+		return items.get(itemID);
 	}
 
 }
