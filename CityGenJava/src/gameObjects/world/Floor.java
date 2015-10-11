@@ -62,7 +62,9 @@ public class Floor {
 	}
 
 	public List<Item> getItems(){
-		return (List<Item>) items.values();
+		List<Item> listItems = new ArrayList<Item>();
+		listItems.addAll(items.values());
+		return listItems;
 	}
 
 	public List<Character> getPlayers(){

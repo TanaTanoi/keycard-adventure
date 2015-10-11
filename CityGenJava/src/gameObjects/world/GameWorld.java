@@ -163,7 +163,9 @@ public class GameWorld {
 	}
 
 	public List<Player> getPlayers(){
-		return (List<Player>) allPlayers.values();
+		List<Player> players = new ArrayList<Player>();
+		players.addAll(allPlayers.values());
+		return players;
 	}
 	/**
 	 * Gets all of the player information and returns them in the following format:
