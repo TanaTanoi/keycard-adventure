@@ -92,6 +92,36 @@ public class GameWorld {
 	public char[][] getCollisions(){
 		return fakeFloor;
 	}
+	
+	
+	/**
+	 * Finds the closest item to a player that is also within the
+	 * given radius. 
+	 * This method is used for selection of items.
+	 * @param l - Center of the radius
+	 * @param radius - Max search distance 
+	 * @return - The closest item to a player within the radius. Null if no objects within the radius
+	 */
+	public Item closestItem(Location l, float radius){
+		Item toReturn = null;
+		for(Item i:floorList.get(1).getItems()){//TODO allow multiple floors
+			Location iloc = i.getLocation();
+			if(iloc.distance(l)<radius){
+				if(toReturn == null){
+					toReturn = i;
+					continue;
+				}else if(toReturn.getLocation().distance(l)>iloc.distance(l)){
+					//if next object is closer
+					toReturn = i;
+				}
+				
+			}
+		}
+		return toReturn;
+	}
+	
+	
+	
 	/**
 	 * Adds an item given by a certain item ID to a player specified  by an ID
 	 * (Delegates work to PickUpItem(Player,Item) method.

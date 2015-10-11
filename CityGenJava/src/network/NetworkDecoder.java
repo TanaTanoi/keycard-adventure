@@ -1,9 +1,12 @@
 package network;
 
+import gameObjects.objects.Item;
 import gameObjects.world.GameWorld;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import controller.ClientController;
 
@@ -26,7 +29,20 @@ public class NetworkDecoder {
 	 */
 	public static String getPlayerOutput(ClientController game_client){
 		float[] info = game_client.getPlayerInfo();
-		return getPlayerString(info);
+		StringBuilder toReturn = new StringBuilder();
+		toReturn.append(getPlayerString(info));
+		
+		Item pickedUp = game_client.getToPickup();
+		if(pickedUp !=null){
+			//if we want to pick up an item, send a pick up request in the form ITEM [Item ID] [Player ID]
+			System.out.println("Adding pickup item");
+			toReturn.append(" ");
+			toReturn.append("ITEM ");
+			toReturn.append(pickedUp.getID());
+			toReturn.append(" ");
+			toReturn.append(game_client.getCurrentPlayer().getID());
+		}
+		return toReturn.toString();
 	}
 
 	/**
@@ -65,6 +81,9 @@ public class NetworkDecoder {
 				}else if(playerID == -2){//-2 means game has already started. TODO actually implement this
 					throw new IllegalArgumentException("Game has already started. Connection refused.");
 				}
+			}else if(next.equals("ITEM")){
+				System.out.println("Received Item call :" + sc.nextLine());
+				//TODO pickup item in the world
 			}
 		}
 		sc.close();
@@ -106,7 +125,7 @@ public class NetworkDecoder {
 	 * @param player - The player who sent the input
 	 * @return - True if the player is still connected.
 	 */
-	public static boolean decodeClientInput(GameWorld game,String input, int player){
+	public static boolean decodeClientInput(GameWorld game,String input, int player,Set<String> approvedCommands){
 		System.out.println("Received "+ input + " from player " + player);
 		if(input==null)return false;
 		Scanner sc = new Scanner(input);
@@ -135,7 +154,8 @@ public class NetworkDecoder {
 				//ITEM [ITEM ID] [PLAYER ID of play who will receive item]
 				int playerID = sc.nextInt();
 				int itemID = sc.nextInt();
-
+				//TODO make it affect the world
+				approvedCommands.add("ITEM " + playerID + " " + itemID);
 			}
 		}
 		sc.close();
@@ -144,11 +164,13 @@ public class NetworkDecoder {
 
 	/**
 	 * Prepares the output to be sent to all clients, based on the input GameWorld
+	 * as well as commands prepared earlier (via approvedCommands).
 	 *
 	 * @param world - The world the package will be based on.
+	 * @param approvedCommands -The additional commands to add to the package. THIS EMPTIES THE LIST
 	 * @return - A string that can be sent to all clients connected to the server.
 	 */
-	public static String prepPackage(GameWorld world){
+	public static String prepPackage(GameWorld world,Set<String> approvedCommands){
 		//Firstly, add all player positions to the string
 		List<float[]> players = world.getPlayerInfos();
 		StringBuilder sb = new StringBuilder();
@@ -156,6 +178,18 @@ public class NetworkDecoder {
 			sb.append(getPlayerString(p));
 			sb.append(" ");
 		}
+		
+		//Add each approved command to the string to dispatch to all players, then remove them
+		if(!approvedCommands.isEmpty()){
+			Iterator<String> itr = approvedCommands.iterator();
+			while(itr.hasNext()){
+				System.out.println("Appending extra to command");
+				sb.append(itr.next());
+				sb.append(" " );
+				itr.remove();
+			}
+		}
+		assert approvedCommands.isEmpty();
 		/* Room for extra sections of the string can go here*/
 		return sb.toString();
 	}

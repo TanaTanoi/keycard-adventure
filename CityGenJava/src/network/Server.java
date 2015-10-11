@@ -5,7 +5,9 @@ import graphics.applicationWindow.Window;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.lwjgl.opengl.GL;
 public class Server {
@@ -63,6 +65,7 @@ class ClientThread extends Thread{
 	}
 
 	public void run(){
+		Set<String> approvedCommands = new HashSet<String>();//A list of commands that have been approved to be sent
 		try{
 			while(true){
 				Thread.sleep(100);
@@ -74,7 +77,7 @@ class ClientThread extends Thread{
 						BufferedReader clientIn =new BufferedReader(
 								new InputStreamReader(connections.get(i).getInputStream()));
 						clInput = clientIn.readLine();
-						if(!NetworkDecoder.decodeClientInput(Server.world,clInput,i)){
+						if(!NetworkDecoder.decodeClientInput(Server.world,clInput,i,approvedCommands)){
 							connections.get(i).close();
 							connections.remove(i);
 							i--;
@@ -82,7 +85,7 @@ class ClientThread extends Thread{
 					}
 
 					//Generate ouput to send to all clients
-					String output = NetworkDecoder.prepPackage(Server.world);
+					String output = NetworkDecoder.prepPackage(Server.world,approvedCommands);
 					//Send output to all clients
 					//System.out.println("Sending " + output);
 					for(int i = 0; i < connections.size();i++){

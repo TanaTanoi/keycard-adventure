@@ -8,5 +8,8 @@ WALL 70 80 70 99
 WALL 70 80 80 80
 WALL 90 80 99 80
 PROP 5 5 keycard.obj
-PROP 4 4 teapot.obj
-PROP 1 1 table.obj
+TOOL key
+Teapot Key
+Key for Teapot 
+4 4 teapot.obj
+PROP 1 1 table2.obj

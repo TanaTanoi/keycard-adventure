@@ -55,6 +55,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
 import vec.Vector2;
+import gameObjects.objects.Item;
 import gameObjects.player.Player;
 import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
@@ -86,7 +87,10 @@ public class ClientController {
 	private float zoom = 1f;
 	private float xRot = 0;
 	private float rot_y = 0;
-
+	
+	/*Local player game-related fields*/
+	private Item toPickup = null;
+	
 	public ClientController(String filename,String IP){
 		world = new GameWorld(filename);
 		view = new View(world,this);
@@ -160,7 +164,18 @@ public class ClientController {
 	public float getRotation(){
 		return xRot;
 	}
-
+	
+	/**
+	 * Returns the item that wants to be picked up. 
+	 * After this is called, sets the pointer on this object to null
+	 * @return - The item that wants to be picked up
+	 */
+	public Item getToPickup(){
+		Item toReturn = toPickup;
+		toPickup = null;
+		return toReturn;
+	}
+	
 	public static void main(String[] args) {
 		new ClientController("testConfig.txt",args[0]);
 	}
@@ -291,8 +306,7 @@ public class ClientController {
 		if(button == GLFW_MOUSE_BUTTON_1){
 			mouse_down = state==1;
 			
-			
-			
+			toPickup = world.closestItem(current.getLocation(), 10.0f);//TODO calibrate pickup radius
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {

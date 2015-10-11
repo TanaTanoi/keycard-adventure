@@ -35,5 +35,14 @@ public class Location {
 	public void setY(float y) {
 		this.y = y;
 	}
+	
+	/**
+	 * The distance between this and another location
+	 * @param other - Other location to get the distance from 
+	 * @return- Length of space between the locations
+	 */
+	public float distance(Location other){
+		return (float) Math.hypot(x-other.getX(),y-other.getY());
+	}
 
 }

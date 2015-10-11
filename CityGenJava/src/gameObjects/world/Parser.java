@@ -76,9 +76,10 @@ public class Parser {
 	private static Item parseTool(Scanner s, int level, int setItemID) {
 		Tool t;
 
-		String type = s.next();
+		String type = s.next();s.nextLine();//Clear end of line
 		String name = s.nextLine();
 		String description = s.nextLine();
+		System.out.println(name);
 		int x = s.nextInt();
 		int y = s.nextInt();
 		Location l = new Location(x,y,level);
