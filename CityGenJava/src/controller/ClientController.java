@@ -93,7 +93,7 @@ public class ClientController {
 	private Item toPickup = null;
 
 	public ClientController(String filename,String IP){
-		
+
 		world = new GameWorld(filename);
 		view = new View(world,this);
 		Parser.parseWorld(filename,world);
@@ -110,8 +110,7 @@ public class ClientController {
 			}
 		}
 		cw.dispose();
-		IP = "LOCAL";
-		
+		IP = "130.195.6.165";
 		//wait until we have been accepted
 		try{
 			if(IP.equals("LOCAL")){

@@ -11,6 +11,10 @@ public class Client extends Thread{
 	private  int port = 32768;
 	Socket clientSocket;
 	ClientController game;
+
+	private DataOutputStream serverOut;
+	private BufferedReader serverIn;
+
 	String  gameHost = InetAddress.getLocalHost().getHostAddress();
 	private boolean connected = true;
 	/**
@@ -30,6 +34,14 @@ public class Client extends Thread{
 		System.out.println("Conneting to " +IP);
 		gameHost = IP;
 		this.game = game;
+
+		try{
+			attemptConnect();
+		}catch(IOException e){
+			System.out.println("Encounted network problem");
+			e.printStackTrace();
+
+		}
 		start();
 	}
 
@@ -49,6 +61,30 @@ public class Client extends Thread{
 	public void disconenct(){
 		connected = false;
 	}
+
+	public boolean attemptConnect() throws IOException{
+		String userIn;
+		String serverInput;
+		System.out.println("Connecting to " + gameHost);
+		clientSocket = new Socket(gameHost,port);
+		serverOut = new DataOutputStream(clientSocket.getOutputStream());
+		serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+		//send initial login packet containing name
+		String name  = "George";
+		serverOut.writeBytes(name+"\n");
+		serverOut.flush();
+
+		//receive ID number
+		serverInput = serverIn.readLine();
+
+		//set game's current player to a new player. Appends the name to the serverInput
+		//To allow for simple parsing
+		NetworkDecoder.decode(game,serverInput + " " + name);
+		return true;
+	}
+
+
 	/**
 	 * This is the thread's main loop. It will set up the connection to the server,
 	 * send an intro package, then continuously send player-position related packages.
@@ -58,23 +94,6 @@ public class Client extends Thread{
 		try{
 			String userIn;
 			String serverInput;
-			System.out.println("Connecting to " + gameHost);
-			clientSocket = new Socket(gameHost,port);
-			DataOutputStream serverOut = new DataOutputStream(clientSocket.getOutputStream());
-			BufferedReader serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-			//send initial login packet containing name
-			String name  = "George";
-			serverOut.writeBytes(name+"\n");
-			serverOut.flush();
-
-			//receive ID number
-			serverInput = serverIn.readLine();
-
-			//set game's current player to a new player. Appends the name to the serverInput
-			//To allow for simple parsing
-			NetworkDecoder.decode(game,serverInput + " " + name);
-
 			//assume regular packet loop
 			while(connected){
 				//send input containing player's information
