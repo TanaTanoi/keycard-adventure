@@ -98,67 +98,125 @@ public class View {
 		renderPlayers();
 		renderWalls();
 
-		drawMinimap();
+		renderDisplayBar();
+
 	}
 
-	private void drawMinimap(){
-		List<Player> players = world.getPlayers();
-		glDisable(GL_DEPTH_TEST);
-		int size = 200;
+	private void renderDisplayBar() {
+		glDisable(GL_DEPTH_TEST); //disable depth test so that objects don't draw over the display
+		glDisable(GL_LIGHTING); //disable lighting so the bar isn't affected by shadows
+
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, w.getWidth(), 0, w.getHeight(), -1, 1);
 		glMatrixMode(GL_MODELVIEW);
-		
+
+		drawInventory();
+		drawMinimap();
+
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+		glColor3f(1,1,1);
+
+	}
+
+	private void drawInventory() {
 		glBegin(GL_QUADS);
-		
+		//QUAD above mini map
+		glVertex3f(5,230,0); 
+		glVertex3f(5,215,0); 
+		glVertex3f(215,215,0);
+		glVertex3f(215,230,0);
+
+		//LEFT of minimap
+		glVertex3f(215,230,0);
+		glVertex3f(215,10,0);
+		glVertex3f(230,10,0);
+		glVertex3f(230,230,0);
+
+		//Bar along the bottom of the screen
+		glVertex3f(230,50,0);
+		glVertex3f(230,10,0);
+		glVertex3f(550,10,0);
+		glVertex3f(550,50,0);
+
+		//Inventory box
+		glVertex3f(550,180,0);
+		glVertex3f(550,10,0);
+		glVertex3f(790,10,0);
+		glVertex3f(790,180,0);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);//for smoothing out rough edges
+		//triangle to the side of the mini-map
+		glVertex3f(230,10,0);
+		glVertex3f(250,10,0);
+		glVertex3f(230,230,0);
+
+		//triangle to the side of the inventory box
+		glVertex3f(550,180,0);
+		glVertex3f(550,10,0);
+		glVertex3f(530,10,0);
+
+		//triangle on the top of of the inventory box
+		glVertex3f(550,180,0);
+		glVertex3f(790,190,0);
+		glVertex3f(790,180,0);
+
+
+		glEnd();
+	}
+
+	private void drawMinimap(){
+		List<Player> players = world.getPlayers();
+		int size = 200;
+
+		glBegin(GL_QUADS); //Draw white square for the background
+
 		glVertex3f(10,10,0);
 		glVertex3f(10,10+size,0);
 		glVertex3f(10+size,10+size,0);
 		glVertex3f(10+size,10,0);
-		
+
 		glEnd();
-		
+
 		float gridSpacing = size/occupiedSpace.length;
-		
-		
+
+
 		glColor3f(0,0,0);
 		glPointSize(2);
-		glBegin(GL_POINTS);
+		glBegin(GL_POINTS);//draw the collision map (walls and objects)
 		for (int x = occupiedSpace.length-1; x >= 0; x--){
 			for (int z = 0; z < occupiedSpace[x].length; z++){
 				if (occupiedSpace[x][z] != '-') glVertex3f(11+(x*gridSpacing),11+(z*gridSpacing),0);
 			}			
 		}
 		glEnd();
-		
+
 		float playerSpacing = (float) (size/gameSize);
-		for(Player p: players){
-			if (!p.equals(control.getCurrentPlayer())) glColor3f(1,0,0);
-			else glColor3f(0,1,0);
+		for(Player p: players){ // draw all players as triangles
+			if (!p.equals(control.getCurrentPlayer())) glColor3f(1,0,0); // make player blue if it isn't the current player
+			else glColor3f(0,1,0); // otherwise green
+
 			glPushMatrix();
-//			
+
 			float x = size-(p.getLocation().getX()+10)*playerSpacing;
 			float y = size-(p.getLocation().getY()+10)*playerSpacing;
 			glTranslatef(11+x, 11+y, 0);
 			glRotatef(p.getOrientation()-180,0, 0, 1);
+
 			glBegin(GL_TRIANGLES);
-			
-			
+
 			glVertex3f(0,playerSpacing/4,0);
 			glVertex3f(-playerSpacing/2,-playerSpacing,0);
 			glVertex3f(playerSpacing/2,-playerSpacing,0);
-			
-//			glVertex3f(11+x,11+y+playerSpacing/4,0);
-//			glVertex3f(11+x-playerSpacing/2,11+y-playerSpacing,0);
-//			glVertex3f(11+x+playerSpacing/2,11+y-playerSpacing,0);
+
 			glEnd();
+
 			glPopMatrix();
-			System.out.println(p.getLocation().getX());
 		}
-		
-		glEnable(GL_DEPTH_TEST);
-		glColor3f(1,1,1);
+
 	}
 
 	private void initaliseCollisions(int width, int depth) {
@@ -350,17 +408,18 @@ public class View {
 
 	public void fillRect(double x, double y, double width, double height){
 		glBegin(GL_QUADS);	//Set mode to fill spaces within vertices
-
-		glTexCoord2d(0,1);
+		float tw = (float) Math.abs(width);
+		float th = (float) Math.abs(height);
+		glTexCoord2f(0,th);
 		glVertex3d(x,height,y);
 
-		glTexCoord2d(0,0);
+		glTexCoord2f(0,0);
 		glVertex3d(x,0f,y);
 
-		glTexCoord2d(1,0);
+		glTexCoord2f(tw,0);
 		glVertex3d(x+width,0f,y);
 
-		glTexCoord2d(1,1);
+		glTexCoord2f(tw,th);
 		glVertex3d(x+width,height,y);
 
 		glEnd();//End quad mode
