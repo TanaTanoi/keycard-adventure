@@ -71,8 +71,9 @@ public class Client extends Thread{
 			//receive ID number
 			serverInput = serverIn.readLine();
 
-			//set game's current player to a new player.
-			game.setCurrentPlayer(name, Integer.parseInt(serverInput));
+			//set game's current player to a new player. Appends the name to the serverInput
+			//To allow for simple parsing
+			NetworkDecoder.decode(game,serverInput + " " + name);
 
 			//assume regular packet loop
 			while(connected){

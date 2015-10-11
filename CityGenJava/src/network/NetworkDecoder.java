@@ -31,11 +31,11 @@ public class NetworkDecoder {
 
 	/**
 	 * Gets a disconnection string that is sent when a player disconnects,
-	 * formally, from the server. 
+	 * formally, from the server.
 	 * The message is as follows
 	 * 			DISC [Player ID]
 	 * @param game_client - Current player to get the ID from
-	 * @return - String that can be sent to the server 
+	 * @return - String that can be sent to the server
 	 */
 	public static String getPlayerDisconnect(ClientController game_client){
 		return "DISC " + (int)game_client.getPlayerInfo()[0];
@@ -47,13 +47,24 @@ public class NetworkDecoder {
 	 * @param input - String directly from the server.
 	 */
 	public static void decode(ClientController game_client, String input){
-//		System.out.println("Decoding " + input);
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){
 			String next = sc.next();
 			//if input is player
 			if(next.equals("P")){
 				parsePlayer(sc,game_client);
+
+			}else if(next.matches("-*\\d")){
+				//if the returned value is JUST a number, then its a reply from the server for connection
+				int playerID = Integer.parseInt(next);
+				if(playerID >=0){
+					//if acceptable ID number
+					game_client.setCurrentPlayer(sc.next(), playerID);
+				}else if(playerID == -1){//-1 means max players has been reached
+					throw new IllegalArgumentException("Server has max amount of players already!");
+				}else if(playerID == -2){//-2 means game has already started. TODO actually implement this
+					throw new IllegalArgumentException("Game has already started. Connection refused.");
+				}
 			}
 		}
 		sc.close();
@@ -81,13 +92,12 @@ public class NetworkDecoder {
 		}
 	}
 
-
 	/*----------------------------------*\
 	 * 		SERVER'S DECODE METHODS 	*
 	\*----------------------------------*/
 
 	/**
-	 * Decode the input from a certain player. Returns false if the player 
+	 * Decode the input from a certain player. Returns false if the player
 	 * has made a formal disconnect
 	 * If the input is invalid, can throw exceptions.
 	 * @param game - The Game World that will be updated by this method call.
@@ -113,16 +123,17 @@ public class NetworkDecoder {
 			}else if(next.equals("DISC")){
 				try{
 					int playerID = Integer.parseInt(sc.next());
-					//TODO handle disconnect of this player
+					//TODO handle disconnect of this player on the game world.
 					return false;
 				}catch(NumberFormatException e){
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
 				}
-				
+
 			}else if(next.equals("ITEM")){
 				//ITEM [ITEM ID] [PLAYER ID of play who will receive item]
 				int playerID = sc.nextInt();
 				int itemID = sc.nextInt();
+
 			}
 		}
 		sc.close();

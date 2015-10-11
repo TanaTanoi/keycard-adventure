@@ -37,15 +37,17 @@ public class Server {
 					new InputStreamReader(cl.getInputStream()));
 			String clInput = clientIn.readLine();
 
-			//Add player to the game world
-			int pID = world.addNewPlayer(clInput);
+			//Add player to the game world. If the server has the max amount of players, it returns -1
+			int playerID = world.addNewPlayer(clInput);
 
 			//Return an ID associated with this player.
 			DataOutputStream clientOut = new DataOutputStream(cl.getOutputStream());
-			clientOut.writeBytes(pID+"\n");
+			clientOut.writeBytes(playerID+"\n");
 
-			//Accept a client and add it to the client thread
-			ct.add(cl);
+			//Accept a client (if applicable) and add it to the client thread
+			if(playerID>=0){		//won't accept the client if the gameworld said no
+				ct.add(cl);
+			}
 		}
 
 	}

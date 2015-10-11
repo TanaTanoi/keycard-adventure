@@ -14,6 +14,8 @@ import java.util.Scanner;
 
 public class GameWorld {
 
+	public static final int MAX_PLAYERS = 4;
+
 	// For testing
 
 	private char[][] fakeFloor;
@@ -26,7 +28,7 @@ public class GameWorld {
 
 	public GameWorld(String filename){
 		init();
-		//Parser is called on ClientController now
+		//Parser is called on ClientController now, so we have more control over when parsing happens
 	}
 
 	/**
@@ -47,17 +49,25 @@ public class GameWorld {
 	 */
 	public void updatePlayerInfo(int id, float x, float y, int rotation){
 		if(allPlayers.size()>id){
-			//			System.out.println("Updating player " + id + " to " + x + " " +y);
-			for(Player p:allPlayers){
-				if(p.getID() == id){
-					p.move(x, y);
-					p.setOrientation(rotation);
-				}
-			}
+			Player p = getPlayer(id);
+			p.move(x, y);
+			p.setOrientation(rotation);
 		}
 	}
 
+	/**
+	 * Adds a new player with the given name, to the game world.
+	 * It then returns an ID number of the added player.
+	 * If the total number of players (indicated by MAX_PLAYERS) is exceeded,
+	 * returns -1.
+	 * If the game has already started, and no new players can join, returns -2.
+	 * The returned ID is global (accross server and clients).
+	 * @param name - Name of player to be added.
+	 * @return - The ID of the newly added player; -1 if max players has been reached; -2 if game has already started.
+	 */
 	public int addNewPlayer(String name){
+		if(allPlayers.size()==MAX_PLAYERS)return-1;
+		//TODO add condition for if the game has already started.
 		Player p = new Player(name, playerID++);
 		allPlayers.add(p); // adds player to game world
 		// Now adds player to correct floor
@@ -82,8 +92,18 @@ public class GameWorld {
 	public char[][] getCollisions(){
 		return fakeFloor;
 	}
-
-
+	/**
+	 * Adds an item given by a certain item ID to a player specified  by an ID
+	 * (Delegates work to PickUpItem(Player,Item) method.
+	 * @throws - IllegalArgumentException if the player ID or item ID is not available
+	 * @param playerID
+	 * @param itemID
+	 */
+	public void pickUpItem(int playerID, int itemID){
+		Player p = getPlayer(playerID);
+		if(p==null){throw new IllegalArgumentException("Invalid Player ID");}
+		pickUpItem(p,null);//TODO implement a get Item from ID method
+	}
 
 	/**
 	 * Picks up an item for a player.
@@ -116,6 +136,7 @@ public class GameWorld {
 	/**
 	 * Gets all of the player information and returns them in the following format:
 	 * ID X Y ROTATION
+	 * ID and Rotation can safely be casted to ints.
 	 * @return - List of Player information arrays
 	 */
 	public List<float[]> getPlayerInfos(){
@@ -126,6 +147,7 @@ public class GameWorld {
 		}
 		return toReturn;
 	}
+
 	public void addPlayer(Player p){
 		allPlayers.add(p);
 		System.out.println("Added player " + allPlayers.size());
@@ -138,4 +160,24 @@ public class GameWorld {
 	public int setItemID(){
 		return itemID++;
 	}
+	/**
+	 * Helper method that gets the player from a given Player ID
+	 * @param playerID - Global ID of player
+	 * @return - Player associated with parameter: playerID or null if player isn't present.
+	 */
+	private Player getPlayer(int playerID){
+		for(Player p:allPlayers){
+			if(p.getID()==playerID){
+				return p;
+			}
+		}
+		return null;
+	}
 }
+
+
+
+
+
+
+
