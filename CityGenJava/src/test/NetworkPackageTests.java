@@ -1,7 +1,9 @@
 package test;
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.*;
 
@@ -10,13 +12,14 @@ import gameObjects.world.GameWorld;
 import network.*;
 public class NetworkPackageTests {
 
-	
+
 	GameWorld g;
 	/*Test the game correctly sends the players positions*/
 	@Test
 	public void test_network_decoder_01(){
 		setupGame();
-		String input = NetworkDecoder.prepPackage(g);
+		Set<String> empty = new HashSet<String>();
+		String input = NetworkDecoder.prepPackage(g,empty);
 		/*Check that the server outputs the correct information (x and y are times 100)*/
 		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
 		/*Then double check that the world is actually updated to this (x and  y are normal values)*/
@@ -27,25 +30,26 @@ public class NetworkPackageTests {
 	/*Test that the server correctly moves a player*/
 	@Test
 	public void test_network_decoder_move_01(){
+		Set<String> empty = new HashSet<String>();
 		setupGame();
 		/*Check that previous test holds*/
-		String input = NetworkDecoder.prepPackage(g);
+		String input = NetworkDecoder.prepPackage(g,empty);
 		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
 		/*Then send and change the game world via new command from a player*/
 		String clientInput = "P 0 1500 1000 0 ";
-		assertTrue(NetworkDecoder.decodeClientInput(g, clientInput, 0));
+		assertTrue(NetworkDecoder.decodeClientInput(g, clientInput, 0,empty));
 		/*Check that the updated package is true*/
-		input = NetworkDecoder.prepPackage(g);
+		input = NetworkDecoder.prepPackage(g,empty);
 		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 0 1500 1000 0 P 1 2000 2000 0 "));
 		float[][] playerInfos =  {{0.0f, 15.0f,10.0f, 0.0f},
 								{1.0f, 20.0f,20.0f, 0.0f}};
 		checkGameworld_Positions(playerInfos);
 	}
-	
+
 	/*---------------*\
 	 * Helper methods*
 	\* --------------*/
-	
+
 	public void setupGame(){
 		g = new GameWorld("floor01.txt");
 		Player p1 = new Player("dave",0);
@@ -55,7 +59,7 @@ public class NetworkPackageTests {
 		g.addPlayer(p1);
 		g.addPlayer(p2);
 	}
-	
+
 	/*Check if the players information in the game world is the same as what is provided*/
 	public void checkGameworld_Positions(float[][] players){
 		List<float[]> infos = g.getPlayerInfos();
@@ -65,5 +69,5 @@ public class NetworkPackageTests {
 			}
 		}
 	}
-	
+
 }

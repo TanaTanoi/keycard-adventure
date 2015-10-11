@@ -62,6 +62,7 @@ import gameObjects.world.GameWorld;
 import gameObjects.world.Location;
 import gameObjects.world.Parser;
 import graphics.View;
+import graphics.applicationWindow.ConnectionWindow;
 import graphics.applicationWindow.Window;
 import network.Client;
 
@@ -87,11 +88,22 @@ public class ClientController {
 	private float zoom = 1f;
 	private float xRot = 0;
 	private float rot_y = 0;
-	
+
 	/*Local player game-related fields*/
 	private Item toPickup = null;
-	
+
 	public ClientController(String filename,String IP){
+		String[] nameAndIP = {"",""};
+		IP = nameAndIP[1];
+		ConnectionWindow cw = new ConnectionWindow(nameAndIP);
+		while(cw.isValid()||cw.isFocused()){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		world = new GameWorld(filename);
 		view = new View(world,this);
 		Parser.parseWorld(filename,world);
@@ -110,7 +122,7 @@ public class ClientController {
 	}
 
 	private void start(){
-		
+
 		view.setMap(world.getCollisions());
 		init();
 		// need to make a spawn method for new player
@@ -164,9 +176,9 @@ public class ClientController {
 	public float getRotation(){
 		return xRot;
 	}
-	
+
 	/**
-	 * Returns the item that wants to be picked up. 
+	 * Returns the item that wants to be picked up.
 	 * After this is called, sets the pointer on this object to null
 	 * @return - The item that wants to be picked up
 	 */
@@ -175,7 +187,7 @@ public class ClientController {
 		toPickup = null;
 		return toReturn;
 	}
-	
+
 	public static void main(String[] args) {
 		new ClientController("testConfig.txt",args[0]);
 	}
@@ -305,7 +317,7 @@ public class ClientController {
 		System.out.println(button + " " + state  + " " + arg3);
 		if(button == GLFW_MOUSE_BUTTON_1){
 			mouse_down = state==1;
-			
+
 			toPickup = world.closestItem(current.getLocation(), 10.0f);//TODO calibrate pickup radius
 		}
 	}
