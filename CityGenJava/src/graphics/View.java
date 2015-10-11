@@ -263,21 +263,35 @@ public class View {
 			z-=dx;
 			x-=dz;
 		}
-		for (int j = -1; j < 2; j++){
-			for (int i = -1; i < 2; i++){
-				int x = (int)((this.x)/squareSize)+49+i;
-				int z = (int)((this.z)/squareSize)+49+j;
-				if (x < 0 || x >= occupiedSpace.length) return;
-				if (z < 0 || z >= occupiedSpace[0].length) return;
-				if (occupiedSpace[100-x][100-z] != '-'){
-
-					System.out.println(x + " " + z);
-					return;
-				}
+		for (int i = -13; i < 13; i++){
+			int x = (int)(((this.x+10) + dx*i)/squareSize);
+			int z = (int)(((this.z+10) + dz*i)/squareSize);
+			if (x < 0 || x >= occupiedSpace.length) return;
+			if (z < 0 || z >= occupiedSpace[0].length) return;
+			if (occupiedSpace[100-x][100-z] != '-'){
+				return;
 			}
 		}
 
 		control.getCurrentPlayer().move(this.x, this.z);
+	}
+	
+	public char interact(double xRot){
+		double dz = Math.cos(Math.toRadians(xRot))/10;
+		double dx = Math.sin(Math.toRadians(xRot))/10;
+		
+	
+		
+		for (int i = -13; i < 13; i++){
+			int x = (int)(((this.x-dx+10) + dx*i)/squareSize);
+			int z = (int)(((this.z+dz+10) + dz*i)/squareSize);
+//			if (x < 0 || x >= occupiedSpace.length) 
+//			if (z < 0 || z >= occupiedSpace[0].length)
+			if (occupiedSpace[100-x][100-z] != '-'){
+				return occupiedSpace[100-x][100-z];
+			}
+		}
+		return '-';
 	}
 
 
@@ -321,7 +335,6 @@ public class View {
 				for(Item it : control.getFloor().getItems()){
 
 					if (it.getModelName().contains("tea")){
-						System.out.println("rendering player");
 						glCallList(control.getFloor().getDisplayList(it));
 						break;
 					}
