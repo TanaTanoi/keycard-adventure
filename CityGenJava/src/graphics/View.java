@@ -80,7 +80,6 @@ public class View {
 				glPushMatrix();
 				glTranslated(x, y, z);
 				glPushMatrix();
-				System.out.println("Drawing object " + i.getModelName());
 				Location l = i.getLocation();
 				glTranslatef(l.getX(), y,l.getY());
 				glScalef(0.1f, 0.1f, 0.1f);
@@ -243,7 +242,6 @@ public class View {
 				for(Item it : control.getFloor().getItems()){
 					
 					if (it.getModelName().contains("tea")){
-						System.out.println("cunt " + it.getModelName());
 						glCallList(control.getFloor().getDisplayList(it));
 						break;
 					}

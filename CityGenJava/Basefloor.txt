@@ -7,6 +7,6 @@ WALL 0 50 30 50
 WALL 70 80 70 99
 WALL 70 80 80 80
 WALL 90 80 99 80
-PROP 40 40 keycard.obj
+PROP 5 5 keycard.obj
 PROP 4 4 teapot.obj
-PROP 10 10 table.obj
+PROP 1 1 table.obj

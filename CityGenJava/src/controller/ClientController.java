@@ -135,10 +135,10 @@ public class ClientController {
 		view.renderView();
 		if (mousePos.y > 80){
 			if (mousePos.x > 600){
-				xRot +=Math.pow((mousePos.x-600)/100,1.2);
+				xRot +=Math.pow((mousePos.x-600)/100,1.4);
 			}
 			else if (mousePos.x < 200){
-				xRot -=Math.pow((200-mousePos.x)/100,1.2);
+				xRot -=Math.pow((200-mousePos.x)/100,1.4);
 			}
 			//xRot %= 360;
 			current.setOrientation((int)xRot);
