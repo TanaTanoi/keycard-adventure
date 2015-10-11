@@ -25,6 +25,10 @@ public class ConnectionWindow extends JFrame{
 		setVisible(true);
 	}
 
+	
+	/**
+	 * Adds all buttons and text fields to the main connection window
+	 */
 	private void setupDisplay() {
 		JPanel display = new JPanel(new GridLayout(5,1));
 
@@ -43,11 +47,16 @@ public class ConnectionWindow extends JFrame{
 				//
 				//TODO code to deal with network here
 				//
+				dispose();
 			}
 		});
-
-
+		JPanel buttonPanel = new JPanel(new GridLayout(1,3));//To get the button to sit nicely in the middle of the window
+		buttonPanel.add(new JLabel());
+		buttonPanel.add(completed);
+		buttonPanel.add(new JLabel());
+		
+		display.add(buttonPanel);
+		
 		add(display);
-
 	}
 }
