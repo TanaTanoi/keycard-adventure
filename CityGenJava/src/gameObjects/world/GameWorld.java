@@ -144,6 +144,7 @@ public class GameWorld {
 		Floor f = floorList.get(p.getLocation().getFloor());
 		Item i = f.getItem(itemID);
 		if(p.pickUp(i)){
+			System.out.println("Is picking item up");
 			f.removeItem(i);
 			i.setLocation(null);
 		}

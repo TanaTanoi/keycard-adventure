@@ -86,6 +86,7 @@ public class Floor {
 	}
 
 	public void removeItem(Item i){
+		System.out.println("Removing item");
 		items.remove(i);
 	}
 
