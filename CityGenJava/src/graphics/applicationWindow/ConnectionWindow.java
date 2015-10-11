@@ -14,13 +14,17 @@ import javax.swing.JTextField;
 
 public class ConnectionWindow extends JFrame{
 	public ConnectionWindow(){
-		super("Connection Window");
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		super("Connection Window");//Give the window a title
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);//Should only be closable if the player has entered a name and IP
+		
+		setLocationRelativeTo(null);//center the window
+		setLocation(getLocation().x-150, getLocation().y-100);
 		setMinimumSize(new Dimension(300,200));
-
+		
 		setupDisplay();
 
 		pack();
+		
 		setResizable(false);
 		setVisible(true);
 	}
