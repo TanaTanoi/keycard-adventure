@@ -82,7 +82,6 @@ public class View {
 				glPushMatrix();
 				Location l = i.getLocation();
 				glTranslatef(l.getX(), y,l.getY());
-				glScalef(0.1f, 0.1f, 0.1f);
 				glCallList(control.getFloor().getDisplayList(i));
 				glPopMatrix();
 				glPopMatrix();
@@ -92,7 +91,7 @@ public class View {
 		x = playerLoc.getX();
 		z = playerLoc.getY();
 
-	
+
 		renderPlayers();
 		renderWalls();
 
@@ -240,7 +239,7 @@ public class View {
 				glRotated(p.getOrientation()+90,0,1,0); // -90 to make the spout point in the direction the player is facing
 				glScaled(0.1, 0.1, 0.1);
 				for(Item it : control.getFloor().getItems()){
-					
+
 					if (it.getModelName().contains("tea")){
 						glCallList(control.getFloor().getDisplayList(it));
 						break;

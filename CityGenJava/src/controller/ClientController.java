@@ -290,6 +290,9 @@ public class ClientController {
 		System.out.println(button + " " + state  + " " + arg3);
 		if(button == GLFW_MOUSE_BUTTON_1){
 			mouse_down = state==1;
+			
+			
+			
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {

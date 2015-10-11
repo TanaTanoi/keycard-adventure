@@ -100,6 +100,7 @@ public class NetworkDecoder {
 	 * Decode the input from a certain player. Returns false if the player
 	 * has made a formal disconnect
 	 * If the input is invalid, can throw exceptions.
+	 * If the input is null (i.e. hard disconnect from player) returns false
 	 * @param game - The Game World that will be updated by this method call.
 	 * @param input - The direct input from the client
 	 * @param player - The player who sent the input
@@ -107,6 +108,7 @@ public class NetworkDecoder {
 	 */
 	public static boolean decodeClientInput(GameWorld game,String input, int player){
 		System.out.println("Received "+ input + " from player " + player);
+		if(input==null)return false;
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){
 			String next = sc.next();
