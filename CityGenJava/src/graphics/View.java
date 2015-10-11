@@ -64,7 +64,6 @@ public class View {
 		initaliseCollisions(100,100);
 		y = -0.95f;
 		w = new Window();
-		//		teapot = new Furniture("teapot", "teapot.obj");
 	}
 
 	public void renderView(){
@@ -122,10 +121,12 @@ public class View {
 	}
 
 	private void drawInventory() {
+		glColor3f(0.55f,0.35f,0.0f);
+
 		glBegin(GL_QUADS);
 		//QUAD above mini map
-		glVertex3f(5,230,0); 
-		glVertex3f(5,215,0); 
+		glVertex3f(5,230,0);
+		glVertex3f(5,215,0);
 		glVertex3f(215,215,0);
 		glVertex3f(215,230,0);
 
@@ -164,8 +165,9 @@ public class View {
 		glVertex3f(790,190,0);
 		glVertex3f(790,180,0);
 
-
 		glEnd();
+
+		glColor3f(1,1,1);
 	}
 
 	private void drawMinimap(){
@@ -190,7 +192,7 @@ public class View {
 		for (int x = occupiedSpace.length-1; x >= 0; x--){
 			for (int z = 0; z < occupiedSpace[x].length; z++){
 				if (occupiedSpace[x][z] != '-') glVertex3f(11+(x*gridSpacing),11+(z*gridSpacing),0);
-			}			
+			}
 		}
 		glEnd();
 
@@ -275,18 +277,16 @@ public class View {
 
 		control.getCurrentPlayer().move(this.x, this.z);
 	}
-	
+
 	public char interact(double xRot){
 		double dz = Math.cos(Math.toRadians(xRot))/10;
 		double dx = Math.sin(Math.toRadians(xRot))/10;
-		
-	
-		
+
+
+
 		for (int i = -13; i < 13; i++){
 			int x = (int)(((this.x-dx+10) + dx*i)/squareSize);
 			int z = (int)(((this.z+dz+10) + dz*i)/squareSize);
-//			if (x < 0 || x >= occupiedSpace.length) 
-//			if (z < 0 || z >= occupiedSpace[0].length)
 			if (occupiedSpace[100-x][100-z] != '-'){
 				return occupiedSpace[100-x][100-z];
 			}
