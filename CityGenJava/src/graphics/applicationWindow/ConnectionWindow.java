@@ -59,7 +59,8 @@ public class ConnectionWindow extends JFrame{
 				//
 				nameAndIP[0] = name;
 				nameAndIP[1] = address;
-				dispose();
+//				dispose();
+				setVisible(false);
 			}
 		});
 		JPanel buttonPanel = new JPanel(new GridLayout(1,3));//To get the button to sit nicely in the middle of the window

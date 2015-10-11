@@ -93,10 +93,15 @@ public class ClientController {
 	private Item toPickup = null;
 
 	public ClientController(String filename,String IP){
+		
+		world = new GameWorld(filename);
+		view = new View(world,this);
+		Parser.parseWorld(filename,world);
+		glClearColor(0f, 0f, 0f, 1.0f);
 		String[] nameAndIP = {"",""};
 		IP = nameAndIP[1];
 		ConnectionWindow cw = new ConnectionWindow(nameAndIP);
-		while(cw.isValid()||cw.isFocused()){
+		while(cw.isVisible()){
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -104,9 +109,9 @@ public class ClientController {
 				e.printStackTrace();
 			}
 		}
-		world = new GameWorld(filename);
-		view = new View(world,this);
-		Parser.parseWorld(filename,world);
+		cw.dispose();
+		IP = "LOCAL";
+		
 		//wait until we have been accepted
 		try{
 			if(IP.equals("LOCAL")){
