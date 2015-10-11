@@ -70,8 +70,10 @@ public class View {
 	public void renderView(){
 		if (!loaded){
 			objectTextureList.add(new Texture("brick.jpg").getTextureID());
-			initaliseCamera();
+			printCollisions();
+			loaded = true;
 		}
+		initaliseCamera();
 		float delta = control.getRotation();
 		glRotatef(delta, 0, 1, 0);
 		if(control.getFloor()!=null){
@@ -82,6 +84,7 @@ public class View {
 				glPushMatrix();
 				Location l = i.getLocation();
 				glTranslatef(l.getX(), y,l.getY());
+				glScalef(0.1f, 0.1f, 0.1f);
 				glCallList(control.getFloor().getDisplayList(i));
 				glPopMatrix();
 				glPopMatrix();
@@ -95,48 +98,67 @@ public class View {
 		renderPlayers();
 		renderWalls();
 
-		//drawMinimap(0.25);
+		drawMinimap();
 	}
 
-	private void drawMinimap(double size){
+	private void drawMinimap(){
 		List<Player> players = world.getPlayers();
-		Location playerLoc = control.getCurrentPlayer().getLocation();
 		glDisable(GL_DEPTH_TEST);
-		//		int angle = control.getCurrentPlayer().getOrientation();
-		glPushMatrix();
-		//		glTranslated(playerLoc.getX(), mapY, playerLoc.getY());
-		glRotated(-control.getRotation(), 0, 1, 0);
-
-		glTranslated(-0.45, -0.45, -1.0001);
-
-		glColor3f(1f, 0.6f, 0.1f);
-
-		fillRect(0, 0, size, size);
-
-		//		glBegin(GL_QUADS);	//Draw map background
-		//
-		//		glTexCoord2d(0,1);
-		//		glVertex3d(0,size,0);
-		//
-		//		glTexCoord2d(0,0);
-		//		glVertex3d(0,0,0);
-		//
-		//		glTexCoord2d(1,0);
-		//		glVertex3d(size,0,0);
-		//
-		//		glTexCoord2d(1,1);
-		//		glVertex3d(size,size,0);
-		//
-		//		glEnd();
-
-		double sqSize = size/gameSize;
-		for (Player p: players){
-
+		int size = 200;
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, w.getWidth(), 0, w.getHeight(), -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		
+		glBegin(GL_QUADS);
+		
+		glVertex3f(10,10,0);
+		glVertex3f(10,10+size,0);
+		glVertex3f(10+size,10+size,0);
+		glVertex3f(10+size,10,0);
+		
+		glEnd();
+		
+		float gridSpacing = size/occupiedSpace.length;
+		
+		
+		glColor3f(0,0,0);
+		glPointSize(2);
+		glBegin(GL_POINTS);
+		for (int x = occupiedSpace.length-1; x >= 0; x--){
+			for (int z = 0; z < occupiedSpace[x].length; z++){
+				if (occupiedSpace[x][z] != '-') glVertex3f(11+(x*gridSpacing),11+(z*gridSpacing),0);
+			}			
 		}
 		glEnd();
-		glColor3f(1, 1, 1);
-		glPopMatrix();
+		
+		float playerSpacing = (float) (size/gameSize);
+		for(Player p: players){
+			if (!p.equals(control.getCurrentPlayer())) glColor3f(1,0,0);
+			else glColor3f(0,1,0);
+			glPushMatrix();
+//			
+			float x = size-(p.getLocation().getX()+10)*playerSpacing;
+			float y = size-(p.getLocation().getY()+10)*playerSpacing;
+			glTranslatef(11+x, 11+y, 0);
+			glRotatef(p.getOrientation()-180,0, 0, 1);
+			glBegin(GL_TRIANGLES);
+			
+			
+			glVertex3f(0,playerSpacing/4,0);
+			glVertex3f(-playerSpacing/2,-playerSpacing,0);
+			glVertex3f(playerSpacing/2,-playerSpacing,0);
+			
+//			glVertex3f(11+x,11+y+playerSpacing/4,0);
+//			glVertex3f(11+x-playerSpacing/2,11+y-playerSpacing,0);
+//			glVertex3f(11+x+playerSpacing/2,11+y-playerSpacing,0);
+			glEnd();
+			glPopMatrix();
+			System.out.println(p.getLocation().getX());
+		}
+		
 		glEnable(GL_DEPTH_TEST);
+		glColor3f(1,1,1);
 	}
 
 	private void initaliseCollisions(int width, int depth) {
@@ -240,7 +262,8 @@ public class View {
 				glScaled(0.5, 0.5, 0.5);
 				for(Item it : control.getFloor().getItems()){
 
-					if (it.getModelName().contains("ghost")){
+					if (it.getModelName().contains("tea")){
+						System.out.println("rendering player");
 						glCallList(control.getFloor().getDisplayList(it));
 						break;
 					}
