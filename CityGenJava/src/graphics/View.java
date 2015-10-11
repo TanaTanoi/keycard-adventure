@@ -237,10 +237,10 @@ public class View {
 				//				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
 				//System.out.println("rot " + p.getOrientation());
 				glRotated(p.getOrientation()+90,0,1,0); // -90 to make the spout point in the direction the player is facing
-				glScaled(0.1, 0.1, 0.1);
+				glScaled(0.5, 0.5, 0.5);
 				for(Item it : control.getFloor().getItems()){
 
-					if (it.getModelName().contains("tea")){
+					if (it.getModelName().contains("ghost")){
 						glCallList(control.getFloor().getDisplayList(it));
 						break;
 					}
