@@ -31,7 +31,7 @@ public class NetworkDecoder {
 		float[] info = game_client.getPlayerInfo();
 		StringBuilder toReturn = new StringBuilder();
 		toReturn.append(getPlayerString(info));
-		
+
 		Item pickedUp = game_client.getToPickup();
 		if(pickedUp !=null){
 			//if we want to pick up an item, send a pick up request in the form ITEM [Item ID] [Player ID]
@@ -82,15 +82,9 @@ public class NetworkDecoder {
 					throw new IllegalArgumentException("Game has already started. Connection refused.");
 				}
 			}else if(next.equals("ITEM")){
-				//TODO pickup item in the world
 				int itemID = sc.nextInt();
 				int playerID = sc.nextInt();
-				for(Item i:game_client.getFloor().getItems()){
-					System.out.println(i.getID() + ": " +i.getName());
-					if(i.getID() == itemID){
-						System.out.println("Item is " + itemID + ": "+ i.getName());
-					}
-				}
+				game_client.pickUp(playerID, itemID);
 			}
 		}
 		sc.close();
@@ -185,7 +179,7 @@ public class NetworkDecoder {
 			sb.append(getPlayerString(p));
 			sb.append(" ");
 		}
-		
+
 		//Add each approved command to the string to dispatch to all players, then remove them
 		if(!approvedCommands.isEmpty()){
 			Iterator<String> itr = approvedCommands.iterator();

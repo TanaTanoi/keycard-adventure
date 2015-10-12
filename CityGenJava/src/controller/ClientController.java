@@ -110,7 +110,7 @@ public class ClientController {
 			}
 		}
 		cw.dispose();
-		IP = "130.195.6.165";
+		IP = "130.195.6.195";
 		//wait until we have been accepted
 		try{
 			if(IP.equals("LOCAL")){
@@ -340,6 +340,10 @@ public class ClientController {
 		}else{
 			zoom/=1.1;
 		}
+	}
+
+	public void pickUp(int playerID, int itemID) {
+		world.pickUpItem(playerID, itemID);
 	}
 
 
