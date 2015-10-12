@@ -28,6 +28,7 @@ public class Floor {
 	private Map<String, Integer> displayLists;
 	private static final float SQUARE_SIZE = 0.5f;
 	private List<Character> players;
+	private List<Portal> portals;
 	private Map<Integer,Item> items;
 	private int level;
 	private char[][] floor;

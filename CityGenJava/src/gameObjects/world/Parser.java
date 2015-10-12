@@ -54,6 +54,7 @@ public class Parser {
 				try {
 					Scanner s = new Scanner(f);
 					List<Item> items = new ArrayList<Item>();
+					List<Portal> portals = new ArrayList<Portal>();
 					while(s.hasNextLine()){
 						switch(s.next()){
 						case("WALL"): // line describes wall in world
@@ -68,8 +69,12 @@ public class Parser {
 						case("DOOR"):
 							items.add(parseDoor(s,level,g.setItemID()));
 						break;
+						case("PORTAL"):
+							portals.add(parsePortal(s,level));
+							break;
 						case("CONTAINER"):
 							items.add(parseContainer(s,level,g.setItemID(),g));
+						break;
 						}
 					}
 					s.close();
@@ -81,6 +86,20 @@ public class Parser {
 			}
 		} catch (FileNotFoundException e1) {e1.printStackTrace();}
 
+	}
+
+	private static Portal parsePortal(Scanner s, int level) {
+
+		int startFloor = s.nextInt();
+		int endFloor = s.nextInt();
+
+		int x = s.nextInt();
+		int y = s.nextInt();
+		Location l = new Location(x,y,level);
+		String modelName = s.next();
+
+		Portal p = new Portal(startFloor,endFloor,l,modelName);
+		return p;
 	}
 
 	private static Item parseContainer(Scanner s, int level, int setItemID, GameWorld g) {
