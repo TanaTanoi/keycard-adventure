@@ -1,5 +1,6 @@
 package gameObjects.world;
 
+import gameObjects.objects.Door;
 import gameObjects.objects.Furniture;
 import gameObjects.objects.Item;
 import gameObjects.objects.Key;
@@ -61,16 +62,33 @@ public class Parser {
 						case("TOOL"):
 							items.add(parseTool(s,level,g.setItemID()));
 						break;
+						case("DOOR"):
+							items.add(parseDoor(s,level,g.setItemID()));
 						}
 					}
 					s.close();
 					g.setFloor(world, level, items); // adds floor to game
-					
+
 				} catch (FileNotFoundException e) {e.printStackTrace(); }
 
 			}
 		} catch (FileNotFoundException e1) {e1.printStackTrace();}
 
+	}
+
+	private static Item parseDoor(Scanner s, int level, int setItemID) {
+		String name = s.nextLine();
+		String description = s.nextLine();
+		String keyName = s.nextLine();
+		System.out.println(name);
+		int x = s.nextInt();
+		int y = s.nextInt();
+		Location l = new Location(x,y,level);
+		String modelName = s.next();
+
+		// Note is assumed locked by default
+		Door d = new Door(name,description,l,true,keyName,modelName,setItemID);
+		return d;
 	}
 
 	private static Item parseTool(Scanner s, int level, int setItemID) {
@@ -97,12 +115,15 @@ public class Parser {
 			int effectW = s.nextInt();
 			t = new Weapon(name, description, l, effectW, modelName, level);
 			break;
+
 		default:
 			t = null;
 		}
 
 		return t;
 	}
+
+
 
 	private static Item parseProp(Scanner s, int level, int ID) {
 		int x = s.nextInt();
