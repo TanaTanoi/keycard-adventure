@@ -59,7 +59,6 @@ public class ConnectionWindow extends JFrame{
 				//
 				nameAndIP[0] = name;
 				nameAndIP[1] = address;
-//				dispose();
 				setVisible(false);
 			}
 		});

@@ -43,24 +43,31 @@ public class View {
 	private char[][] occupiedSpace;
 	private GameWorld world;
 	private ClientController control;
-	//	private char[][] occupiedSpace;
-	private double spacing;
 	private double gameSize = 20;
 	private double squareSize = 0.5;
 	private float x,y,z;
 	private boolean loaded = false;
-	private int wallTexture;
-	private int wallDisplayList;
 	private Window w;
-	private GLFWErrorCallback errorCallback;
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
+	private float lightIntensity = 0.3f;
+	
+	public float getLightIntensity() {
+		return lightIntensity;
+	}
+
+	public void setLightIntensity(float lightIntensity) {
+		this.lightIntensity = lightIntensity;
+	}
+
+	private boolean displayHud = true;
+	
 
 	public View(GameWorld world,ClientController control){
 		this.world = world;
 		this.control = control;
-		objectDisplayLists = new ArrayList<Integer>();
 		objectTextureList = new ArrayList<Integer>();
+
 		initaliseCollisions(100,100);
 		y = -0.95f;
 		w = new Window();
@@ -68,7 +75,8 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			objectTextureList.add(new Texture("brick.jpg").getTextureID());
+			objectTextureList.add(Texture.getTexture("brick.jpg"));
+			objectTextureList.add(Texture.getTexture("wood.jpg"));
 			printCollisions();
 			loaded = true;
 		}
@@ -79,26 +87,61 @@ public class View {
 			for(Item i: control.getFloor().getItems()){
 				glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
 				glPushMatrix();
-				glTranslated(x, y, z);
+				glTranslatef(x, y, z);
 				glPushMatrix();
 				Location l = i.getLocation();
-				glTranslatef(l.getX(), y,l.getY());
+				glTranslatef(l.getX(), 0,l.getY());
 				glScalef(0.1f, 0.1f, 0.1f);
 				glCallList(control.getFloor().getDisplayList(i));
 				glPopMatrix();
 				glPopMatrix();
 			}
 		}
-		Location playerLoc = control.getCurrentPlayer().getLocation();
-		x = playerLoc.getX();
-		z = playerLoc.getY();
+		if (control.getCurrentPlayer() != null){
+			Location playerLoc = control.getCurrentPlayer().getLocation();
+			x = playerLoc.getX();
+			z = playerLoc.getY();
 
 
-		renderPlayers();
-		renderWalls();
 
-		renderDisplayBar();
+			renderPlayers();
+			renderWalls();
+			renderBounds();
+			if (displayHud) renderDisplayBar();
+		}
 
+	}
+
+	private void renderBounds() {
+//		glColor3f(0.0f,0.40f,0.65f);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, objectTextureList.get(1));
+		glPushMatrix();
+		glTranslatef(x, y, z);
+		glBegin(GL_QUADS);
+		//Floor quad
+		
+		glTexCoord2f(0, 0);
+		glVertex3d(-gameSize/2,0,-gameSize/2);
+		glTexCoord2f(1, 0);
+		glVertex3d(gameSize/2,0,-gameSize/2);
+		glTexCoord2f(1, 1);
+		glVertex3d(gameSize/2,0,gameSize/2);
+		glTexCoord2f(0, 1);
+		glVertex3d(-gameSize/2,0,gameSize/2);
+		//Roof quad
+		glTexCoord2f(0, 0);
+		glVertex3d(-gameSize/2,2,-gameSize/2);
+		glTexCoord2f(1, 0);
+		glVertex3d(gameSize/2,2,-gameSize/2);
+		glTexCoord2f(1, 1);
+		glVertex3d(gameSize/2,2,gameSize/2);
+		glTexCoord2f(0, 1);
+		glVertex3d(-gameSize/2,2,gameSize/2);
+
+		glEnd();
+		glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	private void renderDisplayBar() {
@@ -121,7 +164,7 @@ public class View {
 	}
 
 	private void drawInventory() {
-		glColor3f(0.55f,0.35f,0.0f);
+		glColor3f(0.0f,0.40f,0.65f);
 
 		glBegin(GL_QUADS);
 		//QUAD above mini map
@@ -137,18 +180,27 @@ public class View {
 		glVertex3f(230,230,0);
 
 		//Bar along the bottom of the screen
-		glVertex3f(230,50,0);
+		glVertex3f(230,40,0);
 		glVertex3f(230,10,0);
 		glVertex3f(550,10,0);
-		glVertex3f(550,50,0);
+		glVertex3f(550,40,0);
 
 		//Inventory box
 		glVertex3f(550,180,0);
 		glVertex3f(550,10,0);
 		glVertex3f(790,10,0);
 		glVertex3f(790,180,0);
+
+		glColor3f(1.0f,1.0f,1.0f);
+		//Clear the center of the box
+		glVertex3f(560,170,0);
+		glVertex3f(560,20,0);
+		glVertex3f(780,20,0);
+		glVertex3f(780,170,0);
 		glEnd();
 
+
+		glColor3f(0.0f,0.40f,0.65f);
 		glBegin(GL_TRIANGLES);//for smoothing out rough edges
 		//triangle to the side of the mini-map
 		glVertex3f(230,10,0);
@@ -160,11 +212,6 @@ public class View {
 		glVertex3f(550,10,0);
 		glVertex3f(530,10,0);
 
-		//triangle on the top of of the inventory box
-		glVertex3f(550,180,0);
-		glVertex3f(790,190,0);
-		glVertex3f(790,180,0);
-
 		glEnd();
 
 		glColor3f(1,1,1);
@@ -173,7 +220,6 @@ public class View {
 	private void drawMinimap(){
 		List<Player> players = world.getPlayers();
 		int size = 200;
-
 		glBegin(GL_QUADS); //Draw white square for the background
 
 		glVertex3f(10,10,0);
@@ -189,9 +235,9 @@ public class View {
 		glColor3f(0,0,0);
 		glPointSize(2);
 		glBegin(GL_POINTS);//draw the collision map (walls and objects)
-		for (int x = occupiedSpace.length-1; x >= 0; x--){
+		for (int x = 0; x < occupiedSpace.length; x++){
 			for (int z = 0; z < occupiedSpace[x].length; z++){
-				if (occupiedSpace[x][z] != '-') glVertex3f(11+(x*gridSpacing),11+(z*gridSpacing),0);
+				if (occupiedSpace[x][occupiedSpace[x].length-1-z] != '-') glVertex3f(11+(x*gridSpacing),11+(z*gridSpacing),0);
 			}
 		}
 		glEnd();
@@ -204,15 +250,15 @@ public class View {
 			glPushMatrix();
 
 			float x = size-(p.getLocation().getX()+10)*playerSpacing;
-			float y = size-(p.getLocation().getY()+10)*playerSpacing;
+			float y = (p.getLocation().getY()+10)*playerSpacing;
 			glTranslatef(11+x, 11+y, 0);
-			glRotatef(p.getOrientation()-180,0, 0, 1);
+			glRotatef(-p.getOrientation(),0, 0, 1);
 
 			glBegin(GL_TRIANGLES);
 
-			glVertex3f(0,playerSpacing/4,0);
-			glVertex3f(-playerSpacing/2,-playerSpacing,0);
-			glVertex3f(playerSpacing/2,-playerSpacing,0);
+			glVertex3f(0,3*playerSpacing/4,0);
+			glVertex3f(-playerSpacing/2,-3*playerSpacing/4,0);
+			glVertex3f(playerSpacing/2,-3*playerSpacing/4,0);
 
 			glEnd();
 
@@ -347,14 +393,14 @@ public class View {
 	}
 
 	private void renderWalls(){
-		glDisable(GL_COLOR);
+		glColor3f(0.2f,0.2f,0.2f);
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, objectTextureList.get(0));
 		double spacing = gameSize/occupiedSpace.length;
 		for (int ix = 0; ix < occupiedSpace.length; ix++){
 			for (int iz = 0; iz < occupiedSpace[0].length; iz++){
 				glPushMatrix();
-				glTranslated(x, y, z);
+				glTranslatef(x, y, z);
 				if (occupiedSpace[ix][iz] == 'X'){
 					//front and back
 					glPushMatrix();
@@ -384,8 +430,6 @@ public class View {
 			}
 		}
 		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_COLOR);
-
 	}
 
 	private void initaliseCamera() {
@@ -406,7 +450,7 @@ public class View {
 		glLightfv(GL_LIGHT0, GL_POSITION, asFloatBuffer(new float[]{0f,10f,0f,0f}));				// sets light position
 		glLightfv(GL_LIGHT0, GL_SPECULAR, asFloatBuffer(new float[]{0.01f,0.01f,0.01f,0.01f}));				// sets specular light to white
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(new float[]{0.1f,0.1f,0.1f,0.5f}));					// sets diffuse light to white
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{0.5f,0.5f,0.5f,1f}));		// global ambient light
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{lightIntensity,lightIntensity,lightIntensity,1f}));		// global ambient light
 
 		glEnable(GL_LIGHTING);										// enables lighting
 		glEnable(GL_LIGHT0);										// enables light0
@@ -436,6 +480,10 @@ public class View {
 		glVertex3d(x+width,height,y);
 
 		glEnd();//End quad mode
+	}
+	
+	public void toggleHUD(){
+		displayHud = !displayHud;
 	}
 
 	private FloatBuffer asFloatBuffer(float[] array){

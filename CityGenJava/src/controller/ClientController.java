@@ -105,12 +105,10 @@ public class ClientController {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		cw.dispose();
-		IP = "130.195.6.195";
 		//wait until we have been accepted
 		try{
 			if(IP.equals("LOCAL")){
@@ -313,7 +311,8 @@ public class ClientController {
 		if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
 		char pressed = (char)key;
-//		System.out.println("Key Pressed: " + pressed);
+		if (pressed == 'T' && action == 0) view.toggleHUD();
+		if (pressed == 'L' && action == 0) view.setLightIntensity(view.getLightIntensity()+0.1f);
 		view.move(pressed, xRot);
 	}
 

@@ -17,9 +17,8 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 
 public class Texture {
-	private int textureID;
 
-	public Texture(String path){
+	public static int getTexture(String path){
 		try {
 			BufferedImage tex = ImageIO.read(new File(path));
 			int[] pixels = new int[tex.getWidth() * tex.getHeight()];
@@ -37,13 +36,9 @@ public class Texture {
 	            }
 	        }
 
-	        buffer.flip(); //FOR THE LOVE OF GOD DO NOT FORGET THIS
+	        buffer.flip();
 
-	        // You now have a ByteBuffer filled with the color data of each pixel.
-	        // Now just create a texture ID and bind it. Then you can load it using
-	        // whatever OpenGL method you want, for example:
-
-	      int textureID = glGenTextures(); //Generate texture ID
+	     	int textureID = glGenTextures(); //Generate texture ID
 	        glBindTexture(GL_TEXTURE_2D, textureID); //Bind texture ID
 
 	        //Setup wrap mode
@@ -57,13 +52,10 @@ public class Texture {
 	        //Send texel data to OpenGL
 	        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex.getWidth(), tex.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	        //Return the texture ID so we can bind it later again
-	      this.textureID = textureID;
+	      return textureID;
 		} catch (IOException e) {
 			System.out.println("Invalid texture");
 		}
-	}
-
-	public int getTextureID(){
-		return textureID;
+		return 0;
 	}
 }
