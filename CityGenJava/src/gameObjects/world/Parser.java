@@ -1,7 +1,9 @@
 package gameObjects.world;
 
+import gameObjects.objects.Container;
 import gameObjects.objects.Door;
 import gameObjects.objects.Furniture;
+import gameObjects.objects.FurnitureContainer;
 import gameObjects.objects.Item;
 import gameObjects.objects.Key;
 import gameObjects.objects.Potion;
@@ -12,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -64,15 +67,49 @@ public class Parser {
 						break;
 						case("DOOR"):
 							items.add(parseDoor(s,level,g.setItemID()));
+						break;
+						case("CONTAINER"):
+							items.add(parseContainer(s,level,g.setItemID(),g));
 						}
 					}
 					s.close();
 					g.setFloor(world, level, items); // adds floor to game
 
+
 				} catch (FileNotFoundException e) {e.printStackTrace(); }
 
 			}
 		} catch (FileNotFoundException e1) {e1.printStackTrace();}
+
+	}
+
+	private static Item parseContainer(Scanner s, int level, int setItemID, GameWorld g) {
+		String name = s.nextLine();
+		String description = s.nextLine();
+		int limit = s.nextInt();
+		int x = s.nextInt();
+		int y = s.nextInt();
+		Location l = new Location(x,y,level);
+		String model = s.next();
+
+		Container c = new FurnitureContainer(name,description,limit,l,model, setItemID);
+		s.nextLine();
+		s.next("{");
+		s.nextLine();
+
+		while(!s.hasNext("}")){
+		Item i = null;
+
+		switch(s.next()){
+		case "TOOL":
+			 i = parseTool(s,level,g.setItemID());
+			break;
+		case "CONTAINER":
+			i =parseContainer(s,level,g.setItemID(),g);
+		}
+		c.addItem(i);
+		}
+		return c;
 
 	}
 
@@ -106,15 +143,15 @@ public class Parser {
 		switch(type){
 		case("key"):
 			t = new Key(name, description, l, modelName, setItemID);
-			break;
+		break;
 		case("potion"):
 			int effectP = s.nextInt();
-			t = new Potion(name, description, l, effectP, modelName, level);
-			break;
+		t = new Potion(name, description, l, effectP, modelName, level);
+		break;
 		case("weapon"):
 			int effectW = s.nextInt();
-			t = new Weapon(name, description, l, effectW, modelName, level);
-			break;
+		t = new Weapon(name, description, l, effectW, modelName, level);
+		break;
 
 		default:
 			t = null;

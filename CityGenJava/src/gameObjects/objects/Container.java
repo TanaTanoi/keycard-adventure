@@ -159,4 +159,11 @@ public abstract class Container implements Item{
 	public int getID(){
 		return ID;
 	}
+
+	public abstract void addItem(Item i);
+
+	public void add(Item i){
+		inventory.add(i);
+	}
+
 }

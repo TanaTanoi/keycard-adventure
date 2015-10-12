@@ -33,4 +33,12 @@ public class FurnitureContainer extends Container{
 		return null;
 	}
 
+	@Override
+	public void addItem(Item i) {
+		if(!(i instanceof Furniture)){
+			add(i);
+		}
+
+	}
+
 }
