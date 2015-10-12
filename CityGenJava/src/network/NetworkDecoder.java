@@ -26,7 +26,7 @@ public class NetworkDecoder {
 	 * The server is expected to divide it by 100 when received.
 	 *
 	 * @param game_client - The game client in which to get an output from.
-	 * @return - String containing the current player's x,y and their ID
+	 * @return - String containing the current player's x,y and their ID. Also adds any interaction calls
 	 */
 	public static String getPlayerOutput(ClientController game_client){
 		float[] info = game_client.getPlayerInfo();
@@ -60,8 +60,8 @@ public class NetworkDecoder {
 	/**
 	 * Decodes an input from the server and applies the changes to the supplied game client.
 	 *
-	 *@param game_client - The game client that the changes will be applied to.
-	 * @param input - String directly from the server.
+	 * @param game_client - The game client that the changes will be applied to.
+	 * @param input - String directly taken from the server.
 	 */
 	public static void decode(ClientController game_client, String input){
 		Scanner sc = new Scanner(input);
@@ -125,6 +125,7 @@ public class NetworkDecoder {
 	 * @param game - The Game World that will be updated by this method call.
 	 * @param input - The direct input from the client
 	 * @param player - The player who sent the input
+	 * @param approvedCommands - A set of extra commands to be added to, if needed
 	 * @return - True if the player is still connected.
 	 */
 	public static boolean decodeClientInput(GameWorld game,String input, int player,Set<String> approvedCommands){
@@ -147,6 +148,7 @@ public class NetworkDecoder {
 				try{
 					int playerID = Integer.parseInt(sc.next());
 					//TODO handle disconnect of this player on the game world.
+					game.removePlayer(playerID);
 					return false;
 				}catch(NumberFormatException e){
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
@@ -205,8 +207,8 @@ public class NetworkDecoder {
 
 	/**
 	 * Prepares a string that can be sent to a client or server based on the provided information
-	 * @param playerInfo
-	 * @return
+	 * @param playerInfo - Player info to be converted
+	 * @return - String in decoder format that represents a player
 	 */
 	public static String getPlayerString(float[] playerInfo){
 		if(playerInfo.length!=4)throw new IllegalArgumentException("Method only accepts playerinfo of length 4: ID,X,Y,ROT");

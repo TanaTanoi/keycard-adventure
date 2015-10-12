@@ -46,6 +46,30 @@ public class NetworkPackageTests {
 		checkGameworld_Positions(playerInfos);
 	}
 
+	/*Test if an interaction command is correctly broadcasted*/
+	@Test
+	public void test_network_decoder_interact_01(){
+		Set<String> interact = new HashSet<String>();
+
+		setupGame();
+		/*Check that previous test holds*/
+		String input = NetworkDecoder.prepPackage(g,interact);
+		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
+		/*Then send and change the game world via new command from a player*/
+		/*Check that the updated package is unchanged apart from the item call*/
+		interact.add("ITEM 1 1");
+		input = NetworkDecoder.prepPackage(g,interact);
+		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 ITEM 1 1 "));
+		float[][] playerInfos =  {{0.0f, 10.0f,10.0f, 0.0f},
+								{1.0f, 20.0f,20.0f, 0.0f}};
+		checkGameworld_Positions(playerInfos);
+
+		/*Check that extra interaction only applies to a single package*/
+		input = NetworkDecoder.prepPackage(g,interact);
+		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
+	}
+
+
 	/*---------------*\
 	 * Helper methods*
 	\* --------------*/

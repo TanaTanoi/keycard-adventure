@@ -84,8 +84,6 @@ public class ClientController {
 	private Vector2 mousePos = new Vector2(0,0);
 	private boolean mouse_down = false;
 
-	/*Model transformation fields*/
-	private float zoom = 1f;
 	private float xRot = 0;
 	private float rot_y = 0;
 
@@ -337,11 +335,6 @@ public class ClientController {
 	 * @param yoffset - Scroll amount (positive if forward/towards computer)
 	 */
 	private void ScrollCallback(long window, double xoffset, double yoffset) {
-		if(yoffset>0){
-			zoom*=1.1;
-		}else{
-			zoom/=1.1;
-		}
 	}
 
 	public void pickUp(int playerID, int itemID) {

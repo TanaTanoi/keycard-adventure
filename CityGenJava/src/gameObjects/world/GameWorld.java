@@ -78,10 +78,30 @@ public class GameWorld {
 		return playerID-1;
 	}
 
+	/**
+	 * Removes the given player from the game
+	 * @param playerID - Player to remove
+	 */
+	public void removePlayer(int playerID){
+		Player p = allPlayers.get(playerID);
+		//TODO remove player properly, from other things.
+		allPlayers.remove(playerID);
+
+	}
+
+
 	// ADD SEVERAL ITEM CONSTRUCTORS HERE
 	// i.e. tool, container etc
 
 	// Actaully make this
+	/**
+	 * Given a collision map, level int, and a list of items, it creates a floor
+	 * and assigns these values to it. Then adds it to the map of floors, under the given
+	 * level int.
+	 * @param floor - Char array collision map
+	 * @param level - unique ID of the floor
+	 * @param items - List of items to add to the floor, including furniture.
+	 */
 	public void setFloor(char[][] floor, int level, List<Item> items){
 		fakeFloor = floor;
 		Floor f = new Floor(level, floor, items);
@@ -139,8 +159,8 @@ public class GameWorld {
 
 	/**
 	 * Picks up an item for a player.
-	 * @param p
-	 * @param i
+	 * @param p - Player to receive the item
+	 * @param i - ID of item to receive
 	 */
 	public void pickUpItem(Player p, int itemID){
 		Floor f = floorList.get(p.getLocation().getFloor());
@@ -155,8 +175,8 @@ public class GameWorld {
 
 	/**
 	 * Drops an item from a player at the player's current location
-	 * @param p
-	 * @param i
+	 * @param p - Player to receive the item
+	 * @param i - Item to give to player p
 	 */
 	public void dropItem(Player p, Item i){
 		p.drop(i);
@@ -184,20 +204,41 @@ public class GameWorld {
 		}
 		return toReturn;
 	}
-
+	/**
+	 * Add a player to the game
+	 * @param p - Player object
+	 */
 	public void addPlayer(Player p){
 		allPlayers.put(p.getID(),p);
 		System.out.println("Added player " + allPlayers.size());
 	}
 
+	/**
+	 * Add a floor to the game
+	 * @param f - Floor object
+	 */
 	public void addFloor(Floor f){
 		floorList.put(f.getLevel(), f);
 	}
 
+	/**
+	 * Sets the ID of a number and increments the total item IDs
+	 * to keep it unique.
+	 * @return - next unique ID to add.
+	 */
 	public int setItemID(){
 		return itemID++;
 	}
 
+	/**
+	 * An interaction between a player and an item.
+	 * This handles different types of items as well. 			<br>
+	 * If pickup-able item - Item is added to player inventory	<br>
+	 * If door item - Door is unlocked, if given certain parameters<br>
+	 * @param playerID - ID of the player who is interacting
+	 * @param itemID - ID of the item that the player has interacted with
+	 * @return - True if the interaction was sucesful, false if not.
+	 */
 	public boolean interact(int playerID,int itemID){
 		System.out.println("Picking up item");
 		Player p = allPlayers.get(playerID);
@@ -215,20 +256,6 @@ public class GameWorld {
 	}
 
 
-
-	/**
-	 * Helper method that gets the player from a given Player ID
-	 * @param playerID - Global ID of player
-	 * @return - Player associated with parameter: playerID or null if player isn't present.
-	 */
-//	private Player getPlayer(int playerID){
-//		for(Player p:allPlayers){
-//			if(p.getID()==playerID){
-//				return p;
-//			}
-//		}
-//		return null;
-//	}
 }
 
 

@@ -86,7 +86,6 @@ class ClientThread extends Thread{
 					//Generate output to send to all clients
 					String output = NetworkDecoder.prepPackage(Server.world,approvedCommands);
 					//Send output to all clients
-					//System.out.println("Sending " + output);
 					for(int i = 0; i < connections.size();i++){
 						DataOutputStream clientOut = new DataOutputStream(connections.get(i).getOutputStream());
 						clientOut.writeBytes(output+"\n");
