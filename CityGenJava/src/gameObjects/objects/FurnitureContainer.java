@@ -29,8 +29,7 @@ public class FurnitureContainer extends Container{
 
 	@Override
 	public String getModelName() {
-		// TODO Auto-generated method stub
-		return null;
+		return super.getModelName();
 	}
 
 	@Override

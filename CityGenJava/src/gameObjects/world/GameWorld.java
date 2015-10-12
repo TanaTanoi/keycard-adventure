@@ -240,10 +240,13 @@ public class GameWorld {
 	 * @return - True if the interaction was sucesful, false if not.
 	 */
 	public boolean interact(int playerID,int itemID){
-		System.out.println("Picking up item");
 		Player p = allPlayers.get(playerID);
-		Item i = floorList.get(1).getItem(itemID);//TODO change to be dynamic
-
+		Item i = null;
+		for(Floor fl:floorList.values()){
+			//i = floorList.get(0).getItem(itemID);
+			i = fl.getItem(itemID);
+		}
+//		Item i = floorList.get(0).getItem(itemID);//TODO change to be dynamic
 		if(i instanceof Key){//TODO change to be door
 
 		}else if(i instanceof Tool){

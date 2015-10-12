@@ -84,8 +84,8 @@ public class Floor {
 		System.out.println("Adding item to floor " + i.getModelName());
 		items.put(i.getID(),i);
 		Location l = i.getLocation();
-//		loadModel(i.getModelName(),new Vector3f(l.getX()/10,0,l.getY()/10));
-		loadModel(i.getModelName(),new Vector3f(0,0,0));
+		loadModel(i.getModelName(),new Vector3f(l.getX(),0,l.getY()));
+//		loadModel(i.getModelName(),new Vector3f(0,0,0));
 	}
 
 	public void removeItem(Item i){

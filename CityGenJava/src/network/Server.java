@@ -1,5 +1,6 @@
 package network;
 import gameObjects.world.GameWorld;
+import gameObjects.world.Parser;
 import graphics.applicationWindow.Window;
 
 import java.io.*;
@@ -25,6 +26,7 @@ public class Server {
 		ClientThread ct = new ClientThread();
 		ct.start();
 		world = new GameWorld();
+		Parser.parseWorld("testConfig.txt", world);
 		//Constantly accept clients
 		w.destory();
 		while(true){

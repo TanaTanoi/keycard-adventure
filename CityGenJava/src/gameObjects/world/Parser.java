@@ -101,7 +101,20 @@ public class Parser {
 		Portal p = new Portal(startFloor,endFloor,l,modelName);
 		return p;
 	}
-
+	/**
+	 * Parses a container object that follows the given format:
+	 * CONTAINER [NAME]
+	 * [DESC]
+	 * [Item Limit] [X Pos] [Y Pos] [Model obj]
+	 * {
+	 * [Items to parse]
+	 * }
+	 * @param s
+	 * @param level
+	 * @param setItemID
+	 * @param g
+	 * @return
+	 */
 	private static Item parseContainer(Scanner s, int level, int setItemID, GameWorld g) {
 		String name = s.nextLine();
 		String description = s.nextLine();
@@ -113,10 +126,10 @@ public class Parser {
 
 		Container c = new FurnitureContainer(name,description,limit,l,model, setItemID);
 		s.nextLine();
-		s.next("{");
+		s.next("\\{");
 		s.nextLine();
 
-		while(!s.hasNext("}")){
+		while(!s.hasNext("\\}")){
 		Item i = null;
 
 		switch(s.next()){
@@ -150,7 +163,7 @@ public class Parser {
 	private static Item parseTool(Scanner s, int level, int setItemID) {
 		Tool t;
 
-		String type = s.next();s.nextLine();//Clear end of line
+		String type = s.next();
 		String name = s.nextLine();
 		String description = s.nextLine();
 		System.out.println(name);
@@ -175,7 +188,6 @@ public class Parser {
 		default:
 			t = null;
 		}
-
 		return t;
 	}
 

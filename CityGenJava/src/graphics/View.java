@@ -51,7 +51,7 @@ public class View {
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
 	private float lightIntensity = 0.3f;
-	
+
 	public float getLightIntensity() {
 		return lightIntensity;
 	}
@@ -61,7 +61,7 @@ public class View {
 	}
 
 	private boolean displayHud = true;
-	
+
 
 	public View(GameWorld world,ClientController control){
 		this.world = world;
@@ -90,8 +90,7 @@ public class View {
 				glTranslatef(x, y, z);
 				glPushMatrix();
 				Location l = i.getLocation();
-				glTranslatef(l.getX(), 0,l.getY());
-				glScalef(0.1f, 0.1f, 0.1f);
+				glTranslatef(l.getX()/10.0f, 0,l.getY()/10.0f);
 				glCallList(control.getFloor().getDisplayList(i));
 				glPopMatrix();
 				glPopMatrix();
@@ -120,7 +119,7 @@ public class View {
 		glTranslatef(x, y, z);
 		glBegin(GL_QUADS);
 		//Floor quad
-		
+
 		glTexCoord2f(0, 0);
 		glVertex3d(-gameSize/2,0,-gameSize/2);
 		glTexCoord2f(1, 0);
@@ -481,7 +480,7 @@ public class View {
 
 		glEnd();//End quad mode
 	}
-	
+
 	public void toggleHUD(){
 		displayHud = !displayHud;
 	}

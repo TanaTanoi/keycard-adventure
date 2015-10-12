@@ -1,0 +1,16 @@
+WALL 0 0 99 0
+WALL 99 0 99 99
+WALL 99 99 0 99
+WALL 0 99 0 0
+WALL 0 20 80 20
+WALL 80 20 80 80
+WALL 80 80 20 80
+WALL 20 80 20 40
+CONTAINER Box
+An old wooden box
+3 5 5 locker.obj
+{
+TOOL key TEAKEY
+A key for teaaaaa
+5 6 teapot.obj
+}
