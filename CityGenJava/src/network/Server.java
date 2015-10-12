@@ -24,7 +24,7 @@ public class Server {
 		//Set up thread that controls client-server relations
 		ClientThread ct = new ClientThread();
 		ct.start();
-		world = new GameWorld("testConfig.txt");
+		world = new GameWorld();
 		//Constantly accept clients
 		w.destory();
 		while(true){

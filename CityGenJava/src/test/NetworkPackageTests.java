@@ -75,7 +75,7 @@ public class NetworkPackageTests {
 	\* --------------*/
 
 	public void setupGame(){
-		g = new GameWorld("floor01.txt");
+		g = new GameWorld();
 		Player p1 = new Player("dave",0);
 		p1.move(10, 10);
 		Player p2 = new Player("John",1);

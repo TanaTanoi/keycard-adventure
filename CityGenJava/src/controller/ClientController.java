@@ -92,7 +92,7 @@ public class ClientController {
 
 	public ClientController(String filename,String IP){
 
-		world = new GameWorld(filename);
+		world = new GameWorld();
 		view = new View(world,this);
 		Parser.parseWorld(filename,world);
 		glClearColor(0f, 0f, 0f, 1.0f);

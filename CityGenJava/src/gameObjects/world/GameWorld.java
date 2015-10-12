@@ -28,7 +28,7 @@ public class GameWorld {
 	private int playerID = 0;
 	private int itemID = 0;
 
-	public GameWorld(String filename){
+	public GameWorld(){
 		init();
 		//Parser is called on ClientController now, so we have more control over when parsing happens
 	}
