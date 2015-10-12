@@ -2,6 +2,7 @@ package network;
 
 import gameObjects.objects.Item;
 import gameObjects.world.GameWorld;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -84,7 +85,7 @@ public class NetworkDecoder {
 			}else if(next.equals("ITEM")){
 				int itemID = sc.nextInt();
 				int playerID = sc.nextInt();
-				game_client.pickUp(playerID, itemID);
+				game_client.interact(playerID, itemID);
 			}
 		}
 		sc.close();
@@ -155,8 +156,10 @@ public class NetworkDecoder {
 				//ITEM [ITEM ID] [PLAYER ID of play who will receive item]
 				int playerID = sc.nextInt();
 				int itemID = sc.nextInt();
-				//TODO make it affect the world
-				approvedCommands.add("ITEM " + playerID + " " + itemID);
+				System.out.println("Item call " + playerID + " " + itemID);
+				if(game.interact(playerID, itemID)){
+					approvedCommands.add("ITEM " + playerID + " " + itemID);
+				}
 			}
 		}
 		sc.close();

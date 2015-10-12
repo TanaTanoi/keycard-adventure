@@ -23,6 +23,13 @@ public class Client extends Thread{
 	 */
 	public Client(ClientController game) throws Exception {
 		this.game = game;
+		try{
+			attemptConnect();
+		}catch(IOException e){
+			System.out.println("Encounted network problem");
+			e.printStackTrace();
+
+		}
 		start();
 	}
 

@@ -1,6 +1,8 @@
 package gameObjects.world;
 
 import gameObjects.objects.Item;
+import gameObjects.objects.Key;
+import gameObjects.objects.Tool;
 import gameObjects.player.NPC;
 import gameObjects.player.Player;
 
@@ -141,12 +143,11 @@ public class GameWorld {
 	 * @param i
 	 */
 	public void pickUpItem(Player p, int itemID){
-		Floor f = floorList.get(1); // should be p.getLocation().getFloor()
+		Floor f = floorList.get(p.getLocation().getFloor());
 		Item i = f.getItem(itemID);
 		System.out.println("Attemps to pick up item");
 		if(p.pickUp(i)){
 			System.out.println("Is picking item up");
-			System.out.println(i.getName());
 			f.removeItem(i);
 			i.setLocation(null);
 		}
@@ -196,6 +197,25 @@ public class GameWorld {
 	public int setItemID(){
 		return itemID++;
 	}
+
+	public boolean interact(int playerID,int itemID){
+		System.out.println("Picking up item");
+		Player p = allPlayers.get(playerID);
+		Item i = floorList.get(1).getItem(itemID);//TODO change to be dynamic
+
+		if(i instanceof Key){//TODO change to be door
+
+		}else if(i instanceof Tool){
+
+			pickUpItem(playerID,itemID);
+			return true;
+		}
+
+		return false;
+	}
+
+
+
 	/**
 	 * Helper method that gets the player from a given Player ID
 	 * @param playerID - Global ID of player

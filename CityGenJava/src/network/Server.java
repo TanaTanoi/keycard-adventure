@@ -83,8 +83,7 @@ class ClientThread extends Thread{
 							i--;
 						}
 					}
-
-					//Generate ouput to send to all clients
+					//Generate output to send to all clients
 					String output = NetworkDecoder.prepPackage(Server.world,approvedCommands);
 					//Send output to all clients
 					//System.out.println("Sending " + output);

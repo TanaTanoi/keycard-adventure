@@ -99,16 +99,20 @@ public class ClientController {
 		Parser.parseWorld(filename,world);
 		glClearColor(0f, 0f, 0f, 1.0f);
 		String[] nameAndIP = {"",""};
-		IP = nameAndIP[1];
+
 		ConnectionWindow cw = new ConnectionWindow(nameAndIP);
 		while(cw.isVisible()){
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		cw.dispose();
+		IP = nameAndIP[1];
+		//IP = "130.195.6.195";
+		System.out.println(IP);
 		//wait until we have been accepted
 		try{
 			if(IP.equals("LOCAL")){
@@ -311,14 +315,13 @@ public class ClientController {
 		if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
 		char pressed = (char)key;
-		if (pressed == 'T' && action == 0) view.toggleHUD();
-		if (pressed == 'L' && action == 0) view.setLightIntensity(view.getLightIntensity()+0.1f);
+//		System.out.println("Key Pressed: " + pressed);
 		view.move(pressed, xRot);
 	}
 
 	private void MouseButtonCallback(long window, int button, int state, int arg3){
 		System.out.println(button + " " + state  + " " + arg3);
-		if(button == GLFW_MOUSE_BUTTON_1 && state == 0){
+		if(button == GLFW_MOUSE_BUTTON_1){
 			mouse_down = state==1;
 
 			toPickup = world.closestItem(current.getLocation(), 10.0f);//TODO calibrate pickup radius
@@ -345,7 +348,9 @@ public class ClientController {
 		world.pickUpItem(playerID, itemID);
 	}
 
-
+	public void interact(int playerID, int itemID){
+		world.interact(playerID, itemID);
+	}
 
 
 
