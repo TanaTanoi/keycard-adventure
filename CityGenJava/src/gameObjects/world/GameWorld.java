@@ -141,11 +141,12 @@ public class GameWorld {
 	 * @param i
 	 */
 	public void pickUpItem(Player p, int itemID){
-		Floor f = floorList.get(p.getLocation().getFloor());
+		Floor f = floorList.get(1); // should be p.getLocation().getFloor()
 		Item i = f.getItem(itemID);
 		System.out.println("Attemps to pick up item");
 		if(p.pickUp(i)){
 			System.out.println("Is picking item up");
+			System.out.println(i.getName());
 			f.removeItem(i);
 			i.setLocation(null);
 		}

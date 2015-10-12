@@ -18,12 +18,12 @@ public class Player implements Character{
 
 	private String name; // name selected by user
 	private List<Item> inventory; // items  that the player carries
-	private static int MAX_ITEMS = 1;
+	private static int MAX_ITEMS = 5;
 	private int health = 100;
 	private Location loc; // describes player's location in game world
 	private int ID;
 	private int orientation;
-	
+
 
 	public Player(String name, int ID){
 		this.name = name;
@@ -108,7 +108,7 @@ public class Player implements Character{
 	public void drop(Item i){
 		inventory.remove(i);
 	}
-	
+
 	@Override
 	public int getOrientation(){
 		return orientation;
@@ -116,18 +116,18 @@ public class Player implements Character{
 
 	@Override
 	public void setOrientation(int orientation) {
-		this.orientation = orientation;		
+		this.orientation = orientation;
 	}
 
 	@Override
 	public void changeOrientation(int change) {
 		orientation += change;
-		
+
 		if(orientation < 0){
 			orientation += 360;
 		}
 		else if(orientation > 359){
 			orientation -= 360;
-		}		
+		}
 	}
 }

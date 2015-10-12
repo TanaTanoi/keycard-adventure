@@ -1,0 +1,71 @@
+package gameObjects.objects;
+
+import gameObjects.player.Character;
+import gameObjects.world.Location;
+
+public class Door implements Item{
+	String name;
+	String description;
+	Location loc;
+	boolean isLocked;
+	String keyName;
+	String modelName;
+	int ID;
+
+	public Door(String name, String description, Location loc,
+			boolean isLocked, String keyName, String modelName, int ID) {
+		this.name = name;
+		this.description = description;
+		this.loc = loc;
+		this.isLocked = isLocked;
+		this.keyName = keyName;
+		this.modelName = modelName;
+	}
+
+	@Override
+	public void interact(Character c) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void interact(Item i) {
+		if(i instanceof Key){
+			Key k = (Key)i;
+			if(k.getName() == keyName){
+				isLocked = false;
+			}
+		}
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public Location getLocation() {
+		return loc;
+	}
+
+	@Override
+	public void setLocation(Location l) {
+		// should not be able to reset location of door
+	}
+
+	@Override
+	public String getModelName() {
+		return modelName;
+	}
+
+	@Override
+	public int getID() {
+		return ID;
+	}
+
+}
