@@ -166,4 +166,24 @@ public abstract class Container implements Item{
 		inventory.add(i);
 	}
 
+	/**
+	 * Returns a random item from the container and removes it.
+	 * @return - Random item from the container. Null if no items in the container
+	 */
+	public Item getRandomItem(){
+		if(inventory.size()==0){
+			return null;
+		}
+		Item toReturn = inventory.remove(inventory.size()-1);
+		return toReturn;
+	}
+
+	@Override
+	public String toString() {
+		return "Container [ID=" + ID + ", name=" + name + ", desc=" + desc
+				+ ", modelName=" + modelName + "]";
+	}
+
+
+
 }

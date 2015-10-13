@@ -94,11 +94,9 @@ public class Floor {
 		items.put(i.getID(),i);
 		Location l = i.getLocation();
 		loadModel(i.getModelName(),new Vector3f(l.getX(),0,l.getY()));
-//		loadModel(i.getModelName(),new Vector3f(0,0,0));
 	}
 
 	public void removeItem(Item i){
-		System.out.println("Removing item");
 		System.out.println(items.remove(i.getID()));
 	}
 
@@ -141,7 +139,7 @@ public class Floor {
 		glEndList();
 		displayLists.put(filePath,newList);
 	}
-	
+
 
 	void setMaterial(float[] material){
 		float[] mat = new float[4];
@@ -152,7 +150,7 @@ public class Floor {
 		mat[2] = material[2];//b
 		mat[3] = 1.0f;
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, asFloatBuffer(mat));
-		
+
 		// DIFFUSE //
 		mat = new float[4];
 		mat[0] = material[3];//r
@@ -167,7 +165,7 @@ public class Floor {
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, asFloatBuffer(mat));
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material[9] * 128.0f);
 	}
-	
+
 	private FloatBuffer asFloatBuffer(float[] array){
 		return (FloatBuffer)BufferUtils.createFloatBuffer(4).put(array).flip();
 	}

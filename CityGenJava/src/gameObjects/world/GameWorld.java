@@ -1,5 +1,7 @@
 package gameObjects.world;
 
+import gameObjects.objects.Container;
+import gameObjects.objects.Door;
 import gameObjects.objects.Item;
 import gameObjects.objects.Key;
 import gameObjects.objects.Tool;
@@ -13,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class GameWorld {
 
@@ -143,7 +147,6 @@ public class GameWorld {
 	}
 
 
-
 	/**
 	 * Adds an item given by a certain item ID to a player specified  by an ID
 	 * (Delegates work to PickUpItem(Player,Item) method.
@@ -163,11 +166,10 @@ public class GameWorld {
 	 * @param i - ID of item to receive
 	 */
 	public void pickUpItem(Player p, int itemID){
-		Floor f = floorList.get(p.getLocation().getFloor());
+//		Floor f = floorList.get(p.getLocation().getFloor());
+		Floor f = floorList.get(1);
 		Item i = f.getItem(itemID);
-		System.out.println("Attemps to pick up item");
 		if(p.pickUp(i)){
-			System.out.println("Is picking item up");
 			f.removeItem(i);
 			i.setLocation(null);
 		}
@@ -237,21 +239,36 @@ public class GameWorld {
 	 * If door item - Door is unlocked, if given certain parameters<br>
 	 * @param playerID - ID of the player who is interacting
 	 * @param itemID - ID of the item that the player has interacted with
-	 * @return - True if the interaction was sucesful, false if not.
+	 * @return - True if the interaction was successful, false if not.
 	 */
 	public boolean interact(int playerID,int itemID){
 		Player p = allPlayers.get(playerID);
-		Item i = null;
-		for(Floor fl:floorList.values()){
-			//i = floorList.get(0).getItem(itemID);
-			i = fl.getItem(itemID);
-		}
-//		Item i = floorList.get(0).getItem(itemID);//TODO change to be dynamic
-		if(i instanceof Key){//TODO change to be door
-
+//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
+		Item i = floorList.get(1).getItem(itemID);
+		System.out.println(i.toString());
+		if(i instanceof Door){//TODO change to be door
+			//If its a door, unlock it if possible
+			Door door = (Door)i;
+			//door.interact();//TODO get player's equipt item and make it interact with door. If door unlocks, return true
+			return false;//FIXME change when implemented (to true)
 		}else if(i instanceof Tool){
-
+			//If its a tool, pick it up
 			pickUpItem(playerID,itemID);
+			return true;
+		}else if(i instanceof Portal){
+			//if a player interacts with a portal, change them
+			Portal portal = (Portal)i;
+			p.getLocation().setFloor(portal.endFloor);//TODO again, this can be a bit iffy (location class on player?)
+			return true;
+		}else if(i instanceof Container){
+			Container cont = (Container)i;
+			System.out.println("Grabbing random item from container");
+			//pickUpItem(playerID,cont.getRandomItem().getID());
+			Item randomI = cont.getRandomItem();
+			if(randomI==null){
+				return false;
+			}
+			p.pickUp(randomI);
 			return true;
 		}
 
@@ -260,10 +277,4 @@ public class GameWorld {
 
 
 }
-
-
-
-
-
-
 

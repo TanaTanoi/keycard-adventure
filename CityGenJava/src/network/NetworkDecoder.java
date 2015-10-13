@@ -2,8 +2,6 @@ package network;
 
 import gameObjects.objects.Item;
 import gameObjects.world.GameWorld;
-
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -85,6 +83,7 @@ public class NetworkDecoder {
 			}else if(next.equals("ITEM")){
 				int itemID = sc.nextInt();
 				int playerID = sc.nextInt();
+				System.out.println("ITEM " +itemID + " " +playerID);
 				game_client.interact(playerID, itemID);
 			}
 		}
@@ -218,13 +217,10 @@ public class NetworkDecoder {
 		//P [ID] [X*100] [Y*100] [ROT]
 		StringBuilder sb = new StringBuilder();
 		sb.append("P ");
-		sb.append((int)playerInfo[0]);
-		sb.append(" ");
-		sb.append((int)playerInfo[1]);
-		sb.append(" ");
-		sb.append((int)playerInfo[2]);
-		sb.append(" ");
-		sb.append((int)playerInfo[3]);
+		for(int i =0;i<4;i++){
+			sb.append((int)playerInfo[i]);
+			sb.append(" ");
+		}
 		return sb.toString();
 	}
 

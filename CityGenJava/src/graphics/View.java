@@ -128,7 +128,7 @@ public class View {
 				Location l = i.getLocation();
 
 
-				System.out.println(l.getX() + " " + l.getY());
+//				System.out.println(l.getX() + " " + l.getY());
 				glTranslatef((float)(l.getX()*squareSize), 0,(float)(l.getY()*squareSize));
 //				setMaterial(new float[]{ 0.2125f, 0.1275f, 0.054f, 0.714f, 0.4284f, 0.18144f, 0.393548f, 0.271906f, 0.166721f, 0.2f });
 				glCallList(control.getFloor().getDisplayList(i));
@@ -463,7 +463,6 @@ public class View {
 
 	private void initaliseCamera() {
 		glMatrixMode(GL_PROJECTION);
-		System.out.println(spotAngle);
 		glLoadIdentity();
 		double near = 1; // near should be chosen as far into the scene as possible
 		double far  = 100;
