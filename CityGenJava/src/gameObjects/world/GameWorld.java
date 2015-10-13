@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.omg.CORBA.Current;
+
 import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class GameWorld {
@@ -130,7 +132,7 @@ public class GameWorld {
 	 */
 	public Entity closestEntity(Location l, float radius){
 		Entity toReturn = null;
-		for(Entity i: floorList.get(1).getEntities()){//TODO allow multiple floors
+		for(Entity i: floorList.get(l.getFloor()).getEntities()){
 			Location iloc = i.getLocation();
 			if(iloc.distance(l)<radius){
 				if(toReturn == null){
@@ -274,7 +276,7 @@ public class GameWorld {
 		//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
 		Entity i = floorList.get(1).getEntity(itemID);
 		System.out.println(i.toString());
-		if(i instanceof Door){//TODO change to be door
+		if(i instanceof Door){
 			//If its a door, unlock it if possible
 			Door door = (Door)i;
 			//door.interact();//TODO get player's equipt item and make it interact with door. If door unlocks, return true
@@ -284,7 +286,6 @@ public class GameWorld {
 			return pickUpItem(playerID,itemID);
 		}else if(i instanceof Container){
 			Container cont = (Container)i;
-			System.out.println("Grabbing random item from container");
 			//pickUpItem(playerID,cont.getRandomItem().getID());
 			Item randomI = cont.getRandomItem();
 			if(randomI==null){

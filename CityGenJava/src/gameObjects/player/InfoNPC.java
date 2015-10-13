@@ -6,7 +6,7 @@ public class InfoNPC extends NPC {
 
 	private String information;
 
-	public InfoNPC(String name, int health, Location loc, String information, String modelName, int ID) {
+	public InfoNPC(String name, Location loc, String information, String modelName, int ID) {
 		super(name, loc, ID, modelName);
 		this.information = information;
 	}

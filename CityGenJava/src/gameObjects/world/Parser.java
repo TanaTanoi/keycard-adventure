@@ -79,7 +79,7 @@ public class Parser {
 							entities.add(parseContainer(s,level,g.setItemID(),g));
 						break;
 						case("NPC"):
-							entities.add(parseNPC(s,level,g.setItemID(),g));
+							entities.add(parseNPC(s,level,g.setItemID()));
 						break;
 						}
 					}
@@ -95,16 +95,14 @@ public class Parser {
 	}
 
 	/**
-	 * Creates a NPC object from the following:
+	 * Creates a NPC object from the following:<br>
 	 * NPC [NAME] [TYPE] [X POS] [Y POS ] [Model Path] [*{Info} Dialog]
-	 * @param s
-	 * @param level
-	 * @param setItemID
-	 * @param g2
-	 * @return
+	 * @param s - Currently used scanner ("NPC" token has been consumed)
+	 * @param level - Level to place NPC on
+	 * @param setItemID - Global Entity ID for the NPC
+	 * @return - And NPC to be placed in the floor
 	 */
-	private static NPC parseNPC(Scanner s, int level, int setItemID,
-			GameWorld g2) {
+	private static NPC parseNPC(Scanner s, int level, int setItemID) {
 		String name = s.next();
 		String type = s.next();
 		int xpos = s.nextInt();
@@ -113,13 +111,13 @@ public class Parser {
 		switch(type){
 		case "INFO":
 			String dialog = s.next();
-			return new InfoNPC(name,100,new Location(xpos,ypos,level),dialog);
+			return new InfoNPC(name,new Location(xpos,ypos,level),dialog,modelpath,level);
+			default:
+				return null;
 		}
-
-		return null;
 	}
 	/**
-	 * Creates a portal object that pertains to the following structure:
+	 * Creates a portal object that pertains to the following structure:<br>
 	 * PORTAL [Target floor] [X Pos] [Y Pos] [Model name]
 	 * @param s - Currently in use scanner (Has consumed the "PORTAL" token)
 	 * @param level - The floor level this portal will be a part of
@@ -137,12 +135,12 @@ public class Parser {
 		return p;
 	}
 	/**
-	 * Parses a container object that follows the given format:
-	 * CONTAINER [NAME]
-	 * [DESC]
-	 * [Item Limit] [X Pos] [Y Pos] [Model obj]
-	 * {
-	 * [Entities to parse]
+	 * Parses a container object that follows the given format:<br>
+	 * CONTAINER [NAME] 						<br>
+	 * [DESC]									<br>
+	 * [Item Limit] [X Pos] [Y Pos] [Model Path]<br>
+	 * {										<br>
+	 * [Entities to parse]						<br>
 	 * }
 	 * @param s - Currently in use scanner (Has consumed the "CONTAINER" token)
 	 * @param level - The level this container will be assigned to
@@ -180,7 +178,12 @@ public class Parser {
 
 	}
 	/**
-	 * Parses a door and adds it to the floor
+	 * Parses a door and adds it to the floor:<br>
+	 * DOOR [Name] 		<br>
+	 * [Desription]		<br>
+	 * [KeyName] 		<br>
+	 * [xpos ] [ypos] [model path]
+	 *
 	 * @param s - current scanner ("DOOR" token has been consumed)
 	 * @param level - Level this door will be assigned to
 	 * @param setItemID- Globla ID of the door
@@ -200,19 +203,17 @@ public class Parser {
 		return d;
 	}
 	/**
-	 * Parses a tool item in the following format:
-	 * TOOL [Type] [Name]
-	 * [Description]
+	 * Parses a tool item in the following format:	<br>
+	 * TOOL [Type] [Name]							<br>
+	 * [Description]								<br>
 	 * [x pos] [y pos] [model path] [image path] [*effect]
-	 *
 	 * @param s- Current scanner ("TOOL" has been consumed)
 	 * @param level
 	 * @param setItemID
-	 * @return
+	 * @return - Returns the tool to be added to the floor
 	 */
 	private static Item parseTool(Scanner s, int level, int setItemID) {
 		Tool t;
-
 		String type = s.next();
 		String name = s.nextLine();
 		String description = s.nextLine();
@@ -260,12 +261,18 @@ public class Parser {
 		return f;
 	}
 
+	/**
+	 * Parses a wall and applies it to the supplied collision map
+	 * Takes the following format:
+	 * WALL [X1] [Y1] [X2] [Y2]
+	 * @param s - Currently used scanner ("WALL" has been consumed)
+	 * @param world - Collision map to apply the changes to
+	 */
 	private static void parseWall(Scanner s, char[][]world){
 		int startX = s.nextInt();
 		int startY = s.nextInt();
 		int endX = s.nextInt();
 		int endY = s.nextInt();
-
 
 		float changeX = (endX - startX)/100.0f;
 		float changeY = (endY - startY)/100.0f;
