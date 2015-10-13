@@ -22,6 +22,7 @@ import gameObjects.objects.Item;
 import gameObjects.objects.Portal;
 import gameObjects.player.Character;
 import gameObjects.player.NPC;
+import gameObjects.player.Player;
 import graphics.Face;
 import graphics.Model;
 
@@ -39,7 +40,7 @@ public class Floor {
 	//Filepaths to Display lists
 	private Map<String, Integer> displayLists;
 	private static final float SQUARE_SIZE = 0.5f;
-	private List<Character> players;
+	private List<Player> players;
 	private Map<Integer,Entity> entities;
 	private int level;
 	private char[][] floor;
@@ -48,7 +49,7 @@ public class Floor {
 		displayLists = new HashMap<String,Integer>();
 		this.level = level;
 		floor = floorPlan;
-		this.players = new ArrayList<Character>();
+		this.players = new ArrayList<Player>();
 		this.entities = new HashMap<Integer,Entity>();
 		for(Entity i:items){
 			this.addEntity(i);
@@ -80,11 +81,11 @@ public class Floor {
 		return listItems;
 	}
 
-	public List<Character> getPlayers(){
+	public List<Player> getPlayers(){
 		return players;
 	}
 
-	public void addPlayer(Character c){
+	public void addPlayer(Player c){
 		players.add(c);
 	}
 

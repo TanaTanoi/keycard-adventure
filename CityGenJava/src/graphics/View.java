@@ -64,7 +64,7 @@ public class View {
 	public View(GameWorld world,ClientController control){
 		this.world = world;
 		this.control = control;
-		
+
 
 		textureList = new ArrayList<Integer>();
 
@@ -424,7 +424,7 @@ public class View {
 
 	private void renderPlayers(){
 		double spacing = gameSize/occupiedSpace.length;
-		List<Player> players = world.getPlayers();
+		List<Player> players = control.getFloor().getPlayers();
 		if (playersY > 1 ||playersY < 0.3){
 			yChange*=-1;
 			playersY+=yChange;
