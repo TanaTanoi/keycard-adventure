@@ -115,6 +115,21 @@ public class Floor {
 		int newList = glGenLists(1);
 		glNewList(newList, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
+		String materialSeed = ""+filePath.hashCode();
+		while(materialSeed.length()<10){
+			materialSeed = materialSeed+materialSeed.hashCode();
+		}
+		System.out.println("Mat len " + materialSeed.length());
+		float[] values = new float[10];
+		int len = materialSeed.length()-1;
+		for(int i = 0; i < 10;i++){
+			float a = Integer.parseInt(""+materialSeed.charAt(i));
+			float b = Integer.parseInt(""+materialSeed.charAt(len-i));
+			values[i] = Math.min(a/b,1.0f);
+			System.out.println("Mat "  +i + " " + values[i]);
+		}
+		float[] rl = { 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.7f, 0.6f, 0.6f, 0.25f };
+		setMaterial(rl);
 		//TODO setMaterial(new float[]{});
 		for(Face face: m.getFaces()){
 			Vector2f t1 = m.getTextureCoordinates().get((int) face.textures.x -1);
