@@ -17,6 +17,7 @@ import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glNormal3f;
 import static org.lwjgl.opengl.GL11.glTexCoord2d;
 import static org.lwjgl.opengl.GL11.glVertex3f;
+import gameObjects.objects.Entity;
 import gameObjects.objects.Item;
 import gameObjects.player.Character;
 import gameObjects.player.NPC;
@@ -39,8 +40,7 @@ public class Floor {
 	private static final float SQUARE_SIZE = 0.5f;
 	private List<Character> players;
 	private List<Portal> portals;
-	private Map<Integer,Item> items;
-	private List<NPC> allNPCs;
+	private Map<Integer,Entity> entities;
 	private int level;
 	private char[][] floor;
 
@@ -48,9 +48,9 @@ public class Floor {
 		displayLists = new HashMap<String,Integer>();
 		this.level = level;
 		floor = floorPlan;
-		this.items = new HashMap<Integer,Item>();
+		this.entities = new HashMap<Integer,Entity>();
 		for(Item i:items){
-			this.addItem(i);
+			this.addEntity(i);
 		}
 
 	}
@@ -73,9 +73,9 @@ public class Floor {
 		return floor;
 	}
 
-	public List<Item> getItems(){
-		List<Item> listItems = new ArrayList<Item>();
-		listItems.addAll(items.values());
+	public List<Entity> getEntities(){
+		List<Entity> listItems = new ArrayList<Entity>();
+		listItems.addAll(entities.values());
 		return listItems;
 	}
 
@@ -91,18 +91,18 @@ public class Floor {
 		players.remove(c);
 	}
 
-	public void addItem(Item i){
+	public void addEntity(Entity i){
 		System.out.println("Adding item to floor " + i.getModelName());
-		items.put(i.getID(),i);
+		entities.put(i.getID(),i);
 		Location l = i.getLocation();
 		loadModel(i.getModelName(),new Vector3f(l.getX(),0,l.getY()));
 	}
 
-	public void removeItem(Item i){
-		System.out.println(items.remove(i.getID()));
+	public void removeEntity(Entity i){
+		System.out.println(entities.remove(i.getID()));
 	}
 
-	public int getDisplayList(Item i){
+	public int getDisplayList(Entity i){
 		return displayLists.get(i.getModelName());
 	}
 
@@ -206,8 +206,8 @@ public class Floor {
 
 	}
 
-	public Item getItem(int itemID) {
-		return items.get(itemID);
+	public Entity getEntity(int itemID) {
+		return entities.get(itemID);
 	}
 
 }

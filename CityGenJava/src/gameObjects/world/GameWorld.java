@@ -129,7 +129,7 @@ public class GameWorld {
 	 */
 	public Entity closestEntity(Location l, float radius){
 		Entity toReturn = null;
-		for(Entity i: floorList.get(1).getItems()){//TODO allow multiple floors
+		for(Entity i: floorList.get(1).getEntities()){//TODO allow multiple floors
 			Location iloc = i.getLocation();
 			if(iloc.distance(l)<radius){
 				if(toReturn == null){
@@ -159,7 +159,7 @@ public class GameWorld {
 
 		//		Floor f = floorList.get(p.getLocation().getFloor());
 		Floor f = floorList.get(1);
-		Item i = f.getItem(itemID);
+		Entity i = f.getEntity(itemID);
 
 		if(!(i instanceof Tool)){
 			return false;
@@ -168,8 +168,8 @@ public class GameWorld {
 		Tool t = (Tool)i;
 
 		if(p.pickUp(t)){
-			f.removeItem(i);
-			i.setLocation(null);
+			f.removeEntity(t);
+			t.setLocation(null);
 			return true;
 		}
 
@@ -188,7 +188,7 @@ public class GameWorld {
 		}
 		i.setLocation(p.getLocation());
 		Floor f = floorList.get(i.getLocation().getFloor());
-		f.addItem(i);
+		f.addEntity(i);
 		return true;
 	}
 
@@ -249,7 +249,7 @@ public class GameWorld {
 	public boolean interact(int playerID,int itemID){
 		Player p = allPlayers.get(playerID);
 		//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
-		Item i = floorList.get(1).getItem(itemID);
+		Entity i = floorList.get(1).getEntity(itemID);
 		System.out.println(i.toString());
 		if(i instanceof Door){//TODO change to be door
 			//If its a door, unlock it if possible
@@ -280,6 +280,8 @@ public class GameWorld {
 				// Is a container OMG help
 			}
 			return true;
+		}else if(i instanceof NPC){
+			
 		}
 
 		return false;
