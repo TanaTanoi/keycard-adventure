@@ -29,7 +29,7 @@ public class Player implements Character{
 	public Player(String name, int ID){
 		this.name = name;
 		this.ID = ID;
-		loc = new Location(0,-5,1);
+		loc = new Location(3,-4,1);
 		inventory = new Tool[2];
 	}
 

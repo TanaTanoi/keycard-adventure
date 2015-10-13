@@ -11,8 +11,8 @@ public class RiddleNPC extends NPC{
 
 	private List<Integer> playersTalkedTo;
 
-	public RiddleNPC(String name, int health, Location loc, String question, String answer) {
-		super(name, health, loc);
+	public RiddleNPC(String name, int health, Location loc, String question, String answer, String modelName, int ID) {
+		super(name, loc, ID, modelName);
 		this.question = question;
 		this.answer = answer;
 	}

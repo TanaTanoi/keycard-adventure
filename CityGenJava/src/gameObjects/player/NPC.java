@@ -22,11 +22,15 @@ public abstract class NPC implements Character, Entity{
 	private int health;
 	private Location loc;
 	private int orientation;
+	String modelName;
+	int ID;
 
-	public NPC(String name, int health, Location loc){
+	public NPC(String name, Location loc, int ID, String modelName){
 		this.name = name;
-		this.health = health;
+		this.health = 100;
 		this.loc = loc;
+		this.ID = ID;
+		this.modelName = modelName;
 	}
 
 	@Override
@@ -80,6 +84,16 @@ public abstract class NPC implements Character, Entity{
 		else if(orientation > 359){
 			orientation -= 360;
 		}
+	}
+
+	@Override
+	public String getModelName() {
+		return modelName;
+	}
+
+	@Override
+	public int getID() {
+		return ID;
 	}
 
 }
