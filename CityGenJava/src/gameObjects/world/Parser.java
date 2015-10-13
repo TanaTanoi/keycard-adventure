@@ -171,18 +171,19 @@ public class Parser {
 		int y = s.nextInt();
 		Location l = new Location(x,y,level);
 		String modelName = s.next();
+		String imageName= s.next();
 
 		switch(type){
 		case("key"):
-			t = new Key(name, description, l, modelName, setItemID);
+			t = new Key(name, description, l, modelName, setItemID, imageName);
 		break;
 		case("potion"):
 			int effectP = s.nextInt();
-		t = new Potion(name, description, l, effectP, modelName, level);
+		t = new Potion(name, description, l, effectP, modelName, level, imageName);
 		break;
 		case("weapon"):
 			int effectW = s.nextInt();
-		t = new Weapon(name, description, l, effectW, modelName, level);
+		t = new Weapon(name, description, l, effectW, modelName, level, imageName);
 		break;
 
 		default:

@@ -154,25 +154,27 @@ public class GameWorld {
 	 * @param playerID
 	 * @param itemID
 	 */
-	public void pickUpItem(int playerID, int itemID){
+	public boolean pickUpItem(int playerID, int itemID){
 		Player p = allPlayers.get(playerID);
 		if(p==null){throw new IllegalArgumentException("Invalid Player ID");}
-		pickUpItem(p,itemID);//TODO implement a get Item from ID method
-	}
 
-	/**
-	 * Picks up an item for a player.
-	 * @param p - Player to receive the item
-	 * @param i - ID of item to receive
-	 */
-	public void pickUpItem(Player p, int itemID){
-//		Floor f = floorList.get(p.getLocation().getFloor());
+		//		Floor f = floorList.get(p.getLocation().getFloor());
 		Floor f = floorList.get(1);
 		Item i = f.getItem(itemID);
-		if(p.pickUp(i)){
+
+		if(!(i instanceof Tool)){
+			return false;
+		}
+
+		Tool t = (Tool)i;
+
+		if(p.pickUp(t)){
 			f.removeItem(i);
 			i.setLocation(null);
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -243,7 +245,7 @@ public class GameWorld {
 	 */
 	public boolean interact(int playerID,int itemID){
 		Player p = allPlayers.get(playerID);
-//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
+		//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
 		Item i = floorList.get(1).getItem(itemID);
 		System.out.println(i.toString());
 		if(i instanceof Door){//TODO change to be door
@@ -253,8 +255,7 @@ public class GameWorld {
 			return false;//FIXME change when implemented (to true)
 		}else if(i instanceof Tool){
 			//If its a tool, pick it up
-			pickUpItem(playerID,itemID);
-			return true;
+			return pickUpItem(playerID,itemID);
 		}else if(i instanceof Portal){
 			//if a player interacts with a portal, change them
 			Portal portal = (Portal)i;
@@ -268,7 +269,13 @@ public class GameWorld {
 			if(randomI==null){
 				return false;
 			}
-			p.pickUp(randomI);
+
+			if(randomI instanceof Tool){
+				return p.pickUp((Tool)randomI);
+			}
+			else{
+				// Is a container OMG help
+			}
 			return true;
 		}
 
