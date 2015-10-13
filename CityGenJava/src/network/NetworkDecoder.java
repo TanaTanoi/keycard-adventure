@@ -130,7 +130,7 @@ public class NetworkDecoder {
 	 * @return - True if the player is still connected.
 	 */
 	public static boolean decodeClientInput(GameWorld game,String input, int player,Set<String> approvedCommands){
-		System.out.println("Received "+ input + " from player " + player);
+//		System.out.println("Received "+ input + " from player " + player);
 		if(input==null)return false;
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){

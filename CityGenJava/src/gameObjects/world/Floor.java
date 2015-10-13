@@ -40,7 +40,6 @@ public class Floor {
 	private Map<String, Integer> displayLists;
 	private static final float SQUARE_SIZE = 0.5f;
 	private List<Character> players;
-	private List<Portal> portals;
 	private Map<Integer,Entity> entities;
 	private int level;
 	private char[][] floor;
@@ -49,6 +48,7 @@ public class Floor {
 		displayLists = new HashMap<String,Integer>();
 		this.level = level;
 		floor = floorPlan;
+		this.players = new ArrayList<Character>();
 		this.entities = new HashMap<Integer,Entity>();
 		for(Item i:items){
 			this.addEntity(i);

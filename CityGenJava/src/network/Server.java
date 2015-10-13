@@ -72,7 +72,7 @@ class ClientThread extends Thread{
 			while(true){
 				Thread.sleep(100);
 				while(!connections.isEmpty()){
-					System.out.println("Reading inputs");
+//					System.out.println("Reading inputs");
 
 					//get the input from each client
 					for(int i =0;i<connections.size();i++){
