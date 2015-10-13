@@ -107,8 +107,8 @@ public class Client extends Thread{
 			serverOut.writeBytes(NetworkDecoder.getPlayerDisconnect(game));
 			serverOut.flush();
 
-		}catch(Exception e){
-			System.out.println("PROBLEM");
+		}catch(IOException e){
+			System.out.println("Problem communicating with server");
 			e.printStackTrace();
 		}
 	}
