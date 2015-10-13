@@ -50,23 +50,7 @@ public class View {
 	private Window w;
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
-	//<<<<<<< .mine
 	private float lightIntensity = 0.8f;
-	//||||||| .r123
-	//	private float lightIntensity = 0.3f;
-
-	//	public float getLightIntensity() {
-	//		return lightIntensity;
-	//	}
-	//=======
-	//	private float lightIntensity = 0.3f;
-
-	//	public float getLightIntensity() {
-	//		return lightIntensity;
-	//	}
-	//>>>>>>> .r127
-
-	private float spotAngle = 360;
 
 	private boolean displayHud = true;
 
@@ -111,26 +95,13 @@ public class View {
 
 	private void renderObjects(){
 
-		float no_mat[] = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
-		float mat_ambient[] = new float[]{0.7f, 0.7f, 0.7f, 1.0f};
-		float mat_ambient_color[] = new float[]{0.8f, 0.8f, 0.2f, 1.0f};
-		float mat_diffuse[] = new float[]{0.1f, 0.5f, 0.8f, 1.0f};
-		float mat_specular[] = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
-		float no_shininess[] = new float[]{0.0f};
-		float low_shininess[] = new float[]{5.0f};
-		float high_shininess[] = new float[]{100.0f};
-		float mat_emission[] = new float[]{0.3f, 0.2f, 0.2f, 0.0f};
 		if(control.getFloor()!=null){
 			for(Item i: control.getFloor().getItems()){
 				glPushMatrix();
 				glTranslatef(x, y, z);
 				glPushMatrix();
 				Location l = i.getLocation();
-
-
-//				System.out.println(l.getX() + " " + l.getY());
 				glTranslatef((float)(l.getX()*squareSize), 0,(float)(l.getY()*squareSize));
-//				setMaterial(new float[]{ 0.2125f, 0.1275f, 0.054f, 0.714f, 0.4284f, 0.18144f, 0.393548f, 0.271906f, 0.166721f, 0.2f });
 				glCallList(control.getFloor().getDisplayList(i));
 				glPopMatrix();
 				glPopMatrix();
@@ -185,6 +156,7 @@ public class View {
 
 		drawInventory();
 		drawMinimap();
+		drawHealth();
 
 
 		glEnable(GL_LIGHTING);
@@ -193,8 +165,34 @@ public class View {
 
 	}
 
+	private void drawHealth() {
+
+		double healthLost = (100 - control.getCurrentPlayer().getHealth())/100.0;
+		int lostBar = (int)((520.0-260)*healthLost)+260;
+
+		glBegin(GL_QUADS);
+		//Draw full health bar
+		glColor3f(0,1,0);
+		glVertex3f(260,60,0);
+		glVertex3f(260,45,0);
+
+		glColor3f(1,0,0);
+		glVertex3f(520,45,0);
+		glVertex3f(520,60,0);
+
+
+		//Lost Health Bar
+		glColor3f(0.0f,0.23f,0.43f);
+		glVertex3f(260,60,0);
+		glVertex3f(260,45,0);
+		glVertex3f(lostBar,45,0);
+		glVertex3f(lostBar,60,0);
+
+		glEnd();
+	}
+
 	private void drawInventory() {
-		glColor3f(0.0f,0.40f,0.65f);
+		glColor3f(0.0f,0.12f,0.20f);
 
 		glBegin(GL_QUADS);
 		//QUAD above mini map
@@ -215,6 +213,12 @@ public class View {
 		glVertex3f(550,10,0);
 		glVertex3f(550,40,0);
 
+		//Health bar surround
+		glVertex3f(255,63,0);
+		glVertex3f(255,40,0);
+		glVertex3f(525,40,0);
+		glVertex3f(525,63,0);
+
 		//Inventory box
 		glVertex3f(550,180,0);
 		glVertex3f(550,10,0);
@@ -230,16 +234,16 @@ public class View {
 		glEnd();
 
 
-		glColor3f(0.0f,0.40f,0.65f);
+		glColor3f(0.0f,0.23f,0.43f);
 		glBegin(GL_TRIANGLES);//for smoothing out rough edges
 		//triangle to the side of the mini-map
-		glVertex3f(230,10,0);
+		glVertex3f(230,30,0);
 		glVertex3f(250,10,0);
 		glVertex3f(230,230,0);
 
 		//triangle to the side of the inventory box
 		glVertex3f(550,180,0);
-		glVertex3f(550,10,0);
+		glVertex3f(550,30,0);
 		glVertex3f(530,10,0);
 
 		glEnd();
@@ -528,13 +532,6 @@ public class View {
 
 	public void setLightIntensity(float lightIntensity) {
 		this.lightIntensity = lightIntensity;
-	}
-	public float getSpotAngle() {
-		return spotAngle;
-	}
-
-	public void setSpotAngle(float spotAngle) {
-		this.spotAngle = spotAngle;
 	}
 
 	private FloatBuffer asFloatBuffer(float[] array){

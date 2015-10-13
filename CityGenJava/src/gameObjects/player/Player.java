@@ -162,4 +162,12 @@ public class Player implements Character{
 			orientation -= 360;
 		}
 	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
 }
