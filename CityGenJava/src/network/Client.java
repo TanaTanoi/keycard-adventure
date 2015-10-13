@@ -18,8 +18,8 @@ public class Client extends Thread{
 	String  gameHost = InetAddress.getLocalHost().getHostAddress();
 	private boolean connected = true;
 	/**
-	 * Standard constructor that uses default port (4444) and local host as IP
-	 * @throws Exception - If unable to connect to the server via standard port (4444)
+	 * Standard constructor that uses default port (32768) and local host as IP
+	 * @throws Exception - If unable to connect to the server via standard port (32768)
 	 */
 	public Client(ClientController game) throws Exception {
 		this.game = game;
@@ -35,7 +35,7 @@ public class Client extends Thread{
 
 	/**
 	 * Constructor that takes a different IP to standard
-	 * @throws Exception - If unable to connect to the server via standard port (4444)
+	 * @throws Exception - If unable to connect to the server via standard port (32768)
 	 */
 	public Client(ClientController game, String IP) throws Exception {
 		System.out.println("Conneting to " +IP);
@@ -52,15 +52,6 @@ public class Client extends Thread{
 		start();
 	}
 
-	/**
-	 * Constructor that takes a different port to standard.
-	 * @param port - The port to connect through
-	 * @throws Exception - If unable to connect to the server via given port
-	 */
-	public Client(ClientController game, String IP,int port) throws Exception{
-		this.port = port;
-		new Client(game, IP);
-	}
 	/**
 	 * Disconnects this client from the server by stopping the client loop and sending a disconnect message.
 	 * Currently no way to reconnect afterwards.
