@@ -178,6 +178,28 @@ public class GameWorld {
 	}
 
 	/**
+	 * Changes the players location to the new floor
+	 * and portal x,y position
+	 *
+	 * @param playerID
+	 * @param portalID
+	 * @return
+	 */
+	public void moveFloor(int playerID, int portalID){
+		Player p = allPlayers.get(playerID);
+		if(p==null){throw new IllegalArgumentException("Invalid Player ID");}
+
+		//		Floor f = floorList.get(p.getLocation().getFloor());
+		Floor f = floorList.get(1);
+		Portal i = (Portal)f.getEntity(itemID);
+
+		p.move(i.getLocation().getX(), i.getLocation().getY()); // moves to portal location
+		p.setFloor(i.getEndFloor()); // updates players floor
+		f.removePlayer(p); // removes from current floor
+		// adds to new floor
+	}
+
+	/**
 	 * Drops an item from a player at the player's current location
 	 * @param p - Player to receive the item
 	 * @param i - Item to give to player p
@@ -260,11 +282,6 @@ public class GameWorld {
 		}else if(i instanceof Tool){
 			//If its a tool, pick it up
 			return pickUpItem(playerID,itemID);
-		}else if(i instanceof Portal){
-			//if a player interacts with a portal, change them
-			Portal portal = (Portal)i;
-			p.getLocation().setFloor(portal.getEndFloor());//TODO again, this can be a bit iffy (location class on player?)
-			return true;
 		}else if(i instanceof Container){
 			Container cont = (Container)i;
 			System.out.println("Grabbing random item from container");
@@ -283,6 +300,9 @@ public class GameWorld {
 			return true;
 		}else if(i instanceof NPC){
 
+		}else if(i instanceof Portal){
+			moveFloor(playerID, itemID);
+			return true;
 		}
 
 		return false;

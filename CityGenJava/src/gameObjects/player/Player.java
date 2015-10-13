@@ -170,4 +170,8 @@ public class Player implements Character{
 	public void setHealth(int health) {
 		this.health = health;
 	}
+
+	public void setFloor(int f){
+		loc.setFloor(f);
+	}
 }
