@@ -39,7 +39,7 @@ import controller.ClientController;
 public class View {
 
 	ArrayList<Integer> objectDisplayLists;
-	ArrayList<Integer> objectTextureList;
+	ArrayList<Integer> textureList;
 	private char[][] occupiedSpace;
 	private GameWorld world;
 	private ClientController control;
@@ -50,15 +50,23 @@ public class View {
 	private Window w;
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
-	private float lightIntensity = 0.3f;
+	//<<<<<<< .mine
+	private float lightIntensity = 0.8f;
+	//||||||| .r123
+	//	private float lightIntensity = 0.3f;
 
-	public float getLightIntensity() {
-		return lightIntensity;
-	}
+	//	public float getLightIntensity() {
+	//		return lightIntensity;
+	//	}
+	//=======
+	//	private float lightIntensity = 0.3f;
 
-	public void setLightIntensity(float lightIntensity) {
-		this.lightIntensity = lightIntensity;
-	}
+	//	public float getLightIntensity() {
+	//		return lightIntensity;
+	//	}
+	//>>>>>>> .r127
+
+	private float spotAngle = 360;
 
 	private boolean displayHud = true;
 
@@ -66,7 +74,7 @@ public class View {
 	public View(GameWorld world,ClientController control){
 		this.world = world;
 		this.control = control;
-		objectTextureList = new ArrayList<Integer>();
+		textureList = new ArrayList<Integer>();
 
 		initaliseCollisions(100,100);
 		y = -0.95f;
@@ -75,46 +83,69 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			objectTextureList.add(Texture.getTexture("brick.jpg"));
-			objectTextureList.add(Texture.getTexture("wood.jpg"));
+			textureList.add(Texture.getTexture("brick.jpg"));
+			textureList.add(Texture.getTexture("wood.jpg"));
 			printCollisions();
 			loaded = true;
 		}
 		initaliseCamera();
 		float delta = control.getRotation();
 		glRotatef(delta, 0, 1, 0);
-		if(control.getFloor()!=null){
-			for(Item i: control.getFloor().getItems()){
-				glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
-				glPushMatrix();
-				glTranslatef(x, y, z);
-				glPushMatrix();
-				Location l = i.getLocation();
-				glTranslatef(l.getX()/10.0f, 0,l.getY()/10.0f);
-				glCallList(control.getFloor().getDisplayList(i));
-				glPopMatrix();
-				glPopMatrix();
-			}
-		}
+
 		if (control.getCurrentPlayer() != null){
 			Location playerLoc = control.getCurrentPlayer().getLocation();
 			x = playerLoc.getX();
 			z = playerLoc.getY();
 
-
-
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			renderObjects();
 			renderPlayers();
 			renderWalls();
 			renderBounds();
-			if (displayHud) renderDisplayBar();
+
+			renderDisplayBar();
+
 		}
 
 	}
 
+	private void renderObjects(){
+
+		float no_mat[] = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
+		float mat_ambient[] = new float[]{0.7f, 0.7f, 0.7f, 1.0f};
+		float mat_ambient_color[] = new float[]{0.8f, 0.8f, 0.2f, 1.0f};
+		float mat_diffuse[] = new float[]{0.1f, 0.5f, 0.8f, 1.0f};
+		float mat_specular[] = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+		float no_shininess[] = new float[]{0.0f};
+		float low_shininess[] = new float[]{5.0f};
+		float high_shininess[] = new float[]{100.0f};
+		float mat_emission[] = new float[]{0.3f, 0.2f, 0.2f, 0.0f};
+		if(control.getFloor()!=null){
+			for(Item i: control.getFloor().getItems()){
+				glPushMatrix();
+				glTranslatef(x, y, z);
+				glPushMatrix();
+				Location l = i.getLocation();
+
+
+				System.out.println(l.getX() + " " + l.getY());
+				glTranslatef((float)(l.getX()*squareSize), 0,(float)(l.getY()*squareSize));
+//				setMaterial(new float[]{ 0.2125f, 0.1275f, 0.054f, 0.714f, 0.4284f, 0.18144f, 0.393548f, 0.271906f, 0.166721f, 0.2f });
+				glCallList(control.getFloor().getDisplayList(i));
+				glPopMatrix();
+				glPopMatrix();
+			}
+		}
+	}
+
+
+
+
 	private void renderBounds() {
-//		glColor3f(0.0f,0.40f,0.65f);
+		//		glColor3f(0.0f,0.40f,0.65f);
+		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, objectTextureList.get(1));
+		glBindTexture(GL_TEXTURE_2D, textureList.get(1));
 		glPushMatrix();
 		glTranslatef(x, y, z);
 		glBegin(GL_QUADS);
@@ -227,7 +258,7 @@ public class View {
 		glVertex3f(10+size,10,0);
 
 		glEnd();
-
+		if (!displayHud) return;
 		float gridSpacing = size/occupiedSpace.length;
 
 
@@ -294,33 +325,32 @@ public class View {
 	public void move(char pressed, double xRot){
 		double dz = Math.cos(Math.toRadians(xRot))/10;
 		double dx = Math.sin(Math.toRadians(xRot))/10;
+		float tempX = x;
+		float tempZ = z;
 		if (pressed == 'W'){
-			z+=dz;
-			x-=dx;
+			tempZ+=dz;
+			tempX-=dx;
 		}
 		else if (pressed == 'A'){
-			z+=dx;
-			x+=dz;
+			tempZ+=dx;
+			tempX+=dz;
 		}
 		else if (pressed == 'S'){
-			z-=dz;
-			x+=dx;
+			tempZ-=dz;
+			tempX+=dx;
 		}
 		else if (pressed == 'D'){
-			z-=dx;
-			x-=dz;
+			tempZ-=dx;
+			tempX-=dz;
 		}
 		for (int i = -13; i < 13; i++){
-			int x = (int)(((this.x+10) + dx*i)/squareSize);
-			int z = (int)(((this.z+10) + dz*i)/squareSize);
-			if (x < 0 || x >= occupiedSpace.length) return;
-			if (z < 0 || z >= occupiedSpace[0].length) return;
-			if (occupiedSpace[100-x][100-z] != '-'){
-				return;
-			}
+			int x = (int)(((tempX+10) + dx*i)/squareSize);
+			int z = (int)(((tempZ+10) + dz*i)/squareSize);
+			if (x <= 0 || x >= occupiedSpace.length) return;
+			if (z <= 0 || z >= occupiedSpace[0].length) return;
+			if (occupiedSpace[occupiedSpace.length-x][occupiedSpace[0].length-z] != '-') return;
 		}
-
-		control.getCurrentPlayer().move(this.x, this.z);
+		control.getCurrentPlayer().move(tempX, tempZ);
 	}
 
 	public char interact(double xRot){
@@ -379,7 +409,7 @@ public class View {
 				glScaled(0.5, 0.5, 0.5);
 				for(Item it : control.getFloor().getItems()){
 
-					if (it.getModelName().contains("tea")){
+					if (it.getModelName().contains("ghost")){
 						glCallList(control.getFloor().getDisplayList(it));
 						break;
 					}
@@ -392,9 +422,9 @@ public class View {
 	}
 
 	private void renderWalls(){
-		glColor3f(0.2f,0.2f,0.2f);
+		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, objectTextureList.get(0));
+		glBindTexture(GL_TEXTURE_2D, textureList.get(0));
 		double spacing = gameSize/occupiedSpace.length;
 		for (int ix = 0; ix < occupiedSpace.length; ix++){
 			for (int iz = 0; iz < occupiedSpace[0].length; iz++){
@@ -433,7 +463,7 @@ public class View {
 
 	private void initaliseCamera() {
 		glMatrixMode(GL_PROJECTION);
-
+		System.out.println(spotAngle);
 		glLoadIdentity();
 		double near = 1; // near should be chosen as far into the scene as possible
 		double far  = 100;
@@ -443,14 +473,22 @@ public class View {
 
 		//----------- Variables & method calls added for Lighting Test -----------//
 		glShadeModel(GL_SMOOTH);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, asFloatBuffer(new float[]{0.5f,0.5f,0.5f,0.5f}));				// sets specular material color
-		glMaterialf(GL_FRONT, GL_SHININESS, 0.1f);					// sets shininess
+		//		glMaterialfv(GL_FRONT, GL_SPECULAR, asFloatBuffer(new float[]{0.5f,0.5f,0.5f,0.5f}));				// sets specular material color
+		//		glMaterialf(GL_FRONT, GL_SHININESS, 0.1f);					// sets shininess
 
-		glLightfv(GL_LIGHT0, GL_POSITION, asFloatBuffer(new float[]{0f,10f,0f,0f}));				// sets light position
-		glLightfv(GL_LIGHT0, GL_SPECULAR, asFloatBuffer(new float[]{0.01f,0.01f,0.01f,0.01f}));				// sets specular light to white
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(new float[]{0.1f,0.1f,0.1f,0.5f}));					// sets diffuse light to white
+		glLightfv(GL_LIGHT0, GL_POSITION, asFloatBuffer(new float[]{0,5f,0,0.0f}));				// sets light position
+		glLightfv(GL_LIGHT0, GL_SPECULAR, asFloatBuffer(new float[]{lightIntensity/3,lightIntensity/3,lightIntensity/3,0.01f}));				// sets specular light to white
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(new float[]{lightIntensity/3,lightIntensity/3,lightIntensity/3,0.5f}));					// sets diffuse light to white
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{lightIntensity,lightIntensity,lightIntensity,1f}));		// global ambient light
-
+		//		float  spotDir[] = {0.0f,0f,1f,0};
+		//
+		//		glLightfv(GL_LIGHT0,GL_SPOT_DIRECTION, asFloatBuffer(spotDir));
+		//
+		//		// Specific spot effects
+		//		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,10);
+		//
+		//		// Fairly shiny spot
+		//		glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,1.0f);
 		glEnable(GL_LIGHTING);										// enables lighting
 		glEnable(GL_LIGHT0);										// enables light0
 
@@ -483,6 +521,21 @@ public class View {
 
 	public void toggleHUD(){
 		displayHud = !displayHud;
+	}
+
+	public float getLightIntensity() {
+		return lightIntensity;
+	}
+
+	public void setLightIntensity(float lightIntensity) {
+		this.lightIntensity = lightIntensity;
+	}
+	public float getSpotAngle() {
+		return spotAngle;
+	}
+
+	public void setSpotAngle(float spotAngle) {
+		this.spotAngle = spotAngle;
 	}
 
 	private FloatBuffer asFloatBuffer(float[] array){
