@@ -106,7 +106,7 @@ public class GameWorld {
 	 * @param level - unique ID of the floor
 	 * @param items - List of items to add to the floor, including furniture.
 	 */
-	public void setFloor(char[][] floor, int level, List<Item> items){
+	public void setFloor(char[][] floor, int level, List<Entity> items){
 		fakeFloor = floor;
 		Floor f = new Floor(level, floor, items);
 		System.out.println("Adding floor at " + level + " with " + items.size() + " items");

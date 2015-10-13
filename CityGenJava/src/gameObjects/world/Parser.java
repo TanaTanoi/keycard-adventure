@@ -2,6 +2,7 @@ package gameObjects.world;
 
 import gameObjects.objects.Container;
 import gameObjects.objects.Door;
+import gameObjects.objects.Entity;
 import gameObjects.objects.Furniture;
 import gameObjects.objects.FurnitureContainer;
 import gameObjects.objects.Item;
@@ -10,6 +11,8 @@ import gameObjects.objects.Portal;
 import gameObjects.objects.Potion;
 import gameObjects.objects.Tool;
 import gameObjects.objects.Weapon;
+import gameObjects.player.InfoNPC;
+import gameObjects.player.NPC;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,35 +57,34 @@ public class Parser {
 
 				try {
 					Scanner s = new Scanner(f);
-					List<Item> items = new ArrayList<Item>();
-					List<Portal> portals = new ArrayList<Portal>();
+					List<Entity> entities = new ArrayList<Entity>();
 					while(s.hasNextLine()){
 						switch(s.next()){
 						case("WALL"): // line describes wall in world
 							parseWall(s,world);
 						break;
 						case("PROP"): // describes furniture
-							items.add(parseProp(s,level,g.setItemID()));
+							entities.add(parseProp(s,level,g.setItemID()));
 						break;
 						case("TOOL"):
-							items.add(parseTool(s,level,g.setItemID()));
+							entities.add(parseTool(s,level,g.setItemID()));
 						break;
 						case("DOOR"):
-							items.add(parseDoor(s,level,g.setItemID()));
+							entities.add(parseDoor(s,level,g.setItemID()));
 						break;
 						case("PORTAL"):
-							portals.add(parsePortal(s,level,g.setItemID()));
+							entities.add(parsePortal(s,level,g.setItemID()));
 						break;
 						case("CONTAINER"):
-							items.add(parseContainer(s,level,g.setItemID(),g));
+							entities.add(parseContainer(s,level,g.setItemID(),g));
 						break;
 						case("NPC"):
-							items.add(parseNPC(s,level,g.setItemID(),g));
+							entities.add(parseNPC(s,level,g.setItemID(),g));
 						break;
 						}
 					}
 					s.close();
-					g.setFloor(world, level, items); // adds floor to game
+					g.setFloor(world, level, entities); // adds floor to game
 
 
 				} catch (FileNotFoundException e) {e.printStackTrace(); }
@@ -92,9 +94,28 @@ public class Parser {
 
 	}
 
-	private static Item parseNPC(Scanner s, int level, int setItemID,
+	/**
+	 * Creates a NPC object from the following:
+	 * NPC [NAME] [TYPE] [X POS] [Y POS ] [Model Path] [*{Info} Dialog]
+	 * @param s
+	 * @param level
+	 * @param setItemID
+	 * @param g2
+	 * @return
+	 */
+	private static NPC parseNPC(Scanner s, int level, int setItemID,
 			GameWorld g2) {
-		// TODO Auto-generated method stub
+		String name = s.next();
+		String type = s.next();
+		int xpos = s.nextInt();
+		int ypos = s.nextInt();
+		String modelpath = s.next();
+		switch(type){
+		case "INFO":
+			String dialog = s.next();
+			return new InfoNPC(name,100,new Location(xpos,ypos,level),dialog);
+		}
+
 		return null;
 	}
 	/**
@@ -221,6 +242,14 @@ public class Parser {
 		return t;
 	}
 
+	/**
+	 * Parses a prop item in the following format:
+	 * PORTAL [Xpos] [Ypos] [Model path]
+	 * @param s - Current scanner ("PORTAL" has been consumsed)
+	 * @param level - Level to apply it to
+	 * @param ID - Global ID of this prop
+	 * @return - A prop to be added to the game world
+	 */
 	private static Item parseProp(Scanner s, int level, int ID) {
 		int x = s.nextInt();
 		int y = s.nextInt();
