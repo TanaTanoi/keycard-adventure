@@ -11,7 +11,7 @@ import gameObjects.world.Location;
  *
  */
 
-public abstract class Tool implements Item {
+public abstract class Tool implements Item{
 
 	private int ID;
 

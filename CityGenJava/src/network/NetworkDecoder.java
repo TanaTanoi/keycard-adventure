@@ -1,7 +1,9 @@
 package network;
 
+import gameObjects.objects.Entity;
 import gameObjects.objects.Item;
 import gameObjects.world.GameWorld;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -31,7 +33,7 @@ public class NetworkDecoder {
 		StringBuilder toReturn = new StringBuilder();
 		toReturn.append(getPlayerString(info));
 
-		Item pickedUp = game_client.getToPickup();
+		Entity pickedUp = game_client.getToInteract();
 		if(pickedUp !=null){
 			//if we want to pick up an item, send a pick up request in the form ITEM [Item ID] [Player ID]
 			System.out.println("Adding pickup item");

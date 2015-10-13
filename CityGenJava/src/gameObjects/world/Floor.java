@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL11.glTexCoord2d;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 import gameObjects.objects.Item;
 import gameObjects.player.Character;
+import gameObjects.player.NPC;
 import graphics.Face;
 import graphics.Model;
 
@@ -39,6 +40,7 @@ public class Floor {
 	private List<Character> players;
 	private List<Portal> portals;
 	private Map<Integer,Item> items;
+	private List<NPC> allNPCs;
 	private int level;
 	private char[][] floor;
 

@@ -17,5 +17,17 @@ public class RiddleNPC extends NPC{
 		this.answer = answer;
 	}
 
+	@Override
+	public String getModelName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

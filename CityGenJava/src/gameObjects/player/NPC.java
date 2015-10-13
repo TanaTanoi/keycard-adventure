@@ -1,5 +1,6 @@
 package gameObjects.player;
 
+import gameObjects.objects.Entity;
 import gameObjects.objects.Item;
 import gameObjects.world.Location;
 
@@ -15,7 +16,7 @@ import gameObjects.world.Location;
  * @author Hannah
  *
  */
-public abstract class NPC implements Character {
+public abstract class NPC implements Character, Entity{
 
 	private String name;
 	private int health;

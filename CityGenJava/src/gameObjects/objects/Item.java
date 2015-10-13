@@ -11,7 +11,7 @@ import gameObjects.world.Location;
  *
  */
 
-public interface Item {
+public interface Item extends Entity {
 
 	/**
 	 * This item performs an action on a player	 *
@@ -24,11 +24,7 @@ public interface Item {
 	 */
 	public void interact(Item i);
 
-	/**
-	 * Returns the name of the item
-	 * @return item name
-	 */
-	public String getName();
+
 
 	/**
 	 * Returns a description about the item
@@ -36,13 +32,7 @@ public interface Item {
 	 */
 	public String getDescription();
 
-	/**
-	 * Gets location object which describes which
-	 * floor an object is on and whereabouts within
-	 * that floor they are
-	 */
 
-	public Location getLocation();
 
 	/**
 	 * Sets location of object. It is set to null
@@ -53,16 +43,5 @@ public interface Item {
 	 */
 	public void setLocation(Location l);
 
-	/**
-	 * Returns the filename for model which
-	 * will create the item in the renderer
-	 * @return
-	 */
-	public String getModelName();
 
-	/**
-	 * Returns ID assigned to the item
-	 * @return
-	 */
-	public int getID();
 }

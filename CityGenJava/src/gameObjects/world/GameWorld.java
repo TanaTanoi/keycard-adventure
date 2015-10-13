@@ -2,6 +2,7 @@ package gameObjects.world;
 
 import gameObjects.objects.Container;
 import gameObjects.objects.Door;
+import gameObjects.objects.Entity;
 import gameObjects.objects.Item;
 import gameObjects.objects.Key;
 import gameObjects.objects.Tool;
@@ -27,7 +28,6 @@ public class GameWorld {
 	private char[][] fakeFloor;
 
 	private Map<Integer,Player> allPlayers;
-	private List<NPC> allNPCs;
 	private Map<Integer, Floor> floorList;
 	private int playerID = 0;
 	private int itemID = 0;
@@ -42,7 +42,6 @@ public class GameWorld {
 	 */
 	public void init(){
 		allPlayers = new HashMap<Integer,Player>();
-		allNPCs = new ArrayList<NPC>();
 		floorList = new HashMap<Integer,Floor>();
 	}
 
@@ -128,9 +127,9 @@ public class GameWorld {
 	 * @param radius - Max search distance
 	 * @return - The closest item to a player within the radius. Null if no objects within the radius
 	 */
-	public Item closestItem(Location l, float radius){
-		Item toReturn = null;
-		for(Item i:floorList.get(1).getItems()){//TODO allow multiple floors
+	public Entity closestEntity(Location l, float radius){
+		Entity toReturn = null;
+		for(Entity i: floorList.get(1).getItems()){//TODO allow multiple floors
 			Location iloc = i.getLocation();
 			if(iloc.distance(l)<radius){
 				if(toReturn == null){
