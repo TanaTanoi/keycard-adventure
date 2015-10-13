@@ -1,11 +1,18 @@
 package gameObjects.world;
 
+import static org.lwjgl.opengl.GL11.GL_AMBIENT;
 import static org.lwjgl.opengl.GL11.GL_COMPILE;
+import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_SHININESS;
+import static org.lwjgl.opengl.GL11.GL_SPECULAR;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glMaterialf;
+import static org.lwjgl.opengl.GL11.glMaterialfv;
 import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glNormal3f;
 import static org.lwjgl.opengl.GL11.glTexCoord2d;
@@ -15,11 +22,13 @@ import gameObjects.player.Character;
 import graphics.Face;
 import graphics.Model;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -104,6 +113,7 @@ public class Floor {
 		int newList = glGenLists(1);
 		glNewList(newList, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
+		//TODO setMaterial(new float[]{});
 		for(Face face: m.getFaces()){
 			Vector2f t1 = m.getTextureCoordinates().get((int) face.textures.x -1);
 			glTexCoord2d(t1.x,t1.y);
@@ -130,6 +140,36 @@ public class Floor {
 		glEnd();
 		glEndList();
 		displayLists.put(filePath,newList);
+	}
+	
+
+	void setMaterial(float[] material){
+		float[] mat = new float[4];
+
+		// AMBIENT //
+		mat[0] = material[0];//r
+		mat[1] = material[1];//g
+		mat[2] = material[2];//b
+		mat[3] = 1.0f;
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, asFloatBuffer(mat));
+		
+		// DIFFUSE //
+		mat = new float[4];
+		mat[0] = material[3];//r
+		mat[1] = material[4];//g
+		mat[2] = material[5];//b
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, asFloatBuffer(mat));
+		// SPECULAR //
+		mat = new float[4];
+		mat[0] = material[6];//r
+		mat[1] = material[7];//g
+		mat[2] = material[8];//b
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, asFloatBuffer(mat));
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material[9] * 128.0f);
+	}
+	
+	private FloatBuffer asFloatBuffer(float[] array){
+		return (FloatBuffer)BufferUtils.createFloatBuffer(4).put(array).flip();
 	}
 
 	private void updateCollisions(Model m, Vector3f offset){
