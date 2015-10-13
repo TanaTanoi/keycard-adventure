@@ -112,8 +112,8 @@ public class GameWorld {
 		System.out.println("Adding floor at " + level + " with " + items.size() + " items");
 		floorList.put(level, f);
 	}
-	public Floor getFloor(){
-		return floorList.get(1);
+	public Floor getFloor(int floor){
+		return floorList.get(floor);
 	}
 	public char[][] getCollisions(){
 		return fakeFloor;

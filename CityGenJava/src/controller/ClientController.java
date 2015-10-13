@@ -203,7 +203,7 @@ public class ClientController {
 	 */
 	public void setCurrentPlayer(String name, int ID){
 		current = new Player(name,ID);
-		current.move(0, -5);
+		world.getFloor(current.getLocation().getFloor()).addPlayer(current);
 		world.addPlayer(current);
 	}
 
@@ -244,7 +244,7 @@ public class ClientController {
 	}
 
 	public Floor getFloor(){
-		return world.getFloor();
+		return world.getFloor(current.getLocation().getFloor());
 	}
 
 	private void init() {
