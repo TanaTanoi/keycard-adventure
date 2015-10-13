@@ -71,7 +71,7 @@ public class Parser {
 							items.add(parseDoor(s,level,g.setItemID()));
 						break;
 						case("PORTAL"):
-							portals.add(parsePortal(s,level));
+							portals.add(parsePortal(s,level,g.setItemID()));
 						break;
 						case("CONTAINER"):
 							items.add(parseContainer(s,level,g.setItemID(),g));
@@ -97,18 +97,22 @@ public class Parser {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	private static Portal parsePortal(Scanner s, int level) {
-
-		int startFloor = s.nextInt();
+	/**
+	 * Creates a portal object that pertains to the following structure:
+	 * PORTAL [Target floor] [X Pos] [Y Pos] [Model name]
+	 * @param s - Currently in use scanner (Has consumed the "PORTAL" token)
+	 * @param level - The floor level this portal will be a part of
+	 * @param setItemID - The ID of the portal, set by the parser
+	 * @return - The portal constructed by the parser.
+	 */
+	private static Portal parsePortal(Scanner s, int level, int setItemID) {
 		int endFloor = s.nextInt();
 
 		int x = s.nextInt();
 		int y = s.nextInt();
 		Location l = new Location(x,y,level);
 		String modelName = s.next();
-
-		Portal p = new Portal(startFloor,endFloor,l,modelName);
+		Portal p = new Portal(level,endFloor,l,modelName,setItemID);
 		return p;
 	}
 	/**
@@ -117,13 +121,13 @@ public class Parser {
 	 * [DESC]
 	 * [Item Limit] [X Pos] [Y Pos] [Model obj]
 	 * {
-	 * [Items to parse]
+	 * [Entities to parse]
 	 * }
-	 * @param s
-	 * @param level
-	 * @param setItemID
-	 * @param g
-	 * @return
+	 * @param s - Currently in use scanner (Has consumed the "CONTAINER" token)
+	 * @param level - The level this container will be assigned to
+	 * @param setItemID - Global ID of the container
+	 * @param g - Gameworld to be passed to tool parsers
+	 * @return - A container to be added to the game world
 	 */
 	private static Item parseContainer(Scanner s, int level, int setItemID, GameWorld g) {
 		String name = s.nextLine();
@@ -154,7 +158,13 @@ public class Parser {
 		return c;
 
 	}
-
+	/**
+	 * Parses a door and adds it to the floor
+	 * @param s - current scanner ("DOOR" token has been consumed)
+	 * @param level - Level this door will be assigned to
+	 * @param setItemID- Globla ID of the door
+	 * @return - Door to be added to the floor
+	 */
 	private static Item parseDoor(Scanner s, int level, int setItemID) {
 		String name = s.nextLine();
 		String description = s.nextLine();
@@ -164,12 +174,21 @@ public class Parser {
 		int y = s.nextInt();
 		Location l = new Location(x,y,level);
 		String modelName = s.next();
-
 		// Note is assumed locked by default
 		Door d = new Door(name,description,l,true,keyName,modelName,setItemID);
 		return d;
 	}
-
+	/**
+	 * Parses a tool item in the following format:
+	 * TOOL [Type] [Name]
+	 * [Description]
+	 * [x pos] [y pos] [model path] [image path] [*effect]
+	 *
+	 * @param s- Current scanner ("TOOL" has been consumed)
+	 * @param level
+	 * @param setItemID
+	 * @return
+	 */
 	private static Item parseTool(Scanner s, int level, int setItemID) {
 		Tool t;
 

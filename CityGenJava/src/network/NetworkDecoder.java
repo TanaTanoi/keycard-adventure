@@ -35,10 +35,10 @@ public class NetworkDecoder {
 
 		Entity pickedUp = game_client.getToInteract();
 		if(pickedUp !=null){
-			//if we want to pick up an item, send a pick up request in the form ITEM [Item ID] [Player ID]
+			//if we want to pick up an item, send a pick up request in the form INTERACT [Item ID] [Player ID]
 			System.out.println("Adding pickup item");
 			toReturn.append(" ");
-			toReturn.append("ITEM ");
+			toReturn.append("INTERACT ");
 			toReturn.append(pickedUp.getID());
 			toReturn.append(" ");
 			toReturn.append(game_client.getCurrentPlayer().getID());
@@ -82,10 +82,10 @@ public class NetworkDecoder {
 				}else if(playerID == -2){//-2 means game has already started. TODO actually implement this
 					throw new IllegalArgumentException("Game has already started. Connection refused.");
 				}
-			}else if(next.equals("ITEM")){
+			}else if(next.equals("INTERACT")){
 				int itemID = sc.nextInt();
 				int playerID = sc.nextInt();
-				System.out.println("ITEM " +itemID + " " +playerID);
+				System.out.println("INTERACT " +itemID + " " +playerID);
 				game_client.interact(playerID, itemID);
 			}
 		}
@@ -154,14 +154,13 @@ public class NetworkDecoder {
 				}catch(NumberFormatException e){
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
 				}
-
-			}else if(next.equals("ITEM")){
+			}else if(next.equals("INTERACT")){
 				//ITEM [ITEM ID] [PLAYER ID of play who will receive item]
 				int playerID = sc.nextInt();
 				int itemID = sc.nextInt();
 				System.out.println("Item call " + playerID + " " + itemID);
 				if(game.interact(playerID, itemID)){
-					approvedCommands.add("ITEM " + playerID + " " + itemID);
+					approvedCommands.add("INTERACT " + playerID + " " + itemID);
 				}
 			}
 		}
@@ -201,7 +200,6 @@ public class NetworkDecoder {
 		return sb.toString();
 	}
 
-
 	/*----------------------------------*\
 	 * 		GENERAL HELPER METHODS 		*
 	\*----------------------------------*/
@@ -213,7 +211,6 @@ public class NetworkDecoder {
 	 */
 	public static String getPlayerString(float[] playerInfo){
 		if(playerInfo.length!=4)throw new IllegalArgumentException("Method only accepts playerinfo of length 4: ID,X,Y,ROT");
-
 		playerInfo[1]*=100.0f;
 		playerInfo[2]*=100.0f;
 		//P [ID] [X*100] [Y*100] [ROT]
