@@ -313,10 +313,13 @@ public class ClientController {
 		if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
 		char pressed = (char)key;
-
-		if(pressed == 'L') view.setLightIntensity(view.getLightIntensity()+0.05f);
-		if(pressed == 'K') view.setLightIntensity(view.getLightIntensity()-0.05f);
-		if(pressed == 'M' && action == 0) view.toggleHUD();
+		if (action == 0){
+			if(pressed == 'Q') current.equipLeft();
+			if(pressed == 'E') current.equipRight();
+			if(pressed == 'L') view.setLightIntensity(view.getLightIntensity()+0.05f);
+			if(pressed == 'K') view.setLightIntensity(view.getLightIntensity()-0.05f);
+			if(pressed == 'M') view.toggleHUD();
+		}
 		view.move(pressed, xRot);
 	}
 

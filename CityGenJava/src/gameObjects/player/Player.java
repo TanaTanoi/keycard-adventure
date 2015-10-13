@@ -171,6 +171,11 @@ public class Player implements Character{
 		this.health = health;
 	}
 
+
+	public int getEquipped() {
+		return equipped;
+	}
+
 	public void setFloor(int f){
 		loc.setFloor(f);
 	}

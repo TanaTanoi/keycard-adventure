@@ -41,8 +41,6 @@ import controller.ClientController;
 
 public class View {
 
-	ArrayList<Integer> objectDisplayLists;
-	ArrayList<Integer> textureList;
 	private char[][] occupiedSpace;
 	private GameWorld world;
 	private ClientController control;
@@ -55,7 +53,7 @@ public class View {
 	private float playersY = 0.5f;
 	private float lightIntensity = 0.8f;
 	private double inventoryAnimation;
-	private double animationRate = 0.1;
+	private double animationRate = 0.05;
 	private boolean displayHud = true;
 
 	private Map<String, Integer> texMap;
@@ -64,10 +62,6 @@ public class View {
 	public View(GameWorld world,ClientController control){
 		this.world = world;
 		this.control = control;
-
-
-		textureList = new ArrayList<Integer>();
-
 		initaliseCollisions(100,100);
 		y = -0.95f;
 		w = new Window();
@@ -75,13 +69,7 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			texMap= new HashMap<String,Integer>();
-			texMap.put("red_potion.png", Texture.getTexture("red_potion.png"));
-			texMap.put("rainbow_potion.png", Texture.getTexture("rainbow_potion.png"));
-			texMap.put("brick.jpg", Texture.getTexture("brick.jpg"));
-			texMap.put("wood.jpg", Texture.getTexture("wood.jpg"));
-			textureList.add(Texture.getTexture("red_potion.png"));
-			textureList.add(Texture.getTexture("wood.jpg"));
+			loadTextures();
 			printCollisions();
 			loaded = true;
 		}
@@ -104,10 +92,26 @@ public class View {
 
 		}
 		inventoryAnimation+=animationRate;
-		if (inventoryAnimation > 3 || inventoryAnimation < 0){
+		if (inventoryAnimation > 4 || inventoryAnimation < 0){
 			animationRate*=-1;
 			inventoryAnimation+=animationRate;
 		}
+	}
+
+	private void loadTextures(){
+		texMap= new HashMap<String,Integer>();
+		texMap.put("brick.jpg", Texture.getTexture("brick.jpg"));
+		texMap.put("wood.jpg", Texture.getTexture("wood.jpg"));
+
+		texMap.put("red_potion.png", Texture.getTexture("red_potion.png"));
+		texMap.put("rainbow_potion.png", Texture.getTexture("rainbow_potion.png"));
+
+		texMap.put("knife.png", Texture.getTexture("knife.png"));
+		texMap.put("syringe.png", Texture.getTexture("syringe.png"));
+		texMap.put("crowbar.png", Texture.getTexture("crowbar.png"));
+
+		texMap.put("purple_keycard.png", Texture.getTexture("purple_keycard.png"));
+		texMap.put("red_keycard.png", Texture.getTexture("red_keycard.png"));
 	}
 
 	private void renderObjects(){
@@ -132,7 +136,7 @@ public class View {
 		//		glColor3f(0.0f,0.40f,0.65f);
 		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, texMap.get("brick.jpg"));
+		glBindTexture(GL_TEXTURE_2D, texMap.get("wood.jpg"));
 		glPushMatrix();
 		glTranslatef(x, y, z);
 		glBegin(GL_QUADS);
@@ -191,7 +195,6 @@ public class View {
 		glColor3f(0,1,0);
 		glVertex3f(260,60,0);
 		glVertex3f(260,45,0);
-
 		glColor3f(1,0,0);
 		glVertex3f(520,45,0);
 		glVertex3f(520,60,0);
@@ -241,12 +244,19 @@ public class View {
 		glVertex3f(790,10,0);
 		glVertex3f(790,180,0);
 
-		glColor3f(1.0f,1.0f,1.0f);
-		//Clear the center of the box
-		glVertex3f(560,170,0);
-		glVertex3f(560,20,0);
-		glVertex3f(780,20,0);
-		glVertex3f(780,170,0);
+		if (control.getCurrentPlayer().getEquipped() == 0) glColor3f(1,0,0);
+		else glColor3f(0.0f,0.12f,0.20f);
+		glVertex3f(557,173,0);
+		glVertex3f(557,67,0);
+		glVertex3f(663,67,0);
+		glVertex3f(663,173,0);
+
+		if (control.getCurrentPlayer().getEquipped() == 1) glColor3f(1,0,0);
+		else glColor3f(0.0f,0.12f,0.20f);
+		glVertex3f(667,123,0);
+		glVertex3f(667,17,0);
+		glVertex3f(773,17,0);
+		glVertex3f(773,123,0);
 		glEnd();
 
 
@@ -271,19 +281,31 @@ public class View {
 
 	private void renderItems(){
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textureList.get(0));
+		glBindTexture(GL_TEXTURE_2D, texMap.get("knife.png"));
 		glBegin(GL_QUADS);
 
 		float frame = (int)inventoryAnimation;
 
 		glTexCoord2f(frame/4, 0);
-		glVertex3f(300,500,0);
+		glVertex3f(560,170,0);
 		glTexCoord2f(frame/4, 1);
-		glVertex3f(300,200,0);
+		glVertex3f(560,70,0);
 		glTexCoord2f((frame+1)/4, 1);
-		glVertex3f(600,200,0);
+		glVertex3f(660,70,0);
 		glTexCoord2f((frame+1)/4, 0);
-		glVertex3f(600,500,0);
+		glVertex3f(660,170,0);
+
+		glEnd();
+		glBindTexture(GL_TEXTURE_2D, texMap.get("red_keycard.png"));
+		glBegin(GL_QUADS);
+		glTexCoord2f(frame/4, 0);
+		glVertex3f(670,120,0);
+		glTexCoord2f(frame/4, 1);
+		glVertex3f(670,20,0);
+		glTexCoord2f((frame+1)/4, 1);
+		glVertex3f(770,20,0);
+		glTexCoord2f((frame+1)/4, 0);
+		glVertex3f(770,120,0);
 
 		glEnd();
 
@@ -412,16 +434,6 @@ public class View {
 		return '-';
 	}
 
-
-
-	private void renderObject(int displayList){
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
-		glPushMatrix();
-		glTranslated(x, y, z);
-		glCallList(objectDisplayLists.get(displayList));
-		glPopMatrix();
-	}
-
 	private void renderPlayers(){
 		double spacing = gameSize/occupiedSpace.length;
 		List<Player> players = control.getFloor().getPlayers();
@@ -467,7 +479,7 @@ public class View {
 	private void renderWalls(){
 		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textureList.get(0));
+		glBindTexture(GL_TEXTURE_2D, texMap.get("brick.jpg"));
 		double spacing = gameSize/occupiedSpace.length;
 		for (int ix = 0; ix < occupiedSpace.length; ix++){
 			for (int iz = 0; iz < occupiedSpace[0].length; iz++){
