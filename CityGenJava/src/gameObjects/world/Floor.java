@@ -44,13 +44,13 @@ public class Floor {
 	private int level;
 	private char[][] floor;
 
-	public Floor(int level, char[][] floorPlan, List<Item> items){
+	public Floor(int level, char[][] floorPlan, List<Entity> items){
 		displayLists = new HashMap<String,Integer>();
 		this.level = level;
 		floor = floorPlan;
 		this.players = new ArrayList<Character>();
 		this.entities = new HashMap<Integer,Entity>();
-		for(Item i:items){
+		for(Entity i:items){
 			this.addEntity(i);
 		}
 
