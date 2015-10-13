@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL11.glTexCoord2d;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 import gameObjects.objects.Entity;
 import gameObjects.objects.Item;
+import gameObjects.objects.Portal;
 import gameObjects.player.Character;
 import gameObjects.player.NPC;
 import graphics.Face;

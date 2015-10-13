@@ -5,6 +5,7 @@ import gameObjects.objects.Door;
 import gameObjects.objects.Entity;
 import gameObjects.objects.Item;
 import gameObjects.objects.Key;
+import gameObjects.objects.Portal;
 import gameObjects.objects.Tool;
 import gameObjects.player.NPC;
 import gameObjects.player.Player;
@@ -262,7 +263,7 @@ public class GameWorld {
 		}else if(i instanceof Portal){
 			//if a player interacts with a portal, change them
 			Portal portal = (Portal)i;
-			p.getLocation().setFloor(portal.endFloor);//TODO again, this can be a bit iffy (location class on player?)
+			p.getLocation().setFloor(portal.getEndFloor());//TODO again, this can be a bit iffy (location class on player?)
 			return true;
 		}else if(i instanceof Container){
 			Container cont = (Container)i;
@@ -281,7 +282,7 @@ public class GameWorld {
 			}
 			return true;
 		}else if(i instanceof NPC){
-			
+
 		}
 
 		return false;

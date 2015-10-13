@@ -6,6 +6,7 @@ import gameObjects.objects.Furniture;
 import gameObjects.objects.FurnitureContainer;
 import gameObjects.objects.Item;
 import gameObjects.objects.Key;
+import gameObjects.objects.Portal;
 import gameObjects.objects.Potion;
 import gameObjects.objects.Tool;
 import gameObjects.objects.Weapon;
@@ -71,9 +72,12 @@ public class Parser {
 						break;
 						case("PORTAL"):
 							portals.add(parsePortal(s,level));
-							break;
+						break;
 						case("CONTAINER"):
 							items.add(parseContainer(s,level,g.setItemID(),g));
+						break;
+						case("NPC"):
+							items.add(parseNPC(s,level,g.setItemID(),g));
 						break;
 						}
 					}
@@ -86,6 +90,12 @@ public class Parser {
 			}
 		} catch (FileNotFoundException e1) {e1.printStackTrace();}
 
+	}
+
+	private static Item parseNPC(Scanner s, int level, int setItemID,
+			GameWorld g2) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private static Portal parsePortal(Scanner s, int level) {
@@ -130,16 +140,16 @@ public class Parser {
 		s.nextLine();
 
 		while(!s.hasNext("\\}")){
-		Item i = null;
+			Item i = null;
 
-		switch(s.next()){
-		case "TOOL":
-			 i = parseTool(s,level,g.setItemID());
-			break;
-		case "CONTAINER":
-			i =parseContainer(s,level,g.setItemID(),g);
-		}
-		c.addItem(i);
+			switch(s.next()){
+			case "TOOL":
+				i = parseTool(s,level,g.setItemID());
+				break;
+			case "CONTAINER":
+				i =parseContainer(s,level,g.setItemID(),g);
+			}
+			c.addItem(i);
 		}
 		return c;
 
@@ -191,8 +201,6 @@ public class Parser {
 		}
 		return t;
 	}
-
-
 
 	private static Item parseProp(Scanner s, int level, int ID) {
 		int x = s.nextInt();
