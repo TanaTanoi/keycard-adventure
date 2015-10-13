@@ -20,13 +20,15 @@ public abstract class Tool implements Item {
 	private String model;
 	private Location loc;
 	private InteractStrategy interactStrategy;
+	private String image;
 
-	public Tool(String name, String desc, Location loc, String model, int ID){
+	public Tool(String name, String desc, Location loc, String model, int ID, String image){
 		this.name = name;
 		description = desc;
 		this.loc = loc;
 		this.model = model;
 		this.ID = ID;
+		this.image = image;
 	}
 
 	/**
@@ -93,6 +95,10 @@ public abstract class Tool implements Item {
 	@Override
 	public int getID(){
 		return ID;
+	}
+
+	public String getImagePath(){
+		return image;
 	}
 
 }
