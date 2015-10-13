@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import gameObjects.objects.Entity;
 import gameObjects.objects.Furniture;
 import gameObjects.objects.Item;
 import gameObjects.player.Player;
@@ -22,7 +23,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -51,13 +54,18 @@ public class View {
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
 	private float lightIntensity = 0.8f;
-
+	private double inventoryAnimation;
+	private double animationRate = 0.1;
 	private boolean displayHud = true;
+
+	private Map<String, Integer> texMap;
 
 
 	public View(GameWorld world,ClientController control){
 		this.world = world;
 		this.control = control;
+		
+
 		textureList = new ArrayList<Integer>();
 
 		initaliseCollisions(100,100);
@@ -67,7 +75,12 @@ public class View {
 
 	public void renderView(){
 		if (!loaded){
-			textureList.add(Texture.getTexture("brick.jpg"));
+			texMap= new HashMap<String,Integer>();
+			texMap.put("red_potion.png", Texture.getTexture("red_potion.png"));
+			texMap.put("rainbow_potion.png", Texture.getTexture("rainbow_potion.png"));
+			texMap.put("brick.jpg", Texture.getTexture("brick.jpg"));
+			texMap.put("wood.jpg", Texture.getTexture("wood.jpg"));
+			textureList.add(Texture.getTexture("red_potion.png"));
 			textureList.add(Texture.getTexture("wood.jpg"));
 			printCollisions();
 			loaded = true;
@@ -90,13 +103,16 @@ public class View {
 			renderDisplayBar();
 
 		}
-
+		inventoryAnimation+=animationRate;
+		if (inventoryAnimation > 3 || inventoryAnimation < 0){
+			animationRate*=-1;
+			inventoryAnimation+=animationRate;
+		}
 	}
 
 	private void renderObjects(){
-
 		if(control.getFloor()!=null){
-			for(Item i: control.getFloor().getItems()){
+			for(Entity i: control.getFloor().getEntities()){
 				glPushMatrix();
 				glTranslatef(x, y, z);
 				glPushMatrix();
@@ -116,7 +132,7 @@ public class View {
 		//		glColor3f(0.0f,0.40f,0.65f);
 		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textureList.get(1));
+		glBindTexture(GL_TEXTURE_2D, texMap.get("brick.jpg"));
 		glPushMatrix();
 		glTranslatef(x, y, z);
 		glBegin(GL_QUADS);
@@ -249,6 +265,29 @@ public class View {
 		glEnd();
 
 		glColor3f(1,1,1);
+
+		renderItems();
+	}
+
+	private void renderItems(){
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, textureList.get(0));
+		glBegin(GL_QUADS);
+
+		float frame = (int)inventoryAnimation;
+
+		glTexCoord2f(frame/4, 0);
+		glVertex3f(300,500,0);
+		glTexCoord2f(frame/4, 1);
+		glVertex3f(300,200,0);
+		glTexCoord2f((frame+1)/4, 1);
+		glVertex3f(600,200,0);
+		glTexCoord2f((frame+1)/4, 0);
+		glVertex3f(600,500,0);
+
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	private void drawMinimap(){
@@ -411,7 +450,7 @@ public class View {
 				//System.out.println("rot " + p.getOrientation());
 				glRotated(p.getOrientation()+90,0,1,0); // -90 to make the spout point in the direction the player is facing
 				glScaled(0.5, 0.5, 0.5);
-				for(Item it : control.getFloor().getItems()){
+				for(Entity it : control.getFloor().getEntities()){
 
 					if (it.getModelName().contains("ghost")){
 						glCallList(control.getFloor().getDisplayList(it));

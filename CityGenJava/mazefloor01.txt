@@ -12,5 +12,5 @@ An old wooden box
 {
 TOOL key TEAKEY
 A key for teaaaaa
-5 6 teapot.obj
+5 6 teapot.obj red_potion.png
 }
