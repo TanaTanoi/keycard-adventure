@@ -39,11 +39,6 @@ public abstract class Tool implements Item {
 		interactStrategy = strat;
 	}
 
-	/**
-	 * Equip makes the tool the current selected tool
-	 */
-	public abstract void equip();
-
 	@Override
 	public void interact(Character c){
 		if(interactStrategy != null){

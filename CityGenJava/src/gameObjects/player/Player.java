@@ -18,19 +18,37 @@ import gameObjects.world.Location;
 public class Player implements Character{
 
 	private String name; // name selected by user
-	private List<Tool> inventory; // items  that the player carries
-	private static int MAX_ITEMS = 2;
+	private Tool[] inventory; // items  that the player carries
 	private int health = 100;
+	private int noItems = 0;
 	private Location loc; // describes player's location in game world
 	private int ID;
 	private int orientation;
-
+	private int equipped = -1;
 
 	public Player(String name, int ID){
 		this.name = name;
 		this.ID = ID;
 		loc = new Location(0,0,0);
-		inventory = new ArrayList<Tool>();
+		inventory = new Tool[2];
+	}
+
+	public void equipLeft(){
+		if(equipped != 0){ // swap to or equip the left item
+			equipped = 0;
+		}
+		else{ // unequip the left item
+			equipped = -1;
+		}
+	}
+
+	public void equipRight(){
+		if(equipped != 1){ // swap to or equip the right item
+			equipped = 1;
+		}
+		else{ // unequip the right item
+			equipped = -1;
+		}
 	}
 
 	/**
@@ -94,8 +112,16 @@ public class Player implements Character{
 	 * @return a boolean indicating whether the action was succesful
 	 */
 	public boolean pickUp(Tool i){
-		if(inventory.size() < MAX_ITEMS){
-			inventory.add(i);
+		if(noItems < inventory.length){
+			// adds to left slot first
+			if(inventory[0] == null){
+				inventory[0] = i;
+			}
+			// adds to right slot second
+			else{
+				inventory[1] = i;
+			}
+			noItems++;
 			return true;
 		}
 		System.out.println("No more room!");
@@ -106,8 +132,13 @@ public class Player implements Character{
 	 * Drops an item from a player's inventory
 	 * @param i
 	 */
-	public void drop(Item i){
-		inventory.remove(i);
+	public Tool drop(){
+		if(equipped != -1){
+			Tool t = inventory[equipped];
+			inventory[equipped] = null;
+			return t;
+		}
+		return null;
 	}
 
 	@Override

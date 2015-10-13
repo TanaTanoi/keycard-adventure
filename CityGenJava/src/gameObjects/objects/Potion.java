@@ -10,10 +10,4 @@ public class Potion extends Tool{
 		super.setStrategy(new PotionStrategy(effect));
 	}
 
-	@Override
-	public void equip() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

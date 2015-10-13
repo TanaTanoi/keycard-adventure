@@ -9,10 +9,4 @@ public class Weapon extends Tool {
 		super.setStrategy(new WeaponStrategy(damage));
 	}
 
-	@Override
-	public void equip() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -12,10 +12,4 @@ public class Key extends Tool {
 		super.setStrategy(new KeyInteractStrategy(this));
 	}
 
-	@Override
-	public void equip() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

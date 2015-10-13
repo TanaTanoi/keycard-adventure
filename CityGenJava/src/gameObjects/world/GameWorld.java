@@ -182,11 +182,15 @@ public class GameWorld {
 	 * @param p - Player to receive the item
 	 * @param i - Item to give to player p
 	 */
-	public void dropItem(Player p, Item i){
-		p.drop(i);
+	public boolean dropItem(Player p){
+		Item i = p.drop();
+		if(i == null){
+			return false;
+		}
 		i.setLocation(p.getLocation());
 		Floor f = floorList.get(i.getLocation().getFloor());
 		f.addItem(i);
+		return true;
 	}
 
 	public List<Player> getPlayers(){
