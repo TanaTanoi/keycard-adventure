@@ -7,6 +7,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import gameObjects.objects.Entity;
 import gameObjects.objects.Furniture;
 import gameObjects.objects.Item;
+import gameObjects.objects.Tool;
 import gameObjects.player.Player;
 import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
@@ -40,7 +41,7 @@ import controller.ClientController;
 
 
 public class View {
-
+	private static final double ROOF_HEIGHT = 2.5;
 	private char[][] occupiedSpace;
 	private GameWorld world;
 	private ClientController control;
@@ -55,6 +56,8 @@ public class View {
 	private double inventoryAnimation;
 	private double animationRate = 0.05;
 	private boolean displayHud = true;
+	private String text;
+	float textFade = 1;
 
 	private Map<String, Integer> texMap;
 
@@ -133,7 +136,6 @@ public class View {
 
 
 	private void renderBounds() {
-		//		glColor3f(0.0f,0.40f,0.65f);
 		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texMap.get("wood.jpg"));
@@ -152,13 +154,13 @@ public class View {
 		glVertex3d(-gameSize/2,0,gameSize/2);
 		//Roof quad
 		glTexCoord2f(0, 0);
-		glVertex3d(-gameSize/2,2,-gameSize/2);
+		glVertex3d(-gameSize/2,ROOF_HEIGHT,-gameSize/2);
 		glTexCoord2f(1, 0);
-		glVertex3d(gameSize/2,2,-gameSize/2);
+		glVertex3d(gameSize/2,ROOF_HEIGHT,-gameSize/2);
 		glTexCoord2f(1, 1);
-		glVertex3d(gameSize/2,2,gameSize/2);
+		glVertex3d(gameSize/2,ROOF_HEIGHT,gameSize/2);
 		glTexCoord2f(0, 1);
-		glVertex3d(-gameSize/2,2,gameSize/2);
+		glVertex3d(-gameSize/2,ROOF_HEIGHT,gameSize/2);
 
 		glEnd();
 		glPopMatrix();
@@ -177,12 +179,31 @@ public class View {
 		drawInventory();
 		drawMinimap();
 		drawHealth();
+		displayText();
 
 
 		glEnable(GL_LIGHTING);
 		glEnable(GL_DEPTH_TEST);
 		glColor3f(1,1,1);
 
+	}
+
+	private void displayText() {
+		glColor4f(1,1,1,textFade);
+		if (textFade > 0) textFade -= 0.001;
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBegin(GL_QUADS);
+
+		glVertex3f(235, 230, 0);
+		glVertex3f(250, 70, 0);
+		glVertex3f(530, 70, 0);
+		glVertex3f(550, 230, 0);
+
+		glEnd();
+		glColor4f(0,0,0,textFade);
+
+		glDisable(GL_BLEND);
 	}
 
 	private void drawHealth() {
@@ -257,6 +278,19 @@ public class View {
 		glVertex3f(667,17,0);
 		glVertex3f(773,17,0);
 		glVertex3f(773,123,0);
+
+		glColor3f(0.0f,0.23f,0.43f);
+
+		glVertex3f(560,65,0);
+		glVertex3f(560,60,0);
+		glVertex3f(660,60,0);
+		glVertex3f(660,65,0);
+
+		glVertex3f(670,130,0);
+		glVertex3f(670,125,0);
+		glVertex3f(770,125,0);
+		glVertex3f(770,130,0);
+
 		glEnd();
 
 
@@ -281,7 +315,9 @@ public class View {
 
 	private void renderItems(){
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, texMap.get("knife.png"));
+		Tool[] inv = control.getCurrentPlayer().getInventory();
+		if (inv[0] != null)	glBindTexture(GL_TEXTURE_2D, texMap.get(inv[0].getImagePath()));
+		else glDisable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 
 		float frame = (int)inventoryAnimation;
@@ -296,7 +332,9 @@ public class View {
 		glVertex3f(660,170,0);
 
 		glEnd();
-		glBindTexture(GL_TEXTURE_2D, texMap.get("red_keycard.png"));
+		glEnable(GL_TEXTURE_2D);
+		if (inv[1] != null)	glBindTexture(GL_TEXTURE_2D, texMap.get(inv[1].getImagePath()));
+		else glDisable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		glTexCoord2f(frame/4, 0);
 		glVertex3f(670,120,0);
@@ -306,10 +344,7 @@ public class View {
 		glVertex3f(770,20,0);
 		glTexCoord2f((frame+1)/4, 0);
 		glVertex3f(770,120,0);
-
 		glEnd();
-
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	private void drawMinimap(){
@@ -489,25 +524,25 @@ public class View {
 					//front and back
 					glPushMatrix();
 					glTranslated((ix-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
-					fillRect(0, 0, spacing, 2);
+					fillRect(0, 0, spacing, ROOF_HEIGHT);
 					glPopMatrix();
 
 					glPushMatrix();
 					glTranslated(((ix+1)-occupiedSpace.length/2)*spacing, 0, ((iz+1)-occupiedSpace.length/2)*spacing);
-					fillRect(0, 0, -spacing, 2);
+					fillRect(0, 0, -spacing, ROOF_HEIGHT);
 					glPopMatrix();
 
 					//left and right
 					glPushMatrix();
 					glTranslated((ix-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
 					glRotated(90, 0, 1, 0);
-					fillRect(0, 0, -spacing, 2);
+					fillRect(0, 0, -spacing, ROOF_HEIGHT);
 					glPopMatrix();
 
 					glPushMatrix();
 					glTranslated(((ix+1)-occupiedSpace.length/2)*spacing, 0, (iz-occupiedSpace.length/2)*spacing);
 					glRotated(90, 0, 1, 0);
-					fillRect(0, 0, -spacing, 2);
+					fillRect(0, 0, -spacing, ROOF_HEIGHT);
 					glPopMatrix();
 				}
 				glPopMatrix();
