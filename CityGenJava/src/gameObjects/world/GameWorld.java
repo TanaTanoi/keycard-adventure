@@ -160,8 +160,8 @@ public class GameWorld {
 		Player p = allPlayers.get(playerID);
 		if(p==null){throw new IllegalArgumentException("Invalid Player ID");}
 
-		//		Floor f = floorList.get(p.getLocation().getFloor());
-		Floor f = floorList.get(1);
+		Floor f = floorList.get(p.getLocation().getFloor());
+//		Floor f = floorList.get(1);
 		Entity i = f.getEntity(itemID);
 
 		if(!(i instanceof Tool)){
@@ -188,12 +188,16 @@ public class GameWorld {
 	 * @return
 	 */
 	public void moveFloor(int playerID, int portalID){
+		System.out.println("Moving floor");
+
 		Player p = allPlayers.get(playerID);
 		if(p==null){throw new IllegalArgumentException("Invalid Player ID");}
 
-		//		Floor f = floorList.get(p.getLocation().getFloor());
-		Floor f = floorList.get(1);
+		Floor f = floorList.get(p.getLocation().getFloor());
+//		Floor f = floorList.get(1);
 		Portal i = (Portal)f.getEntity(itemID);
+
+		if(i == null){System.out.println("Portal is null"); System.out.println("Floor " + f.getLevel());}
 
 		p.move(i.getLocation().getX(), i.getLocation().getY()); // moves to portal location
 		p.setFloor(i.getEndFloor()); // updates players floor

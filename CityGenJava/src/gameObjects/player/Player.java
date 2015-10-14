@@ -179,4 +179,8 @@ public class Player implements Character{
 	public void setFloor(int f){
 		loc.setFloor(f);
 	}
+
+	public Tool[] getInventory() {
+		return inventory;
+	}
 }
