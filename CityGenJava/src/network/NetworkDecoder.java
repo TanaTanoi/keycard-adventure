@@ -156,11 +156,11 @@ public class NetworkDecoder {
 				}
 			}else if(next.equals("INTERACT")){
 				//ITEM [ITEM ID] [PLAYER ID of play who will receive item]
-				int playerID = sc.nextInt();
 				int itemID = sc.nextInt();
-				System.out.println("Item call " + playerID + " " + itemID);
+				int playerID = sc.nextInt();
+				System.out.println("Interact call " + itemID + " " + playerID);
 				if(game.interact(playerID, itemID)){
-					approvedCommands.add("INTERACT " + playerID + " " + itemID);
+					approvedCommands.add("INTERACT " + itemID + " " + playerID);
 				}
 			}
 		}

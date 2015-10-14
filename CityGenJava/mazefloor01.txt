@@ -14,3 +14,9 @@ TOOL key TEAKEY
 A key for teaaaaa
 5 6 teapot.obj red_potion.png
 }
+PROP 4 5 ladder.obj
+PROP 3 5 keycard.obj
+PROP 20 20 trapdoor.obj
+TOOL key GHOSTKEY
+A key for ghoooosts
+-10 -10 ghost.obj rainbow_keycard.png

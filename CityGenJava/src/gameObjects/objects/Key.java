@@ -12,4 +12,12 @@ public class Key extends Tool {
 		super.setStrategy(new KeyInteractStrategy(this));
 	}
 
+	@Override
+	public String toString() {
+		return "Key [getName()=" + getName() + ", getDescription()="
+				+ getDescription() + ", getModelName()=" + getModelName()
+				+ ", getID()=" + getID() + ", getImagePath()=" + getImagePath()
+				+ "]";
+	}
+
 }

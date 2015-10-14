@@ -325,7 +325,7 @@ public class ClientController {
 
 	private void MouseButtonCallback(long window, int button, int state, int arg3){
 		System.out.println(button + " " + state  + " " + arg3);
-		if(button == GLFW_MOUSE_BUTTON_1){
+		if(button == GLFW_MOUSE_BUTTON_1&&state ==0){
 			mouse_down = state==1;
 
 			toInteract = world.closestEntity(current.getLocation(), 10.0f);//TODO calibrate pickup radius
