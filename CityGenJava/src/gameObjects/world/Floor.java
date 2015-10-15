@@ -110,6 +110,12 @@ public class Floor {
 		return displayLists.get(i.getModelName());
 	}
 
+	/**
+	 * Loads a model specified by the given file path into the model map, then creates collisions
+	 * based on the provided offset. Materials are generated based on the filepath string.
+	 * @param filePath - Path to the .obj (that uses tris)
+	 * @param offset - World offset of this particular entity.
+	 */
 	private void loadModel(String filePath, Vector3f offset){
 
 		Model m = new Model(filePath);
@@ -130,7 +136,6 @@ public class Floor {
 			values[i] = Math.min(a/b,1.0f);
 		}
 		setMaterial(values);
-		//TODO setMaterial(new float[]{});
 		for(Face face: m.getFaces()){
 			Vector2f t1 = m.getTextureCoordinates().get((int) face.textures.x -1);
 			glTexCoord2d(t1.x,t1.y);
@@ -159,7 +164,10 @@ public class Floor {
 		displayLists.put(filePath,newList);
 	}
 
-
+	/**
+	 * Set the material of a model. This method must be called before a model is drawn.
+	 * @param material - An array of 10 floats that represent Ambient (3) Diffuse (3) specular (3) and shininess (1)
+	 */
 	void setMaterial(float[] material){
 		float[] mat = new float[4];
 
@@ -189,58 +197,37 @@ public class Floor {
 		return (FloatBuffer)BufferUtils.createFloatBuffer(4).put(array).flip();
 	}
 
+	/**
+	 * Given a model and an offset, this method will generate collisions based on the X Z values of the
+	 * third vertex every face on the model. <br>
+	 *
+	 * @param m - The model to create a collision for
+	 * @param offset - This unique entity's world offset
+	 */
 	private void updateCollisions(Model m, Vector3f offset){
-		System.out.println("Offset " + offset.x + " " + offset.z);
 		offset = new Vector3f(-offset.x*5,offset.y,-offset.z*5);
-//		offset = new Vector3f(-offset.x,offset.y,-offset.z);
 		int maxX = Integer.MIN_VALUE;
 		int minX = Integer.MAX_VALUE;
-		int[][] zValues = new int[100][2];
+		int maxZ = Integer.MIN_VALUE;
+		int minZ = Integer.MAX_VALUE;
 		int[][] map = new int[100][100];
 		for(Face face: m.getFaces()){
-			/*
-//			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
-//			v3 = new Vector3f((v3.x+offset.x)/SQUARE_SIZE+50,(v3.y+offset.y)/SQUARE_SIZE+50,(v3.z+offset.z)/SQUARE_SIZE+50);
-//			maxX = Math.max(maxX, (int)((v3.x)));
-//			minX = Math.min(minX, (int)((v3.x)));
-//
-//			if (zValues[(int)((v3.x))][0] == 0){
-//				zValues[(int)((v3.x ) )][0] = (int)((v3.z ) );
-//				zValues[(int)((v3.x ) )][1] = (int)((v3.z ) );
-//			}
-//			zValues[(int)((v3.x ) )][0] = Math.min((int)((v3.z ) ),zValues[(int)((v3.x ) )][0]);
-//			zValues[(int)((v3.x ) )][1] = Math.max((int)((v3.z ) ),zValues[(int)((v3.x ) )][1]);
-//			floor[(int)((v3.x ) )][(int)((v3.z ) )] = 'T';
- * */
 			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
 			v3 = new Vector3f(v3.x*SQUARE_SIZE,v3.y*SQUARE_SIZE,v3.z*SQUARE_SIZE);
 			v3 = new Vector3f((v3.x)+offset.x,(v3.y)+offset.y,(v3.z)+offset.z);
 			v3 = new Vector3f(v3.x+51,v3.y+51,v3.z+51);
-		/*maxX = Math.max(maxX, (int)((v3.x)));
-			minX = Math.min(minX, (int)((v3.x)));
-
-			if (zValues[(int)((v3.x))][0] == 0){
-				zValues[(int)((v3.x ) )][0] = (int)((v3.z ) );
-				zValues[(int)((v3.x ) )][1] = (int)((v3.z ) );
-			}
-			zValues[(int)((v3.x ) )][0] = Math.min((int)((v3.z ) ),zValues[(int)((v3.x ) )][0]);
-			zValues[(int)((v3.x ) )][1] = Math.max((int)((v3.z ) ),zValues[(int)((v3.x ) )][1]);
-			floor[(int)((v3.x ) )][(int)((v3.z ) )] = 'T';*/
 			map[(int) v3.x][(int) v3.z] = 1;
+			minX = (int) Math.min(minX, v3.x);
+			maxX = (int) Math.max(maxX,v3.x);
+			minZ = (int) Math.min(minZ, v3.z);
+			maxZ = (int) Math.max(maxZ,v3.z);
 		}
-
-//		for (int x = minX; x < maxX;x++){
-//			for (int z = zValues[x][0]; z < zValues[x][1];z++){
-//				floor[x][z] = 'T';
-//			}
-//		}
-		for (int x = 0; x < 100;x++){
-			for (int z = 0; z < 100;z++){
+		for (int x = minX; x < maxX+1;x++){
+			for (int z = minZ; z < maxZ+1;z++){
 				if(map[x][z] == 1)
 					floor[x][z] = 'T';
 			}
-	}
-
+		}
 	}
 
 	public Entity getEntity(int itemID) {
