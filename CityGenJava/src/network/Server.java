@@ -24,12 +24,13 @@ public class Server {
 		System.out.println(IPInfo);
 		//Set up thread that controls client-server relations
 		ClientThread ct = new ClientThread();
-		ct.start();
+
 		world = new GameWorld();
 		Parser.parseWorld("testConfig.txt", world);
 		//Constantly accept clients
 		w.destory();
-		while(true){
+		int total_connections = 0;
+		while(total_connections < GameWorld.MAX_PLAYERS){
 			//LOGIN PROTOCOL -> Accept user -> take name from user -> send new ID to user -> add user to list
 
 			//Accept a client
@@ -52,7 +53,9 @@ public class Server {
 			if(playerID>=0){		//won't accept the client if the gameworld said no
 				ct.add(cl);
 			}
+			total_connections++;
 		}
+		ct.start();
 
 	}
 

@@ -27,7 +27,7 @@ import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class GameWorld {
 
-	public static final int MAX_PLAYERS = 4;
+	public static final int MAX_PLAYERS = 3;
 
 	// For testing
 
