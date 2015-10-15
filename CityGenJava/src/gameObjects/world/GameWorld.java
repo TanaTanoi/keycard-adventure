@@ -343,8 +343,10 @@ public class GameWorld {
 	}
 
 
-	public boolean useEquippedItem(Player p, Tool t){
-		return false;
+	public boolean useEquippedItem(int pID, int itemID){
+		Player p = allPlayers.get(pID);
+		p.useItem(itemID);
+		return true;
 	}
 
 }

@@ -36,9 +36,12 @@ public class NetworkDecoder {
 		Entity pickedUp = game_client.getToInteract();
 		if(pickedUp !=null){
 			//if we want to pick up an item, send a pick up request in the form INTERACT [Item ID] [Player ID]
-			System.out.println("Adding pickup item");
 			toReturn.append(" ");
-			toReturn.append("INTERACT ");
+			if(game_client.useOnSelf){
+				toReturn.append("USE ");
+			}else{
+				toReturn.append("INTERACT ");
+			}
 			toReturn.append(pickedUp.getID());
 			toReturn.append(" ");
 			toReturn.append(game_client.getCurrentPlayer().getID());
@@ -87,6 +90,11 @@ public class NetworkDecoder {
 				int playerID = sc.nextInt();
 				System.out.println("INTERACT " +itemID + " " +playerID);
 				game_client.interact(playerID, itemID);
+			}else if(next.equals("USE")){
+				int itemID = sc.nextInt();
+				int playerID = sc.nextInt();
+				System.out.println("USE " +itemID + " " +playerID);
+				game_client.use(playerID, itemID);
 			}
 		}
 		sc.close();
@@ -160,8 +168,16 @@ public class NetworkDecoder {
 				int playerID = sc.nextInt();
 				System.out.println("Interact call " + itemID + " " + playerID);
 				if(game.interact(playerID, itemID)){
-					approvedCommands.add("INTERACT " + itemID + " " + playerID);
+					approvedCommands.add(next +" "+ itemID + " " + playerID);
 				}
+			}else if(next.equals("USE")){
+				//USE [ITEM ID] [PLAYER ID of play who will receive item]
+				int itemID = sc.nextInt();
+				int playerID = sc.nextInt();
+				if(game.useEquippedItem(playerID, itemID)){
+					approvedCommands.add(next +" "+ itemID + " " + playerID);
+				}
+
 			}
 		}
 		sc.close();

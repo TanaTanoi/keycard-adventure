@@ -142,15 +142,6 @@ public class Player implements Character{
 		inventory[inventoryID] = null;
 		noItems--;
 		return t;
-
-
-//		if(equipped != -1){
-//			Tool t = inventory[equipped];
-//			inventory[equipped] = null;
-//			noItems--;
-//			return t;
-//		}
-//		return null;
 	}
 
 	@Override
@@ -203,10 +194,16 @@ public class Player implements Character{
 		return inventory;
 	}
 
-	public void useItemOnSelf() {
-		if(equipped != -1){ // has item equipped
-			inventory[equipped].interact(this);
-			inventory[equipped] = null;
+	public void useItem(int itemID) {
+		System.out.println("Usiing an item");
+		if(inventory[0]!=null&&inventory[0].getID()==itemID){
+			inventory[0] .interact(this);
+			inventory[0] = null;
+			noItems--;
+		}else if(inventory[1]!=null&&inventory[1].getID()==itemID){
+			inventory[1] .interact(this);
+			inventory[1] = null;
+			noItems--;
 		}
 	}
 }

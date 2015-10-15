@@ -91,6 +91,7 @@ public class ClientController {
 
 	/*Local player game-related fields*/
 	private Entity toInteract = null;
+	public boolean useOnSelf = false;
 
 	public ClientController(String filename,String IP){
 
@@ -318,7 +319,7 @@ public class ClientController {
 			if(pressed == 'Q') current.equipLeft();
 			if(pressed == 'E') current.equipRight();
 			if(pressed == 'T') toInteract = current.getEquippedTool();
-			if(pressed == 'U') current.useItemOnSelf();
+			if(pressed == 'U') {toInteract = current.getEquippedTool();useOnSelf = true;}
 			if(pressed == 'L') view.setLightIntensity(view.getLightIntensity()+0.05f);
 			if(pressed == 'K') view.setLightIntensity(view.getLightIntensity()-0.05f);
 			if(pressed == 'M') view.toggleHUD();
@@ -357,6 +358,12 @@ public class ClientController {
 		world.interact(playerID, interactID);
 		view.setMap(world.getFloor(current.getLocation().getFloor()).getFloorPlan());
 	}
+	public void use(int playerID, int interactID){
+		System.out.println("We picked up an item");
+		useOnSelf = false;
+		world.useEquippedItem(playerID, interactID);
+	}
+
 
 
 
