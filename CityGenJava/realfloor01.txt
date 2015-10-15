@@ -11,13 +11,19 @@ WALL 0 80 35 80
 PROP 5 5 keycard.obj
 DOOR TESTDOOR_1
 This is a door for testing
-TEST_KEY
--5 -7 door.obj
-TOOL key TEST_KEY
-This will be a key for test
--4 -4 keycard.obj red_keycard.png
-TOOL map World Map
-This will help you around the floor
--4 -4 mapScroll.obj map.png
-NPC Bobby INFO -3 -3 goldtrophy.obj syringe.png
-PORTAL 2 -2 2 trapdoor.obj
+Green Door Key
+-4 -7 door.obj
+CONTAINER container
+This contains items
+3 1 1 locker.obj
+{
+TOOL potion Death Potion
+This will almost kill you
+3 2 potion.obj rainbow_potion.png -50
+TOOL potion Health Potion
+This will almost kill you
+3 2 potion.obj red_potion.png 20
+}
+NPC Bobby INFO -2 8 ghost.obj NPCSpeech3.png
+PORTAL 2 0 8 trapdoor.obj
+PORTAL 3 5 -8 trapdoor.obj
