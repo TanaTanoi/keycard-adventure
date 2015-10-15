@@ -191,15 +191,32 @@ public class Floor {
 
 	private void updateCollisions(Model m, Vector3f offset){
 		System.out.println("Offset " + offset.x + " " + offset.z);
-		offset = new Vector3f(offset.x*SQUARE_SIZE,offset.y*SQUARE_SIZE,offset.z*SQUARE_SIZE);
+		offset = new Vector3f(-offset.x*5,offset.y,-offset.z*5);
+//		offset = new Vector3f(-offset.x,offset.y,-offset.z);
 		int maxX = Integer.MIN_VALUE;
 		int minX = Integer.MAX_VALUE;
 		int[][] zValues = new int[100][2];
-
+		int[][] map = new int[100][100];
 		for(Face face: m.getFaces()){
+			/*
+//			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
+//			v3 = new Vector3f((v3.x+offset.x)/SQUARE_SIZE+50,(v3.y+offset.y)/SQUARE_SIZE+50,(v3.z+offset.z)/SQUARE_SIZE+50);
+//			maxX = Math.max(maxX, (int)((v3.x)));
+//			minX = Math.min(minX, (int)((v3.x)));
+//
+//			if (zValues[(int)((v3.x))][0] == 0){
+//				zValues[(int)((v3.x ) )][0] = (int)((v3.z ) );
+//				zValues[(int)((v3.x ) )][1] = (int)((v3.z ) );
+//			}
+//			zValues[(int)((v3.x ) )][0] = Math.min((int)((v3.z ) ),zValues[(int)((v3.x ) )][0]);
+//			zValues[(int)((v3.x ) )][1] = Math.max((int)((v3.z ) ),zValues[(int)((v3.x ) )][1]);
+//			floor[(int)((v3.x ) )][(int)((v3.z ) )] = 'T';
+ * */
 			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
-			v3 = new Vector3f((v3.x+offset.x)/SQUARE_SIZE+50,(v3.y+offset.y)/SQUARE_SIZE+50,(v3.z+offset.z)/SQUARE_SIZE+50);
-			maxX = Math.max(maxX, (int)((v3.x)));
+			v3 = new Vector3f(v3.x*SQUARE_SIZE,v3.y*SQUARE_SIZE,v3.z*SQUARE_SIZE);
+			v3 = new Vector3f((v3.x)+offset.x,(v3.y)+offset.y,(v3.z)+offset.z);
+			v3 = new Vector3f(v3.x+51,v3.y+51,v3.z+51);
+		/*maxX = Math.max(maxX, (int)((v3.x)));
 			minX = Math.min(minX, (int)((v3.x)));
 
 			if (zValues[(int)((v3.x))][0] == 0){
@@ -208,14 +225,21 @@ public class Floor {
 			}
 			zValues[(int)((v3.x ) )][0] = Math.min((int)((v3.z ) ),zValues[(int)((v3.x ) )][0]);
 			zValues[(int)((v3.x ) )][1] = Math.max((int)((v3.z ) ),zValues[(int)((v3.x ) )][1]);
-			floor[(int)((v3.x ) )][(int)((v3.z ) )] = 'T';
+			floor[(int)((v3.x ) )][(int)((v3.z ) )] = 'T';*/
+			map[(int) v3.x][(int) v3.z] = 1;
 		}
 
-		for (int x = minX; x < maxX;x++){
-			for (int z = zValues[x][0]; z < zValues[x][1];z++){
-				floor[x][z] = 'T';
+//		for (int x = minX; x < maxX;x++){
+//			for (int z = zValues[x][0]; z < zValues[x][1];z++){
+//				floor[x][z] = 'T';
+//			}
+//		}
+		for (int x = 0; x < 100;x++){
+			for (int z = 0; z < 100;z++){
+				if(map[x][z] == 1)
+					floor[x][z] = 'T';
 			}
-		}
+	}
 
 	}
 

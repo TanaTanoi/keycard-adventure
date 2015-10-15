@@ -5,4 +5,4 @@ WALL 0 99 0 0
 PORTAL 1 2 2 ladder.obj
 TOOL key fesg
 grsdmgrijd
-20 20 keycard.obj knife.png
+5 5 keycard.obj knife.png
