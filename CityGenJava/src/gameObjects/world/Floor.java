@@ -102,7 +102,12 @@ public class Floor {
 		System.out.println("Added item " + i.getID() + " " + i.getName());
 		System.out.println(i.toString());
 		Location l = i.getLocation();
-		updateCollisions(loadModel(i.getModelName()),new Vector3f(l.getX(),0,l.getY()),'T');
+		if(displayLists.containsKey(i.getModelName())){
+			//if we have loaded it in before, we don't need to update collisiosn properly
+			updateCollisions(new Model(i.getModelName()),new Vector3f(l.getX(),0,l.getY()),'T');
+		}else{
+			updateCollisions(loadModel(i.getModelName()),new Vector3f(l.getX(),0,l.getY()),'T');
+		}
 	}
 
 	public void removeEntity(Entity i){
@@ -240,11 +245,6 @@ public class Floor {
 	}
 
 	public Entity getEntity(int itemID) {
-		System.out.println("SEGMESOIGMSEOGS");
-		for(Entity e:entities.values()){
-			System.out.println(e.toString());
-		}System.out.println("------------");
-		System.out.println("Attempting to access "+itemID);
 		return entities.get(itemID);
 	}
 

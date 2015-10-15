@@ -215,9 +215,16 @@ public class GameWorld {
 	 * @param p - Player to receive the item
 	 * @param i - Item to give to player p
 	 */
-	public boolean dropItem(Player p){
-		Item i = p.drop();
-		if(i == null){
+	public boolean dropItem(Player p, int itemID){
+		//Item i = p.drop();
+		System.out.println("Dropping from player");
+		Tool[] tools = p.getInventory();
+		Item i;
+		if(tools[0]!=null&&tools[0].getID() == itemID){
+			i = p.drop(0);
+		}else if(tools[1]!=null&&tools[1].getID() == itemID){
+			i = p.drop(1);
+		}else{
 			return false;
 		}
 		Location dropLoc = 	new Location(p.getLocation().getX() + 1, p.getLocation().getY(), p.getLocation().getFloor());
@@ -286,7 +293,18 @@ public class GameWorld {
 		Player p = allPlayers.get(playerID);
 		//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
 		Entity i = floorList.get(p.getLocation().getFloor()).getEntity(itemID);
-		if(i == null){System.out.println("Null caught");return false;}
+		System.out.println("Item i is " +(i==null));
+		if(i == null){
+			if(p.getInventory()[0]!=null||p.getInventory()[1]!=null){
+//				i = p.getInventory()[p.getEquipped()];
+				System.out.println("Received the id to drop item");
+				return dropItem(p, itemID);
+			}else{
+				System.out.println("No items on player");
+				return false;
+			}
+
+		}
 		System.out.println(i.toString());
 		if(i instanceof Door){
 			//If its a door, unlock it if possible
@@ -321,6 +339,10 @@ public class GameWorld {
 		return false;
 	}
 
+
+	public boolean useEquippedItem(Player p, Tool t){
+		return false;
+	}
 
 }
 

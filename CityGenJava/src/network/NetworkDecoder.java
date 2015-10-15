@@ -155,7 +155,7 @@ public class NetworkDecoder {
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
 				}
 			}else if(next.equals("INTERACT")){
-				//ITEM [ITEM ID] [PLAYER ID of play who will receive item]
+				//INTERACT [ITEM ID] [PLAYER ID of play who will receive item]
 				int itemID = sc.nextInt();
 				int playerID = sc.nextInt();
 				System.out.println("Interact call " + itemID + " " + playerID);

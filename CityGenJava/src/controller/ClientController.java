@@ -316,7 +316,7 @@ public class ClientController {
 		if (action == 0){
 			if(pressed == 'Q') current.equipLeft();
 			if(pressed == 'E') current.equipRight();
-			if(pressed == 'T') world.dropItem(current);
+			if(pressed == 'T') toInteract = current.getEquippedTool();
 			if(pressed == 'U') current.useItemOnSelf();
 			if(pressed == 'L') view.setLightIntensity(view.getLightIntensity()+0.05f);
 			if(pressed == 'K') view.setLightIntensity(view.getLightIntensity()-0.05f);
