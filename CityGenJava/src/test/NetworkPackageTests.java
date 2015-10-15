@@ -17,7 +17,7 @@ public class NetworkPackageTests {
 	/*Test the game correctly sends the players positions*/
 	@Test
 	public void test_network_decoder_01(){
-		setupGame();
+		g = HelperMethods.setupGame();
 		Set<String> empty = new HashSet<String>();
 		String input = NetworkDecoder.prepPackage(g,empty);
 		/*Check that the server outputs the correct information (x and y are times 100)*/
@@ -31,7 +31,7 @@ public class NetworkPackageTests {
 	@Test
 	public void test_network_decoder_move_01(){
 		Set<String> empty = new HashSet<String>();
-		setupGame();
+		g = HelperMethods.setupGame();
 		/*Check that previous test holds*/
 		String input = NetworkDecoder.prepPackage(g,empty);
 		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
@@ -51,7 +51,7 @@ public class NetworkPackageTests {
 	public void test_network_decoder_interact_01(){
 		Set<String> interact = new HashSet<String>();
 
-		setupGame();
+		g = HelperMethods.setupGame();
 		/*Check that previous test holds*/
 		String input = NetworkDecoder.prepPackage(g,interact);
 		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
@@ -74,7 +74,7 @@ public class NetworkPackageTests {
 	public void test_network_decoder_disconect_01(){
 		Set<String> interact = new HashSet<String>();
 
-		setupGame();
+		g = HelperMethods.setupGame();
 
 		//Send a disconnect message from player 0. Should return false to show that they have disconnected
 		assertFalse(NetworkDecoder.decodeClientInput(g, "DISC 0", 0, interact));
@@ -89,15 +89,7 @@ public class NetworkPackageTests {
 	 * Helper methods*
 	\* --------------*/
 
-	public void setupGame(){
-		g = new GameWorld();
-		Player p1 = new Player("dave",0);
-		p1.move(10, 10);
-		Player p2 = new Player("John",1);
-		p2.move(20, 20);
-		g.addPlayer(p1);
-		g.addPlayer(p2);
-	}
+
 
 	/*Check if the players information in the game world is the same as what is provided*/
 	public void checkGameworld_Positions(float[][] players){

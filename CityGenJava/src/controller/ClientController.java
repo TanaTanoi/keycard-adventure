@@ -41,6 +41,7 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glShadeModel;
 
+import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -98,7 +99,11 @@ public class ClientController {
 
 		world = new GameWorld();
 		view = new View(world,this);
-		Parser.parseWorld(filename,world);
+
+		try {
+			Parser.parseWorld(filename,world);
+		} catch (FileNotFoundException e1) {e1.printStackTrace();}
+
 		glClearColor(0f, 0f, 0f, 1.0f);
 		String[] nameAndIP = {"",""};
 

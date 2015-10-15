@@ -12,11 +12,14 @@ import gameObjects.objects.Portal;
 import gameObjects.objects.Potion;
 import gameObjects.objects.Tool;
 import gameObjects.objects.Weapon;
+import gameObjects.player.AttackNPC;
 import gameObjects.player.InfoNPC;
 import gameObjects.player.NPC;
+import gameObjects.player.TrophyNPC;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,65 +39,63 @@ public class Parser {
 	 *
 	 * @param filename is the name of the file to parse
 	 */
-	public static void parseWorld(String floorFiles, GameWorld g) {
+	public static void parseWorld(String floorFiles, GameWorld g) throws FileNotFoundException{
 
 		File config = new File(floorFiles); // opens config file
 		Scanner outer;
-		try {
-			outer = new Scanner(config);
+		outer = new Scanner(config);
 
-			while(outer.hasNextLine()){ // while there are still files to parse
+		while(outer.hasNextLine()){ // while there are still files to parse
 
-				char[][] world = new char[WORLD_SIZE][WORLD_SIZE]; // creates new floorplan
+			char[][] world = new char[WORLD_SIZE][WORLD_SIZE]; // creates new floorplan
 
-				for(char[] ca:world){
-					Arrays.fill(ca,'-'); // fills world plan with empty world character
+			for(char[] ca:world){
+				Arrays.fill(ca,'-'); // fills world plan with empty world character
+			}
+
+			int level = outer.nextInt(); // gets floor level
+			String filename = outer.next(); // gets file path describing floor
+
+			File f = new File(filename);
+
+			try {
+				Scanner s = new Scanner(f);
+				List<Entity> entities = new ArrayList<Entity>();
+				while(s.hasNextLine()){
+					switch(s.next()){
+					case("WALL"): // line describes wall in world
+						parseWall(s,world);
+					break;
+					case("PROP"): // describes furniture
+						entities.add(parseProp(s,level,g.setItemID()));
+					break;
+					case("TOOL"):
+						entities.add(parseTool(s,level,g.setItemID()));
+					break;
+					case("DOOR"):
+						entities.add(parseDoor(s,level,g.setItemID()));
+					break;
+					case("PORTAL"):
+						entities.add(parsePortal(s,level,g.setItemID()));
+					break;
+					case("CONTAINER"):
+						entities.add(parseContainer(s,level,g.setItemID(),g));
+					break;
+					case("NPC"):
+						entities.add(parseNPC(s,level,g.setItemID()));
+					break;
+					}
+					if(!entities.isEmpty())
+						System.out.println("Added a " + entities.get(entities.size()-1).getClass().getSimpleName());
 				}
 
-				int level = outer.nextInt(); // gets floor level
-				String filename = outer.next(); // gets file path describing floor
-
-				File f = new File(filename);
-
-				try {
-					Scanner s = new Scanner(f);
-					List<Entity> entities = new ArrayList<Entity>();
-					while(s.hasNextLine()){
-						switch(s.next()){
-						case("WALL"): // line describes wall in world
-							parseWall(s,world);
-						break;
-						case("PROP"): // describes furniture
-							entities.add(parseProp(s,level,g.setItemID()));
-						break;
-						case("TOOL"):
-							entities.add(parseTool(s,level,g.setItemID()));
-						break;
-						case("DOOR"):
-							entities.add(parseDoor(s,level,g.setItemID()));
-						break;
-						case("PORTAL"):
-							entities.add(parsePortal(s,level,g.setItemID()));
-						break;
-						case("CONTAINER"):
-							entities.add(parseContainer(s,level,g.setItemID(),g));
-						break;
-						case("NPC"):
-							entities.add(parseNPC(s,level,g.setItemID()));
-						break;
-						}
-						if(!entities.isEmpty())
-							System.out.println("Added a " + entities.get(entities.size()-1).getClass().getSimpleName());
-					}
-
-					s.close();
-					g.setFloor(world, level, entities); // adds floor to game
+				s.close();
+				g.setFloor(world, level, entities); // adds floor to game
 
 
-				} catch (FileNotFoundException e) {e.printStackTrace(); }
+			} catch (FileNotFoundException e) {e.printStackTrace(); }
 
-			}
-		} catch (FileNotFoundException e1) {e1.printStackTrace();}
+		}
 
 	}
 
@@ -112,13 +113,19 @@ public class Parser {
 		int xpos = s.nextInt();
 		int ypos = s.nextInt();
 		String modelpath = s.next();
+
 		switch(type){
 		case "INFO":
 			String dialog = s.next();
 			return new InfoNPC(name,new Location(xpos,ypos,level),dialog,modelpath,level);
-			default:
-				return null;
+		case "TROPHY":
+			String dia = s.next();
+			return new TrophyNPC(name,new Location(xpos,ypos,level),dia,modelpath,level);
+		case "ATTACK":
+			return new AttackNPC(name,new Location(xpos,ypos,level),level,modelpath);
+
 		}
+		return null;
 	}
 	/**
 	 * Creates a portal object that pertains to the following structure:<br>
@@ -217,7 +224,7 @@ public class Parser {
 	 * @return - Returns the tool to be added to the floor
 	 */
 	private static Item parseTool(Scanner s, int level, int setItemID) {
-		Tool t;
+		Tool t = null;
 		String type = s.next();
 		String name = s.nextLine().trim();
 		String description = s.nextLine();
@@ -243,8 +250,6 @@ public class Parser {
 		case("map"):
 			t = new Map(name, description, l, modelName, setItemID, imageName);
 		break;
-		default:
-			t = null;
 		}
 		return t;
 	}

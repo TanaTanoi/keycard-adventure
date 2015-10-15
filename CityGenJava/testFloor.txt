@@ -1,0 +1,38 @@
+WALL 0 0 99 0
+WALL 99 0 99 99
+WALL 99 99 0 99
+WALL 0 99 0 0
+WALL 50 0 50 50
+WALL 0 50 30 50
+WALL 70 80 70 99
+WALL 70 80 80 80
+WALL 90 80 99 80
+PROP 5 5 keycard.obj
+DOOR TESTDOOR_1
+This is a door for testing
+TEST_KEY
+-7 -7 door.obj
+TOOL key TEST_KEY
+This will be a key for test
+-4 -4 keycard.obj red_keycard.png
+TOOL potion TEST_POTION
+This will be a potion for test
+-4 -4 keycard.obj red_keycard.png -50
+TOOL weapon TEST_WEAPON
+This will be a weapon for test
+-4 -4 keycard.obj red_keycard.png 20
+TOOL map World Map
+This will help you around the floor
+-4 -4 mapScroll.obj knife.png
+NPC Bobby INFO -3 -3 goldtrophy.obj syringe.png
+NPC Bobby TROPHY -3 -3 goldtrophy.obj syringe.png
+NPC Bobby ATTACK -3 -3 goldtrophy.obj
+PORTAL 2 -2 2 trapdoor.obj
+CONTAINER container
+This contains items
+3 1 1 locker.obj
+{
+TOOL potion Death Potion
+This will almost kill you
+3 2 potion.obj rainbow_potion.png -50
+}
