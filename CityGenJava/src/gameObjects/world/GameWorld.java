@@ -220,7 +220,8 @@ public class GameWorld {
 		if(i == null){
 			return false;
 		}
-		i.setLocation(p.getLocation());
+		Location dropLoc = 	new Location(p.getLocation().getX() + 1, p.getLocation().getY(), p.getLocation().getFloor());
+		i.setLocation(dropLoc);
 		Floor f = floorList.get(i.getLocation().getFloor());
 		f.addEntity(i);
 		return true;
@@ -284,6 +285,7 @@ public class GameWorld {
 		Player p = allPlayers.get(playerID);
 		//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
 		Entity i = floorList.get(p.getLocation().getFloor()).getEntity(itemID);
+		if(i == null){System.out.println("Null caught");return false;}
 		System.out.println(i.toString());
 		if(i instanceof Door){
 			//If its a door, unlock it if possible
