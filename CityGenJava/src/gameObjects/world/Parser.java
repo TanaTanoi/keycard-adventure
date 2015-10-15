@@ -275,15 +275,15 @@ public class Parser {
 	/**
 	 * Parses a wall and applies it to the supplied collision map
 	 * Takes the following format:
-	 * WALL [X1] [Y1] [X2] [Y2]
+	 * WALL [Y1] [X1] [Y2] [X2]
 	 * @param s - Currently used scanner ("WALL" has been consumed)
 	 * @param world - Collision map to apply the changes to
 	 */
 	private static void parseWall(Scanner s, char[][]world){
-		int startX = s.nextInt();
 		int startY = s.nextInt();
-		int endX = s.nextInt();
+		int startX = s.nextInt();
 		int endY = s.nextInt();
+		int endX = s.nextInt();
 
 		float changeX = (endX - startX)/100.0f;
 		float changeY = (endY - startY)/100.0f;

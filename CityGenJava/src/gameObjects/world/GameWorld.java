@@ -40,7 +40,7 @@ import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class GameWorld {
 
-	public static final int MAX_PLAYERS = 3;
+	public static final int MAX_PLAYERS = 1;
 
 	private Map<Integer,Player> allPlayers;
 	private Map<Integer, Floor> floorList;

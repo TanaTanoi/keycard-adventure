@@ -1,2 +1,4 @@
 1
 realfloor01.txt
+2
+mazeFloor.txt
