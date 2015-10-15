@@ -57,6 +57,7 @@ import org.lwjgl.opengl.GLContext;
 import vec.Vector2;
 import gameObjects.objects.Entity;
 import gameObjects.objects.Item;
+import gameObjects.player.InfoNPC;
 import gameObjects.player.Player;
 import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
@@ -330,6 +331,10 @@ public class ClientController {
 		if(button == GLFW_MOUSE_BUTTON_1&&state ==0){
 			mouse_down = state==1;
 			toInteract = world.closestEntity(current.getLocation(), 2.5f,(int)xRot%360);//TODO calibrate pickup radius
+			if(toInteract instanceof InfoNPC){
+				view.setText(((InfoNPC)toInteract).getInfo());
+				toInteract = null;
+			}
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {

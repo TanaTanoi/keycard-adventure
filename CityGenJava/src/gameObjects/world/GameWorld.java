@@ -7,6 +7,7 @@ import gameObjects.objects.Item;
 import gameObjects.objects.Key;
 import gameObjects.objects.Portal;
 import gameObjects.objects.Tool;
+import gameObjects.player.InfoNPC;
 import gameObjects.player.NPC;
 import gameObjects.player.Player;
 
@@ -330,7 +331,9 @@ public class GameWorld {
 			}
 			return true;
 		}else if(i instanceof NPC){
+			if(i instanceof InfoNPC){
 
+			}
 		}else if(i instanceof Portal){
 			moveFloor(playerID, itemID);
 			return true;
