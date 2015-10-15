@@ -37,6 +37,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * This class holds onto a collision map, a static map of displayLists for every object, a list of entities in the floor
+ * as well as some other view related code.
+ *
+ * @author Tana
+ *
+ */
 public class Floor {
 	//Filepaths to Display lists
 	private static final Map<String, Integer> displayLists = new HashMap<String,Integer>();
@@ -46,14 +53,20 @@ public class Floor {
 	private int level;
 	private char[][] floor;
 
-	private static final String PLAYER_MODEL = "ghost.obj";
+	private static final String PLAYER_MODEL = "ghost.obj";//Global player model
 
-	public Floor(int level, char[][] floorPlan, List<Entity> items){
+	/**
+	 * Standard floor constructor
+	 * @param level - The number this floor is associated with
+	 * @param floorPlan - The collision map of the floor
+	 * @param items- Entities on this floor
+	 */
+	public Floor(int level, char[][] floorPlan, List<Entity> entities){
 		this.level = level;
 		floor = floorPlan;
 		this.players = new ArrayList<Player>();
 		this.entities = new HashMap<Integer,Entity>();
-		for(Entity i:items){
+		for(Entity i:entities){
 			this.addEntity(i);
 		}
 		loadModel("ghost.obj");
@@ -73,21 +86,22 @@ public class Floor {
 	public int getLevel(){
 		return level;
 	}
-
+	/**
+	 * Gets the collision map of this floor
+	 * @return 2D char array representing collisions in the floor.
+	 */
 	public char[][] getFloorPlan(){
 		return floor;
 	}
-
+	/**
+	 * Returns a list of entities stored on this map.
+	 * @return
+	 */
 	public List<Entity> getEntities(){
 		List<Entity> listItems = new ArrayList<Entity>();
 		listItems.addAll(entities.values());
 		return listItems;
 	}
-
-	public List<Player> getPlayers(){
-		return players;
-	}
-
 	public void addPlayer(Player c){
 		players.add(c);
 	}
@@ -95,12 +109,13 @@ public class Floor {
 	public void removePlayer(Character c){
 		players.remove(c);
 	}
-
+	/**
+	 *Adds an entity to this floor. This includes updating the collisions.
+	 *If this model hasn't been loaded before, it will add it to the map of display lists.
+	 * @param i - The entity to be added to the floor.
+	 */
 	public void addEntity(Entity i){
-		System.out.println("Adding item to floor " + i.getModelName());
 		entities.put(i.getID(),i);
-		System.out.println("Added item " + i.getID() + " " + i.getName());
-		System.out.println(i.toString());
 		Location l = i.getLocation();
 		if(displayLists.containsKey(i.getModelName())){
 			//if we have loaded it in before, we don't need to update collisiosn properly
@@ -109,18 +124,30 @@ public class Floor {
 			updateCollisions(loadModel(i.getModelName()),new Vector3f(l.getX(),0,l.getY()),'T');
 		}
 	}
-
+	/**
+	 * Removes an entity from a floor and updates the collisions to remove this
+	 * entities collisions.
+	 * @param i
+	 */
 	public void removeEntity(Entity i){
-		System.out.println(entities.remove(i.getID()));
+		entities.remove(i.getID());
 		updateCollisions(new Model(i.getModelName()),new Vector3f(i.getLocation().getX(),0,i.getLocation().getY()),'-');
 
 	}
 
-	public int getDisplayList(Entity i){
+	/**
+	 * Gets the display list associated with an entity and its model name.
+	 * @param i Entity to get the display list of
+	 * @return - A display list of this entity.
+	 */
+	public static int getDisplayList(Entity i){
 		return Floor.displayLists.get(i.getModelName());
 	}
-
-	public int getPlayerDisplayList(){
+	/**
+	 * Gets the global player model
+	 * @return - A display list representing the player.
+	 */
+	public static int getPlayerDisplayList(){
 		return displayLists.get(PLAYER_MODEL);
 	}
 
@@ -130,7 +157,6 @@ public class Floor {
 	 * @param filePath - Path to the .obj (that uses tris)
 	 * @param offset - World offset of this particular entity.
 	 */
-	
 	private Model loadModel(String filePath){
 
 		Model m = new Model(filePath);
@@ -177,7 +203,6 @@ public class Floor {
 			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
 			glVertex3f(v3.x,v3.y,v3.z);
 		}
-
 		glEnd();
 		glEndList();
 		displayLists.put(filePath,newList);
