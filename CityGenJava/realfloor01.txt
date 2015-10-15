@@ -5,11 +5,14 @@ WALL 0 99 0 0
 WALL 70 60 70 80
 WALL 70 90 70 99
 WALL 70 60 99 60
+WALL 40 0 40 20
+WALL 40 20 80 20
+WALL 0 80 35 80
 PROP 5 5 keycard.obj
 DOOR TESTDOOR_1
 This is a door for testing
 TEST_KEY
--7 -7 door.obj
+-5 -7 door.obj
 TOOL key TEST_KEY
 This will be a key for test
 -4 -4 keycard.obj red_keycard.png
