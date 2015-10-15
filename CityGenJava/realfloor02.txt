@@ -1,0 +1,11 @@
+WALL 0 0 99 0
+WALL 99 0 99 99
+WALL 99 99 0 99
+WALL 0 99 0 0
+WALL 40 40 60 40
+WALL 40 40 40 60
+WALL 40 60 60 60
+TOOL map World Map
+This will help you around the floor
+0 0 mapScroll.obj map.png
+PORTAL 1 6 -6 ladder.obj

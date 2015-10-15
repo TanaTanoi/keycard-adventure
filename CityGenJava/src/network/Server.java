@@ -23,19 +23,9 @@ import org.lwjgl.opengl.GL;
 public class Server {
 
 	public static final int port = 32768;
-	static GameWorld world;//FIXME Find a way to have this private. Its not great having it package level
+	static GameWorld world;
 
-
-
-
-	/**
-	 * The main deals with the connection of GameWorld.MAX_PLAYERS amount of players, then sending
-	 * the information to the thread. It will not receive or distribute any information until the max amount of players
-	 * has been connected. This prevents many game logic related errors.
-	 * @param argv - Expects no arguments
-	 * @throws Exception
-	 */
-	public static void main(String argv[]) throws Exception{
+	public Server(String filepath) throws Exception{
 		Window w = new Window();
 		GL.createCapabilities(true); // valid for latest build
 		//initialise client on this port
@@ -78,6 +68,18 @@ public class Server {
 
 	}
 
+
+	/**
+	 * The main deals with the connection of GameWorld.MAX_PLAYERS amount of players, then sending
+	 * the information to the thread. It will not receive or distribute any information until the max amount of players
+	 * has been connected. This prevents many game logic related errors.
+	 * @param argv - Expects no arguments
+	 * @throws Exception
+	 */
+	public static void main(String argv[]) throws Exception{
+		new Server(argv[0]);
+
+	}
 }
 
 /**
@@ -108,7 +110,7 @@ class ClientThread extends Thread{
 			while(true){
 				Thread.sleep(100);
 				while(!connections.isEmpty()){
-//					System.out.println("Reading inputs");
+					//					System.out.println("Reading inputs");
 
 					//get the input from each client
 					for(int i =0;i<connections.size();i++){
