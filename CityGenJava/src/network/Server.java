@@ -41,12 +41,11 @@ public class Server {
 		//initialise client on this port
 		ServerSocket clientInteractSocket = new ServerSocket(port);
 		String IPInfo = clientInteractSocket.getInetAddress().getHostAddress();
-		System.out.println(IPInfo);
 		//Set up thread that controls client-server relations
 		ClientThread ct = new ClientThread();
 
 		world = new GameWorld();
-		Parser.parseWorld("testConfig.txt", world);
+		Parser.parseWorld("realfloorconfig.txt", world);
 		//Constantly accept clients
 		w.destory();
 		int total_connections = 0;

@@ -277,6 +277,8 @@ public class Floor {
 	}
 
 	public Entity getEntity(int itemID) {
+		System.out.println("Geting item "+itemID);
+
 		return entities.get(itemID);
 	}
 

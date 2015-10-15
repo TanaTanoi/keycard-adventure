@@ -143,7 +143,6 @@ public class NetworkDecoder {
 	 * @return - True if the player is still connected.
 	 */
 	public static boolean decodeClientInput(GameWorld game,String input, int player,Set<String> approvedCommands){
-//		System.out.println("Received "+ input + " from player " + player);
 		if(input==null){
 			System.out.println("INPUT IS NULL, REMOVING PLAYER");
 			game.removePlayer(player);
@@ -151,7 +150,6 @@ public class NetworkDecoder {
 			return false;
 			}
 		Scanner sc = new Scanner(input);
-		System.out.println(input);
 		while(sc.hasNext()){
 			String next = sc.next();
 			//Decode the player's Player update input

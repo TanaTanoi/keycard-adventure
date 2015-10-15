@@ -1,0 +1,23 @@
+WALL 0 0 99 0
+WALL 99 0 99 99
+WALL 99 99 0 99
+WALL 0 99 0 0
+WALL 50 0 50 50
+WALL 0 50 20 50
+WALL 20 50 20 70
+WALL 70 80 70 99
+WALL 70 80 80 80
+WALL 90 80 99 80
+PROP 5 5 keycard.obj
+DOOR TESTDOOR_1
+This is a door for testing
+TEST_KEY
+-7 -7 door.obj
+TOOL key TEST_KEY
+This will be a key for test
+-4 -4 keycard.obj red_keycard.png
+TOOL map World Map
+This will help you around the floor
+-4 -4 mapScroll.obj map.png
+NPC Bobby INFO -3 -3 goldtrophy.obj syringe.png
+PORTAL 2 -2 2 trapdoor.obj

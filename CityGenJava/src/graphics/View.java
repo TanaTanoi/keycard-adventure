@@ -109,6 +109,7 @@ public class View {
 
 		texMap.put("purple_keycard.png", Texture.getTexture("purple_keycard.png"));
 		texMap.put("red_keycard.png", Texture.getTexture("red_keycard.png"));
+		texMap.put("map.png", Texture.getTexture("map.png"));
 	}
 
 

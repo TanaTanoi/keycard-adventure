@@ -390,6 +390,9 @@ public class ClientController {
 	 */
 	public void interact(int playerID, int interactID){
 		world.interact(playerID, interactID);
+		System.out.println("starting");
+		System.out.println(current.getLocation()==null);
+		System.out.println(current.getLocation().getFloor());
 		view.setMap(world.getFloor(current.getLocation().getFloor()).getFloorPlan());
 	}
 
@@ -416,7 +419,7 @@ public class ClientController {
 	 * @param args - args[0] is the IP address of the server.
 	 */
 	public static void main(String[] args) {
-		new ClientController("testConfig.txt",args[0]);
+		new ClientController("realfloorconfig.txt",args[0]);
 	}
 
 }
