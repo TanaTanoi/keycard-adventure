@@ -14,6 +14,8 @@ This is a door for testing
 Green Door Key
 -4 -7 door.obj
 NPC Larry TROPHY -6 -7 goldtrophy.obj NPCSpeech4.png
+NPC Jenny INFO 3 -8 ghost.obj NPCSpeech1.png
+NPC Bobby INFO -2 8 ghost.obj NPCSpeech3.png
 CONTAINER container
 This contains items
 3 1 1 locker.obj
@@ -25,7 +27,5 @@ TOOL potion Health Potion
 This will almost kill you
 3 2 potion.obj red_potion.png 20
 }
-NPC Bobby INFO -2 8 ghost.obj NPCSpeech3.png
-NPC Jenny INFO 3 -8 ghost.obj NPCSpeech1.png
-PORTAL 2 0 8 trapdoor.obj
+PORTAL 2 0 8 ladder.obj
 PORTAL 3 5 -8 trapdoor.obj
