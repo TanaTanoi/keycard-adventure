@@ -96,6 +96,8 @@ public class Floor {
 	public void addEntity(Entity i){
 		System.out.println("Adding item to floor " + i.getModelName());
 		entities.put(i.getID(),i);
+		System.out.println("Added item " + i.getID() + " " + i.getName());
+		System.out.println(i.toString());
 		Location l = i.getLocation();
 		loadModel(i.getModelName(),new Vector3f(l.getX(),0,l.getY()));
 	}
@@ -125,9 +127,7 @@ public class Floor {
 		for(int i = 0; i < 10;i++){
 			float a = Integer.parseInt(""+materialSeed.substring(i, i+2));
 			float b = Integer.parseInt(""+materialSeed.substring(len-i-2, len-i));
-			System.out.println(a + " " + b);
 			values[i] = Math.min(a/b,1.0f);
-			System.out.println("Mat "  +i + " " + values[i]);
 		}
 		setMaterial(values);
 		//TODO setMaterial(new float[]{});
@@ -191,28 +191,24 @@ public class Floor {
 
 	private void updateCollisions(Model m, Vector3f offset){
 		System.out.println("Offset " + offset.x + " " + offset.z);
+		offset = new Vector3f(offset.x*SQUARE_SIZE,offset.y*SQUARE_SIZE,offset.z*SQUARE_SIZE);
 		int maxX = Integer.MIN_VALUE;
 		int minX = Integer.MAX_VALUE;
 		int[][] zValues = new int[100][2];
 
 		for(Face face: m.getFaces()){
-			Vector3f v1 = m.getVertices().get((int) face.vertex.x -1);
-			Vector3f v2 = m.getVertices().get((int) face.vertex.y -1);
 			Vector3f v3 = m.getVertices().get((int) face.vertex.z -1);
-			v1 = new Vector3f(v1.x+offset.x,v1.y+offset.y,v1.z+offset.z);
-			v2 = new Vector3f(v2.x+offset.x,v2.y+offset.y,v2.z+offset.z);
-			v3 = new Vector3f(v3.x+offset.x,v3.y+offset.y,v3.z+offset.z);
-			maxX = Math.max(maxX, (int)((v3.x/SQUARE_SIZE)+50));
-			minX = Math.min(minX, (int)((v3.x/SQUARE_SIZE)+50));
+			v3 = new Vector3f((v3.x+offset.x)/SQUARE_SIZE+50,(v3.y+offset.y)/SQUARE_SIZE+50,(v3.z+offset.z)/SQUARE_SIZE+50);
+			maxX = Math.max(maxX, (int)((v3.x)));
+			minX = Math.min(minX, (int)((v3.x)));
 
-
-			if (zValues[(int)((v3.x/SQUARE_SIZE)+50)][0] == 0){
-				zValues[(int)((v3.x/SQUARE_SIZE)+50)][0] = (int)((v3.z/SQUARE_SIZE)+50);
-				zValues[(int)((v3.x/SQUARE_SIZE)+50)][1] = (int)((v3.z/SQUARE_SIZE)+50);
+			if (zValues[(int)((v3.x))][0] == 0){
+				zValues[(int)((v3.x ) )][0] = (int)((v3.z ) );
+				zValues[(int)((v3.x ) )][1] = (int)((v3.z ) );
 			}
-			zValues[(int)((v3.x/SQUARE_SIZE)+50)][0] = Math.min((int)((v3.z/SQUARE_SIZE)+50),zValues[(int)((v3.x/SQUARE_SIZE)+50)][0]);
-			zValues[(int)((v3.x/SQUARE_SIZE)+50)][1] = Math.max((int)((v3.z/SQUARE_SIZE)+50),zValues[(int)((v3.x/SQUARE_SIZE)+50)][1]);
-			floor[(int)((v3.x/SQUARE_SIZE)+50)][(int)((v3.z/SQUARE_SIZE)+50)] = 'T';
+			zValues[(int)((v3.x ) )][0] = Math.min((int)((v3.z ) ),zValues[(int)((v3.x ) )][0]);
+			zValues[(int)((v3.x ) )][1] = Math.max((int)((v3.z ) ),zValues[(int)((v3.x ) )][1]);
+			floor[(int)((v3.x ) )][(int)((v3.z ) )] = 'T';
 		}
 
 		for (int x = minX; x < maxX;x++){
@@ -224,6 +220,11 @@ public class Floor {
 	}
 
 	public Entity getEntity(int itemID) {
+		System.out.println("SEGMESOIGMSEOGS");
+		for(Entity e:entities.values()){
+			System.out.println(e.toString());
+		}System.out.println("------------");
+		System.out.println("Attempting to access "+itemID);
 		return entities.get(itemID);
 	}
 

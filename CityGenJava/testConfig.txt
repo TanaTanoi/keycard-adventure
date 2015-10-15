@@ -2,3 +2,5 @@
 Basefloor.txt
 2
 mazefloor01.txt
+3
+emptyfloor.txt

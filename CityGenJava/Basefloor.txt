@@ -8,7 +8,4 @@ WALL 70 80 70 99
 WALL 70 80 80 80
 WALL 90 80 99 80
 PROP 5 5 keycard.obj
-TOOL key Teapot Key
-Key for Teapot
-4 4 teapot.obj knife.png
 PORTAL 2 2 2 trapdoor.obj

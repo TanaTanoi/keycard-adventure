@@ -6,17 +6,4 @@ WALL 0 20 80 20
 WALL 80 20 80 80
 WALL 80 80 20 80
 WALL 20 80 20 40
-CONTAINER Box
-An old wooden box
-3 5 5 locker.obj
-{
-TOOL key TEAKEY
-A key for teaaaaa
-5 6 teapot.obj red_potion.png
-}
-PROP 4 5 ladder.obj
-PROP 3 5 keycard.obj
-PROP 20 20 trapdoor.obj
-TOOL key GHOSTKEY
-A key for ghoooosts
--10 -10 ghost.obj rainbow_keycard.png
+PORTAL 3 2 2 trapdoor.obj

@@ -49,4 +49,10 @@ public class Portal implements Entity {
 		return ID;
 	}
 
+	@Override
+	public String toString() {
+		return "Portal [startFloor=" + startFloor + ", endFloor=" + endFloor
+				+ ", modelName=" + modelName + ", ID=" + ID + "]";
+	}
+
 }

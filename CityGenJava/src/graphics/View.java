@@ -124,7 +124,7 @@ public class View {
 				glTranslatef(x, y, z);
 				glPushMatrix();
 				Location l = i.getLocation();
-				glTranslatef((float)(l.getX()*squareSize), 0,(float)(l.getY()*squareSize));
+				glTranslatef((float)(-l.getX()), 0,(float)(-l.getY()));
 				glCallList(control.getFloor().getDisplayList(i));
 				glPopMatrix();
 				glPopMatrix();

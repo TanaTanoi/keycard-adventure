@@ -127,7 +127,7 @@ public class ClientController {
 
 	private void start(){
 
-		view.setMap(world.getCollisions());
+		view.setMap(world.getFloor(current.getLocation().getFloor()).getFloorPlan());
 		init();
 		// need to make a spawn method for new player
 		GL.createCapabilities(false); // valid for latest build
@@ -292,8 +292,8 @@ public class ClientController {
 		// Center our window relative to primary monitor
 		glfwSetWindowPos(
 				window.getID(),
-				(GLFWvidmode.width(vidmode) - window.getWidth()) / 2,
-				(GLFWvidmode.height(vidmode) - window.getHeight()) / 2
+				(GLFWvidmode.width(vidmode) - Window.getWidth()) / 2,
+				(GLFWvidmode.height(vidmode) - Window.getHeight()) / 2
 				);
 
 		// Make the OpenGL context current
@@ -327,8 +327,7 @@ public class ClientController {
 		System.out.println(button + " " + state  + " " + arg3);
 		if(button == GLFW_MOUSE_BUTTON_1&&state ==0){
 			mouse_down = state==1;
-
-			toInteract = world.closestEntity(current.getLocation(), 10.0f);//TODO calibrate pickup radius
+			toInteract = world.closestEntity(current.getLocation(), 5.0f,(int)xRot%360);//TODO calibrate pickup radius
 		}
 	}
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
@@ -349,6 +348,7 @@ public class ClientController {
 
 	public void interact(int playerID, int interactID){
 		world.interact(playerID, interactID);
+		view.setMap(world.getFloor(current.getLocation().getFloor()).getFloorPlan());
 	}
 
 
