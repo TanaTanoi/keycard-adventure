@@ -6,3 +6,6 @@ PORTAL 1 2 2 ladder.obj
 TOOL potion syringe ng
 it kills you, kinda
 5 5 ghost.obj syringe.png -50
+TOOL potion Death Potion
+This will almost kill you
+3 2 potion.obj rainbow_potion.png -50

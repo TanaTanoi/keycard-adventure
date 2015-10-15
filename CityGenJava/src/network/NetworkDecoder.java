@@ -95,6 +95,10 @@ public class NetworkDecoder {
 				int playerID = sc.nextInt();
 				System.out.println("USE " +itemID + " " +playerID);
 				game_client.use(playerID, itemID);
+			}else if(next.equals("DISC")){
+				int playerID = sc.nextInt();
+				//TODO handle removing a player from the world
+
 			}
 		}
 		sc.close();
@@ -158,6 +162,7 @@ public class NetworkDecoder {
 					int playerID = Integer.parseInt(sc.next());
 					//TODO handle disconnect of this player on the game world.
 					game.removePlayer(playerID);
+					approvedCommands.add(input);
 					return false;
 				}catch(NumberFormatException e){
 					System.out.println("Error! Received bad input |" + input + "| couldn't parse into (int) ");
@@ -198,7 +203,6 @@ public class NetworkDecoder {
 		StringBuilder sb = new StringBuilder();
 		for(float[] p: players){
 			sb.append(getPlayerString(p));
-			sb.append(" ");
 		}
 
 		//Add each approved command to the string to dispatch to all players, then remove them

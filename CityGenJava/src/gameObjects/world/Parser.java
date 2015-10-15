@@ -83,7 +83,10 @@ public class Parser {
 							entities.add(parseNPC(s,level,g.setItemID()));
 						break;
 						}
+						if(!entities.isEmpty())
+							System.out.println("Added a " + entities.get(entities.size()-1).getClass().getSimpleName());
 					}
+
 					s.close();
 					g.setFloor(world, level, entities); // adds floor to game
 

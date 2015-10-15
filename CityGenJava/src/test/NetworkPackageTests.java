@@ -69,6 +69,26 @@ public class NetworkPackageTests {
 		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
 	}
 
+	/*Test if a disconenction message can be created and decoded*/
+	@Test
+	public void test_network_decoder_disconect_01(){
+		Set<String> interact = new HashSet<String>();
+
+		setupGame();
+
+		//Send a disconnect message from player 0. Should return false to show that they have disconnected
+		assertFalse(NetworkDecoder.decodeClientInput(g, "DISC 0", 0, interact));
+
+		String input = NetworkDecoder.prepPackage(g,interact);
+		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 ITEM 1 1 "));
+		float[][] playerInfos =  {{0.0f, 10.0f,10.0f, 0.0f},
+								{1.0f, 20.0f,20.0f, 0.0f}};
+		checkGameworld_Positions(playerInfos);
+
+		/*Check that extra interaction only applies to a single package*/
+		input = NetworkDecoder.prepPackage(g,interact);
+		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
+	}
 
 	/*---------------*\
 	 * Helper methods*
