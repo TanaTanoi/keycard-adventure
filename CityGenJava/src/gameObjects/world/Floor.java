@@ -262,11 +262,16 @@ public class Floor {
 			v3 = new Vector3f(v3.x*SQUARE_SIZE,v3.y*SQUARE_SIZE,v3.z*SQUARE_SIZE);
 			v3 = new Vector3f((v3.x)+offset.x,(v3.y)+offset.y,(v3.z)+offset.z);
 			v3 = new Vector3f(v3.x+51,v3.y+51,v3.z+51);
-			map[(int) v3.x][(int) v3.z] = 1;
+			map[Math.min(99,(int) v3.x)][Math.min(99,(int) v3.z)] = 1;
 			minX = (int) Math.min(minX, v3.x);
 			maxX = (int) Math.max(maxX,v3.x);
 			minZ = (int) Math.min(minZ, v3.z);
 			maxZ = (int) Math.max(maxZ,v3.z);
+			minX = Math.min(99, minX);
+			maxX = Math.min(99, maxX);
+			minZ = Math.min(99, minZ);
+			maxZ = Math.min(99, maxZ);
+			
 		}
 		for (int x = minX; x < maxX+1;x++){
 			for (int z = minZ; z < maxZ+1;z++){
