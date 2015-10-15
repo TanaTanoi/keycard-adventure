@@ -2,6 +2,13 @@ package gameObjects.strategies;
 import gameObjects.player.Character;
 import gameObjects.objects.Item;
 
+/**
+ * Details how a weapon should be used.
+ * If used on a player, the damage it can do should be applied to the player
+ *
+ * @author craighhann
+ */
+
 public class WeaponStrategy implements InteractStrategy {
 
 	private int damage;
@@ -13,8 +20,7 @@ public class WeaponStrategy implements InteractStrategy {
 
 	@Override
 	public void interact(Item i) {
-		// TODO Auto-generated method stub
-
+		// Do nothing
 	}
 
 	@Override

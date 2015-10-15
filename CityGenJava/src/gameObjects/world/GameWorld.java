@@ -27,20 +27,28 @@ import vec.Vector2;
 
 import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
+/**
+ *
+ * The GameWorld represents all the state in the game. It stores a list of all the floors in the game and all players in the game.
+ * It also has game logic for determing whether players should be able to interact with objects and determining how they should.
+ * There is a main copy of the gameWorld held on the server. Any game state changes made there are updated to all client versions
+ * of the gameworld. Events that only affect the client, such as an NPC displaying text, only happen in the client's gameworld
+ *
+ * @author craighhann
+ *
+ */
+
 public class GameWorld {
 
-	public static final int MAX_PLAYERS = 2;//3;//TODO change back to 3
-
-	// For testing
+	public static final int MAX_PLAYERS = 3;
 
 	private Map<Integer,Player> allPlayers;
 	private Map<Integer, Floor> floorList;
-	private int TOTAL_PLAYER_COUNT = 0;
-	private int TOTAL_ENTITY_COUNT = 0;
+	private int TOTAL_PLAYER_COUNT = 0; // used as counter for unique player ID's
+	private int TOTAL_ENTITY_COUNT = 0; // used as counter for unique entity ID's
 
 	public GameWorld(){
 		init();
-		//Parser is called on ClientController now, so we have more control over when parsing happens
 	}
 
 	/**
@@ -60,7 +68,7 @@ public class GameWorld {
 	 */
 	public void updatePlayerInfo(int id, float x, float y, int rotation){
 		if(allPlayers.size()>id){
-			Player p = allPlayers.get(id);//getPlayer(id);
+			Player p = allPlayers.get(id);
 			p.move(x, y);
 			p.setOrientation(rotation);
 		}
@@ -78,12 +86,10 @@ public class GameWorld {
 	 */
 	public int addNewPlayer(String name){
 		if(allPlayers.size()==MAX_PLAYERS)return-1;
-		//TODO add condition for if the game has already started.
 		Player p = new Player(name, TOTAL_PLAYER_COUNT++);
 		allPlayers.put(p.getID(),p); // adds player to game world
 		// Now adds player to correct floor
 		int floor = p.getLocation().getFloor();
-		//floorList.get(floor).addPlayer(p);
 		return TOTAL_PLAYER_COUNT-1;
 	}
 
@@ -93,16 +99,10 @@ public class GameWorld {
 	 */
 	public void removePlayer(int playerID){
 		Player p = allPlayers.get(playerID);
-		//TODO remove player properly, from other things.
+		floorList.get(p.getLocation().getFloor()).removePlayer(p);
 		allPlayers.remove(playerID);
-
 	}
 
-
-	// ADD SEVERAL ITEM CONSTRUCTORS HERE
-	// i.e. tool, container etc
-
-	// Actaully make this
 	/**
 	 * Given a collision map, level int, and a list of items, it creates a floor
 	 * and assigns these values to it. Then adds it to the map of floors, under the given
@@ -116,6 +116,14 @@ public class GameWorld {
 		System.out.println("Adding floor at " + level + " with " + items.size() + " items");
 		floorList.put(level, f);
 	}
+
+	/**
+	 * Returns the correct floor
+	 * when given a level
+	 *
+	 * @param floor
+	 * @return
+	 */
 	public Floor getFloor(int floor){
 		return floorList.get(floor);
 	}
@@ -130,26 +138,23 @@ public class GameWorld {
 	 * @param rot
 	 * @return - The closest item to a player within the radius. Null if no objects within the radius
 	 */
+
 	public Entity closestEntity(Location l, float radius,int rot){
 		Entity toReturn = null;
-		System.out.println(l.getX() + " " + l.getY());
+
 		for(Entity i: floorList.get(l.getFloor()).getEntities()){
 			Location iloc = i.getLocation();
-			//vector
+
 			Vector2 ent_to_pl = new Vector2(iloc.getX()-l.getX(),iloc.getY()-l.getY());
 			ent_to_pl = ent_to_pl.unitVector();
 			Vector2 p_dir = new Vector2(
 					(float)-Math.sin(Math.toRadians(rot)),
 					(float)Math.cos(Math.toRadians(rot)));
 			p_dir = p_dir.unitVector();
-			System.out.println("P_DIR : " +p_dir.x + " " + p_dir.y);
-			System.out.println("ENT_T : " +ent_to_pl.x + " " + ent_to_pl.y);
-			System.out.println("ENT_L : " +l.getX() + " " + l.getY());
-
 			float anglediff = p_dir.dot(ent_to_pl.mul(1.0f));
-			System.out.println("Angle diff  " + (Math.round(anglediff*10)/10.0f));
+
 			if(iloc.distance(l)<radius&&Math.round(anglediff*10.0f)/10.0f==1){
-				System.out.println("We have selected " + i.getName());
+
 				if(toReturn == null){
 					toReturn = i;
 					continue;
@@ -237,17 +242,24 @@ public class GameWorld {
 		return true;
 	}
 
+	/**
+	 * Gets a list of all players currently connected and in the game
+	 * @return
+	 */
+
 	public List<Player> getPlayers(){
 		List<Player> players = new ArrayList<Player>();
 		players.addAll(allPlayers.values());
 		return players;
 	}
+
 	/**
 	 * Gets all of the player information and returns them in the following format:
 	 * ID X Y ROTATION
 	 * ID and Rotation can safely be casted to ints.
 	 * @return - List of Player information arrays
 	 */
+
 	public List<float[]> getPlayerInfos(){
 		List<float[]> toReturn = new ArrayList<float[]>();
 		for(Player p:allPlayers.values()){
@@ -256,6 +268,7 @@ public class GameWorld {
 		}
 		return toReturn;
 	}
+
 	/**
 	 * Add a player to the game
 	 * @param p - Player object
@@ -292,45 +305,33 @@ public class GameWorld {
 	 * @return - True if the interaction was successful, false if not.
 	 */
 	public boolean interact(int playerID,int itemID){
-		System.out.println("Player ID " + playerID + "  Item ID " + itemID);
 		Player p = allPlayers.get(playerID);
-		//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
 		Entity i = floorList.get(p.getLocation().getFloor()).getEntity(itemID);
 		System.out.println("Item i is " +(i==null));
 		if(i == null){
 			if(p.getInventory()[0]!=null||p.getInventory()[1]!=null){
-				System.out.println("Received the id to drop item");
 				return dropItem(p, itemID);
 			}else{
-				System.out.println("No items on player");
 				return false;
 			}
 		}
-		System.out.println(i.toString());
 		if(i instanceof Door){
 			//If its a door, unlock it if possible
 			Door door = (Door)i;
-			System.out.println("We have interacted with a door");
-		return	unlockDoor(door,p);
-
+			return	unlockDoor(door,p);
 		}else if(i instanceof Tool){
 			//If its a tool, pick it up
 			return pickUpItem(playerID,itemID);
 		}else if(i instanceof Container){
 			Container cont = (Container)i;
-			//pickUpItem(playerID,cont.getRandomItem().getID());
 			Item randomI = cont.getRandomItem();
 			if(randomI==null){
 				return false;
 			}
-
 			if(randomI instanceof Tool){
 				return p.pickUp((Tool)randomI);
 			}
-			else{
-				// Is a container OMG help
-			}
-			return true;
+			return false;
 		}else if(i instanceof NPC){
 			if(i instanceof AttackNPC){
 				return attackNPC(p, (AttackNPC)i);
@@ -339,10 +340,26 @@ public class GameWorld {
 			moveFloor(playerID, itemID);
 			return true;
 		}
-
 		return false;
 	}
 
+	/**
+	 * This methods is used when a player attacks an attackable NPC
+	 * It damages the NPC's health by the value on the weapon and
+	 * damages the player a little
+	 *
+	 * It then checks whether the NPC is alive and if not, removes it
+	 * from the game
+	 *
+	 * If a player is not alive, it will respawn with full health
+	 * on the bottom floor with full health
+	 *
+	 * Returns true if player had a weaon equipped to attack them
+	 *
+	 * @param p
+	 * @param i
+	 * @return
+	 */
 	private boolean attackNPC(Player p, AttackNPC i) {
 		if(p.getEquippedTool() instanceof Weapon){
 			Weapon w = (Weapon)p.getEquippedTool();
@@ -355,31 +372,53 @@ public class GameWorld {
 			if(!p.isAlive()){
 				respawn(p);
 			}
-
+			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Moves a dead player off their current floor
+	 * to the base floor and regenerates their health
+	 *
+	 * @param p
+	 */
 	private void respawn(Player p) {
 		Floor f = floorList.get(p.getLocation().getFloor());
 		f.removePlayer(p);
 		Floor newFloor = floorList.get(1);
 		Location newLocation = new Location(3,-4,1);
 		p.setLocation(newLocation);
+		p.setHealth(100);
 		newFloor.addPlayer(p);
 	}
 
+	/**
+	 *This method checks if a player has a key equipped to unlock
+	 *a door they click on. Returns true if their key can unlock the door.
+	 *Unlocked doors are then deleted from the game so all players can pass through it
+	 *
+	 * @param door
+	 * @param p
+	 * @return
+	 */
 	private boolean unlockDoor(Door door, Player p) {
-		door.interact(p);//TODO get player's equipt item and make it interact with door. If door unlocks, return true
+		door.interact(p);
 		if(!door.isLocked()){
 			System.out.println("Door is locked but shoould now be unlocked");
 			Floor f = floorList.get(door.getLocation().getFloor());
 			f.removeEntity(door);
 			return true;
 		}
-		return false;//FIXME change when implemented (to true)
+		return false;
 	}
 
+	/**
+	 * Allows a player to use an equipped item on themselves
+	 * @param pID
+	 * @param itemID
+	 * @return
+	 */
 	public boolean useEquippedItem(int pID, int itemID){
 		Player p = allPlayers.get(pID);
 		p.useItem(itemID);

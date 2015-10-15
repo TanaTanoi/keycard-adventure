@@ -11,14 +11,12 @@ public class MapStrategy implements InteractStrategy{
 
 	@Override
 	public void interact(Item i) {
-		// TODO Auto-generated method stub
-
+		// Does nothing
 	}
 
 	@Override
 	public void useOnPlayer(Character c) {
-		// TODO Auto-generated method stub
-
+		// Does nothing
 	}
 
 }

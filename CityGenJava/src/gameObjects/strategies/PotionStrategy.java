@@ -13,8 +13,7 @@ public class PotionStrategy implements InteractStrategy {
 
 	@Override
 	public void interact(Item i) {
-		// Allow put in container
-
+		// No effect
 	}
 
 	@Override
