@@ -241,4 +241,8 @@ public class Player implements Character{
 
 		return false;
 	}
+
+	public void setLocation(Location loc){
+		this.loc = loc;
+	}
 }

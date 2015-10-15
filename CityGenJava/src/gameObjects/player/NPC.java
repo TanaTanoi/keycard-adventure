@@ -19,7 +19,7 @@ import gameObjects.world.Location;
 public abstract class NPC implements Character, Entity{
 
 	private String name;
-	private int health;
+	private int health = 10;
 	private Location loc;
 	private int orientation;
 	String modelName;

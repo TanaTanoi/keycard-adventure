@@ -7,6 +7,8 @@ import gameObjects.objects.Item;
 import gameObjects.objects.Key;
 import gameObjects.objects.Portal;
 import gameObjects.objects.Tool;
+import gameObjects.objects.Weapon;
+import gameObjects.player.AttackNPC;
 import gameObjects.player.InfoNPC;
 import gameObjects.player.NPC;
 import gameObjects.player.Player;
@@ -330,8 +332,8 @@ public class GameWorld {
 			}
 			return true;
 		}else if(i instanceof NPC){
-			if(i instanceof InfoNPC){
-
+			if(i instanceof AttackNPC){
+				return attackNPC(p, (AttackNPC)i);
 			}
 		}else if(i instanceof Portal){
 			moveFloor(playerID, itemID);
@@ -339,6 +341,32 @@ public class GameWorld {
 		}
 
 		return false;
+	}
+
+	private boolean attackNPC(Player p, AttackNPC i) {
+		if(p.getEquippedTool() instanceof Weapon){
+			Weapon w = (Weapon)p.getEquippedTool();
+			w.interact(i); // weapon used on NPC
+			p.attack(5); // does a little damage to NPC
+			if(!i.isAlive()){
+				Floor f = floorList.get(i.getLocation().getFloor());
+				f.removeEntity(i);
+			}
+			if(!p.isAlive()){
+				respawn(p);
+			}
+
+		}
+		return false;
+	}
+
+	private void respawn(Player p) {
+		Floor f = floorList.get(p.getLocation().getFloor());
+		f.removePlayer(p);
+		Floor newFloor = floorList.get(1);
+		Location newLocation = new Location(3,-4,1);
+		p.setLocation(newLocation);
+		newFloor.addPlayer(p);
 	}
 
 	private boolean unlockDoor(Door door, Player p) {
