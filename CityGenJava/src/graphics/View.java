@@ -471,7 +471,7 @@ public class View {
 
 	private void renderPlayers(){
 		double spacing = gameSize/occupiedSpace.length;
-		List<Player> players = control.getFloor().getPlayers();
+		List<Player> players = world.getPlayers();//control.getFloor().getPlayers();
 		if (playersY > 1 ||playersY < 0.3){
 			yChange*=-1;
 			playersY+=yChange;
@@ -480,7 +480,8 @@ public class View {
 		playersY+=yChange;
 		int i = 0;
 		for(Player p: players){
-			if (!p.equals(control.getCurrentPlayer())) {
+			if (!p.equals(control.getCurrentPlayer())&&
+					p.getLocation().getFloor()==control.getCurrentPlayer().getLocation().getFloor()) {
 				Location playerLoc = p.getLocation();
 				glPushMatrix();
 				i = p.getID();
@@ -497,13 +498,8 @@ public class View {
 				//System.out.println("rot " + p.getOrientation());
 				glRotated(p.getOrientation()+90,0,1,0); // -90 to make the spout point in the direction the player is facing
 				glScaled(0.5, 0.5, 0.5);
-				for(Entity it : control.getFloor().getEntities()){
+				glCallList(control.getFloor().getPlayerDisplayList());
 
-					if (it.getModelName().contains("ghost")){
-						glCallList(control.getFloor().getDisplayList(it));
-						break;
-					}
-				}
 				glColor3f(1, 1, 1);
 				glPopMatrix();
 				//				glPopMatrix();

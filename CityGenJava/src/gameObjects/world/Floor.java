@@ -45,6 +45,8 @@ public class Floor {
 	private int level;
 	private char[][] floor;
 
+	private static final String PLAYER_MODEL = "ghost.obj";
+
 	public Floor(int level, char[][] floorPlan, List<Entity> items){
 		displayLists = new HashMap<String,Integer>();
 		this.level = level;
@@ -54,6 +56,7 @@ public class Floor {
 		for(Entity i:items){
 			this.addEntity(i);
 		}
+		loadModel("ghost.obj");
 
 	}
 
@@ -99,7 +102,7 @@ public class Floor {
 		System.out.println("Added item " + i.getID() + " " + i.getName());
 		System.out.println(i.toString());
 		Location l = i.getLocation();
-		loadModel(i.getModelName(),new Vector3f(l.getX(),0,l.getY()));
+		updateCollisions(loadModel(i.getModelName()),new Vector3f(l.getX(),0,l.getY()));
 	}
 
 	public void removeEntity(Entity i){
@@ -110,16 +113,19 @@ public class Floor {
 		return displayLists.get(i.getModelName());
 	}
 
+	public int getPlayerDisplayList(){
+		return displayLists.get(PLAYER_MODEL);
+	}
+
 	/**
 	 * Loads a model specified by the given file path into the model map, then creates collisions
 	 * based on the provided offset. Materials are generated based on the filepath string.
 	 * @param filePath - Path to the .obj (that uses tris)
 	 * @param offset - World offset of this particular entity.
 	 */
-	private void loadModel(String filePath, Vector3f offset){
+	private Model loadModel(String filePath){
 
 		Model m = new Model(filePath);
-		updateCollisions(m, offset);
 		int newList = glGenLists(1);
 		glNewList(newList, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
@@ -127,7 +133,6 @@ public class Floor {
 		while(materialSeed.length()<20){
 			materialSeed = materialSeed+Math.abs(materialSeed.hashCode());
 		}
-		System.out.println("Mat len " + materialSeed.length());
 		float[] values = new float[10];
 		int len = materialSeed.length()-1;
 		for(int i = 0; i < 10;i++){
@@ -162,6 +167,7 @@ public class Floor {
 		glEnd();
 		glEndList();
 		displayLists.put(filePath,newList);
+		return m;
 	}
 
 	/**

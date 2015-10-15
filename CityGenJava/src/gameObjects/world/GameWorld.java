@@ -196,8 +196,6 @@ public class GameWorld {
 	 * @return
 	 */
 	public void moveFloor(int playerID, int portalID){
-		System.out.println("Moving floor");
-
 		Player p = allPlayers.get(playerID);
 		if(p==null){throw new IllegalArgumentException("Invalid Player ID");}
 
@@ -206,7 +204,7 @@ public class GameWorld {
 
 		if(i == null){System.out.println("Portal is null"); System.out.println("Floor " + f.getLevel());}
 
-		p.move(i.getLocation().getX(), i.getLocation().getY()); // moves to portal location
+		p.move(i.getLocation().getX()+1, i.getLocation().getY()+1); // moves to portal location
 		p.setFloor(i.getEndFloor()); // updates players floor
 		f.removePlayer(p); // removes from current floor
 		// adds to new floor
