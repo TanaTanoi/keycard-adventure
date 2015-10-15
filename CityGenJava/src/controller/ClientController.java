@@ -365,6 +365,9 @@ public class ClientController {
 		world.useEquippedItem(playerID, interactID);
 	}
 
+	public void removePlayer(int playerID){
+		world.removePlayer(playerID);
+	}
 
 
 

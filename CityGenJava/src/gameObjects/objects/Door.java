@@ -26,7 +26,9 @@ public class Door implements Item{
 	@Override
 	public void interact(Character c) {
 		Player p = (Player)c;
+
 		if(p.useKey(keyName)){
+
 			isLocked = false;
 		}
 	}

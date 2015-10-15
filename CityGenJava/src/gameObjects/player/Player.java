@@ -219,7 +219,11 @@ public class Player implements Character{
 			noItems--;
 		}
 	}
-
+	/**
+	 *
+	 * @param keyName - The name of the key expected to unlock the door this has been used on.
+	 * @return
+	 */
 	public boolean useKey(String keyName) {
 		if(inventory[0]!=null&&inventory[0] instanceof Key){
 			if(((Key)inventory[0]).getName().equals(keyName)){

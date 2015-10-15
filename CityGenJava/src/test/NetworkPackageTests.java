@@ -80,14 +80,9 @@ public class NetworkPackageTests {
 		assertFalse(NetworkDecoder.decodeClientInput(g, "DISC 0", 0, interact));
 
 		String input = NetworkDecoder.prepPackage(g,interact);
-		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 ITEM 1 1 "));
-		float[][] playerInfos =  {{0.0f, 10.0f,10.0f, 0.0f},
-								{1.0f, 20.0f,20.0f, 0.0f}};
+		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 1 2000 2000 0 DISC 0 "));
+		float[][] playerInfos =  {{1.0f, 20.0f,20.0f, 0.0f}};
 		checkGameworld_Positions(playerInfos);
-
-		/*Check that extra interaction only applies to a single package*/
-		input = NetworkDecoder.prepPackage(g,interact);
-		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
 	}
 
 	/*---------------*\

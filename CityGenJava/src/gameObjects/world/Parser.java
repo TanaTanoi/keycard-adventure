@@ -219,7 +219,7 @@ public class Parser {
 	private static Item parseTool(Scanner s, int level, int setItemID) {
 		Tool t;
 		String type = s.next();
-		String name = s.nextLine();
+		String name = s.nextLine().trim();
 		String description = s.nextLine();
 		System.out.println(name);
 		int x = s.nextInt();

@@ -97,6 +97,7 @@ public class NetworkDecoder {
 				game_client.use(playerID, itemID);
 			}else if(next.equals("DISC")){
 				int playerID = sc.nextInt();
+				game_client.removePlayer(playerID);
 				//TODO handle removing a player from the world
 
 			}

@@ -18,5 +18,5 @@ This will be a key for test
 TOOL map World Map
 This will help you around the floor
 -4 -4 mapScroll.obj knife.png
-NPC Bobby INFO -3 -3 ghost.obj syringe.png
+NPC Bobby INFO -3 -3 goldtrophy.obj syringe.png
 PORTAL 2 -2 2 trapdoor.obj

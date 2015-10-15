@@ -27,7 +27,7 @@ import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class GameWorld {
 
-	public static final int MAX_PLAYERS = 1;//3;//TODO change back to 3
+	public static final int MAX_PLAYERS = 2;//3;//TODO change back to 3
 
 	// For testing
 
@@ -297,19 +297,18 @@ public class GameWorld {
 		System.out.println("Item i is " +(i==null));
 		if(i == null){
 			if(p.getInventory()[0]!=null||p.getInventory()[1]!=null){
-//				i = p.getInventory()[p.getEquipped()];
 				System.out.println("Received the id to drop item");
 				return dropItem(p, itemID);
 			}else{
 				System.out.println("No items on player");
 				return false;
 			}
-
 		}
 		System.out.println(i.toString());
 		if(i instanceof Door){
 			//If its a door, unlock it if possible
 			Door door = (Door)i;
+			System.out.println("We have interacted with a door");
 		return	unlockDoor(door,p);
 
 		}else if(i instanceof Tool){
@@ -342,10 +341,10 @@ public class GameWorld {
 		return false;
 	}
 
-
 	private boolean unlockDoor(Door door, Player p) {
 		door.interact(p);//TODO get player's equipt item and make it interact with door. If door unlocks, return true
 		if(!door.isLocked()){
+			System.out.println("Door is locked but shoould now be unlocked");
 			Floor f = floorList.get(door.getLocation().getFloor());
 			f.removeEntity(door);
 			return true;
