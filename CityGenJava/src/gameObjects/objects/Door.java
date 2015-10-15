@@ -1,6 +1,7 @@
 package gameObjects.objects;
 
 import gameObjects.player.Character;
+import gameObjects.player.Player;
 import gameObjects.world.Location;
 
 public class Door implements Item{
@@ -24,15 +25,17 @@ public class Door implements Item{
 
 	@Override
 	public void interact(Character c) {
-		// TODO Auto-generated method stub
-
+		Player p = (Player)c;
+		if(p.useKey(keyName)){
+			isLocked = false;
+		}
 	}
 
 	@Override
 	public void interact(Item i) {
 		if(i instanceof Key){
 			Key k = (Key)i;
-			if(k.getName() == keyName){
+			if(k.getName().equals(keyName)){
 				isLocked = false;
 			}
 		}
@@ -66,6 +69,10 @@ public class Door implements Item{
 	@Override
 	public int getID() {
 		return ID;
+	}
+
+	public boolean isLocked(){
+		return isLocked;
 	}
 
 }

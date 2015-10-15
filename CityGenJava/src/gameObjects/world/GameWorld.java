@@ -310,8 +310,8 @@ public class GameWorld {
 		if(i instanceof Door){
 			//If its a door, unlock it if possible
 			Door door = (Door)i;
-			//door.interact();//TODO get player's equipt item and make it interact with door. If door unlocks, return true
-			return false;//FIXME change when implemented (to true)
+		return	unlockDoor(door,p);
+
 		}else if(i instanceof Tool){
 			//If its a tool, pick it up
 			return pickUpItem(playerID,itemID);
@@ -342,6 +342,16 @@ public class GameWorld {
 		return false;
 	}
 
+
+	private boolean unlockDoor(Door door, Player p) {
+		door.interact(p);//TODO get player's equipt item and make it interact with door. If door unlocks, return true
+		if(!door.isLocked()){
+			Floor f = floorList.get(door.getLocation().getFloor());
+			f.removeEntity(door);
+			return true;
+		}
+		return false;//FIXME change when implemented (to true)
+	}
 
 	public boolean useEquippedItem(int pID, int itemID){
 		Player p = allPlayers.get(pID);

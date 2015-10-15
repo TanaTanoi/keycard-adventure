@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gameObjects.objects.Item;
+import gameObjects.objects.Key;
 import gameObjects.objects.Map;
 import gameObjects.objects.Potion;
 import gameObjects.objects.Tool;
@@ -217,5 +218,23 @@ public class Player implements Character{
 			inventory[1] = null;
 			noItems--;
 		}
+	}
+
+	public boolean useKey(String keyName) {
+		if(inventory[0]!=null&&inventory[0] instanceof Key){
+			if(((Key)inventory[0]).getName().equals(keyName)){
+				inventory[0] = null;
+				noItems--;
+				return true;
+			}
+		}else if(inventory[1]!=null&&inventory[1] instanceof Key){
+			if(((Key)inventory[1]).getName().equals(keyName)){
+				inventory[1] = null;
+				noItems--;
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
