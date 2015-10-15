@@ -38,7 +38,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Floor {
 	//Filepaths to Display lists
-	private Map<String, Integer> displayLists;
+	private static final Map<String, Integer> displayLists = new HashMap<String,Integer>();
 	private static final float SQUARE_SIZE = 0.5f;
 	private List<Player> players;
 	private Map<Integer,Entity> entities;
@@ -48,7 +48,6 @@ public class Floor {
 	private static final String PLAYER_MODEL = "ghost.obj";
 
 	public Floor(int level, char[][] floorPlan, List<Entity> items){
-		displayLists = new HashMap<String,Integer>();
 		this.level = level;
 		floor = floorPlan;
 		this.players = new ArrayList<Player>();
@@ -117,7 +116,7 @@ public class Floor {
 	}
 
 	public int getDisplayList(Entity i){
-		return displayLists.get(i.getModelName());
+		return Floor.displayLists.get(i.getModelName());
 	}
 
 	public int getPlayerDisplayList(){

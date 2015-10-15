@@ -138,7 +138,9 @@ public class Player implements Character{
 	 * @param i
 	 */
 	public Tool drop(int inventoryID){
-		return inventory[inventoryID];
+		Tool t =  inventory[inventoryID];
+		inventory[inventoryID] = null;
+		return t;
 
 
 //		if(equipped != -1){

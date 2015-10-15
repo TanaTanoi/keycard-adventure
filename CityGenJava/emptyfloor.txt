@@ -3,6 +3,6 @@ WALL 99 0 99 99
 WALL 99 99 0 99
 WALL 0 99 0 0
 PORTAL 1 2 2 ladder.obj
-TOOL key fesg
-grsdmgrijd
-5 5 keycard.obj knife.png
+TOOL potion syringe ng
+it kills you, kinda
+5 5 ghost.obj syringe.png -50

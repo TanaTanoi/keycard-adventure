@@ -8,7 +8,7 @@ WALL 70 80 70 99
 WALL 70 80 80 80
 WALL 90 80 99 80
 PROP 5 5 keycard.obj
-PORTAL 2 2 2 trapdoor.obj
 TOOL potion Death Potion
 This will almost kill you
 3 3 keycard.obj rainbow_potion.png -50
+PORTAL 2 -2 2 trapdoor.obj
