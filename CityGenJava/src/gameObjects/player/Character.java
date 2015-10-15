@@ -3,6 +3,14 @@ package gameObjects.player;
 import gameObjects.objects.Item;
 import gameObjects.world.Location;
 
+/**
+ * A character represents any living object in the game. The two major subclasses of this
+ * are players and NPC's. The two share some common methodology
+ *
+ * @author craighhann
+ *
+ */
+
 public interface Character {
 
 	/**

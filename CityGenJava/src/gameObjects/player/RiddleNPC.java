@@ -3,6 +3,14 @@ package gameObjects.player;
 import java.util.List;
 
 import gameObjects.world.Location;
+/**
+ * A riddleNPC has a question and stores an answer to this question.
+ * Answering this question correctly may result either in information
+ * or in a useful item
+ *
+ * @author craighhann
+ *
+ */
 
 public class RiddleNPC extends NPC{
 
