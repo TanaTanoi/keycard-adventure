@@ -13,6 +13,6 @@ This will almost kill you
 3 3 keycard.obj rainbow_potion.png -50
 TOOL map World Map
 This will help you around the floor
--4 -4 teapot.obj knife.png
+-4 -4 mapScroll.obj knife.png
 NPC Bobby INFO -3 -3 ghost.obj syringe.png
 PORTAL 2 -2 2 trapdoor.obj
