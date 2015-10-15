@@ -401,7 +401,7 @@ public class View {
 		occupiedSpace = new char[width][depth];
 		for (int x = 0; x < width; x++){
 			for(int z = 0; z < depth; z++){
-				occupiedSpace[x][z] = 'O';
+				occupiedSpace[x][z] = '-';
 				if (x == 0 || x == width-1) occupiedSpace[x][z] = 'X';
 				else if (z == 0 || z == depth-1) occupiedSpace[x][z] = 'X';
 			}

@@ -102,11 +102,13 @@ public class Floor {
 		System.out.println("Added item " + i.getID() + " " + i.getName());
 		System.out.println(i.toString());
 		Location l = i.getLocation();
-		updateCollisions(loadModel(i.getModelName()),new Vector3f(l.getX(),0,l.getY()));
+		updateCollisions(loadModel(i.getModelName()),new Vector3f(l.getX(),0,l.getY()),'T');
 	}
 
 	public void removeEntity(Entity i){
 		System.out.println(entities.remove(i.getID()));
+		updateCollisions(new Model(i.getModelName()),new Vector3f(i.getLocation().getX(),0,i.getLocation().getY()),'-');
+
 	}
 
 	public int getDisplayList(Entity i){
@@ -210,7 +212,8 @@ public class Floor {
 	 * @param m - The model to create a collision for
 	 * @param offset - This unique entity's world offset
 	 */
-	private void updateCollisions(Model m, Vector3f offset){
+	private void updateCollisions(Model m, Vector3f offset,char toAdd){
+		System.out.println("Updating collisiosn with " +toAdd);
 		offset = new Vector3f(-offset.x*5,offset.y,-offset.z*5);
 		int maxX = Integer.MIN_VALUE;
 		int minX = Integer.MAX_VALUE;
@@ -231,7 +234,7 @@ public class Floor {
 		for (int x = minX; x < maxX+1;x++){
 			for (int z = minZ; z < maxZ+1;z++){
 				if(map[x][z] == 1)
-					floor[x][z] = 'T';
+					floor[x][z] = toAdd;
 			}
 		}
 	}
