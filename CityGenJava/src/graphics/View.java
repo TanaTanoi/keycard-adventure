@@ -115,6 +115,7 @@ public class View {
 
 		texMap.put("purple_keycard.png", Texture.getTexture("purple_keycard.png"));
 		texMap.put("red_keycard.png", Texture.getTexture("red_keycard.png"));
+		text = Texture.getTexture("brick.jpg");
 	}
 
 	private void renderObjects(){
@@ -201,9 +202,14 @@ public class View {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBegin(GL_QUADS);
 
+
+		glTexCoord2f(0,0);
 		glVertex3f(250, 230, 0);
+		glTexCoord2f(0,1);
 		glVertex3f(250, 70, 0);
+		glTexCoord2f(1,1);
 		glVertex3f(530, 70, 0);
+		glTexCoord2f(1,0);
 		glVertex3f(530, 230, 0);
 
 		glEnd();
@@ -476,6 +482,7 @@ public class View {
 	}
 
 	private void renderPlayers(){
+		glDisable(GL_TEXTURE_2D);
 		double spacing = gameSize/occupiedSpace.length;
 		List<Player> players = world.getPlayers();//control.getFloor().getPlayers();
 		if (playersY > 1 ||playersY < 0.3){
@@ -511,6 +518,7 @@ public class View {
 				//				glPopMatrix();
 			}
 		}
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	private void renderWalls(){
