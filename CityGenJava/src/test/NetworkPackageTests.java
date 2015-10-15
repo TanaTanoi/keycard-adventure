@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.junit.*;
 
+import controller.ClientController;
 import gameObjects.player.Player;
 import gameObjects.world.GameWorld;
 import network.*;
@@ -69,21 +70,7 @@ public class NetworkPackageTests {
 		assertTrue("Moves aren't right, response was :" + input+":", input.equalsIgnoreCase("P 0 1000 1000 0 P 1 2000 2000 0 "));
 	}
 
-	/*Test if a disconenction message can be created and decoded*/
-	@Test
-	public void test_network_decoder_disconect_01(){
-		Set<String> interact = new HashSet<String>();
 
-		g = HelperMethods.setupGame();
-
-		//Send a disconnect message from player 0. Should return false to show that they have disconnected
-		assertFalse(NetworkDecoder.decodeClientInput(g, "DISC 0", 0, interact));
-
-		String input = NetworkDecoder.prepPackage(g,interact);
-		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 1 2000 2000 0 DISC 0 "));
-		float[][] playerInfos =  {{1.0f, 20.0f,20.0f, 0.0f}};
-		checkGameworld_Positions(playerInfos);
-	}
 
 	/*---------------*\
 	 * Helper methods*
@@ -99,6 +86,33 @@ public class NetworkPackageTests {
 				assertTrue("Info should be equal " +players[j][i] + " " + infos.get(j)[i],players[j][i] == infos.get(j)[i]);
 			}
 		}
+	}
+	/*Test if a disconenction message can be created and decoded*/
+	@Test
+	public void test_network_decoder_disconect_01(){
+		Set<String> interact = new HashSet<String>();
+
+		g = HelperMethods.setupGame();
+
+		//Send a disconnect message from player 0. Should return false to show that they have disconnected
+		assertFalse(NetworkDecoder.decodeClientInput(g, "DISC 0", 0, interact));
+
+		String input = NetworkDecoder.prepPackage(g,interact);
+		assertTrue("With two players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 1 2000 2000 0 DISC 0 "));
+		float[][] playerInfos =  {{1.0f, 20.0f,20.0f, 0.0f}};
+		checkGameworld_Positions(playerInfos);
+	}
+	/*Test if a disconenction message can be created and decoded*/
+	@Test
+	public void test_network_decoder_disconect_02(){
+		Set<String> interact = new HashSet<String>();
+		g = HelperMethods.setupGame();
+		//Send a disconnect message from player 0. Should return false to show that they have disconnected
+		assertFalse(NetworkDecoder.decodeClientInput(g, null, 0, interact));
+		String input = NetworkDecoder.prepPackage(g,interact);
+		assertTrue("With one players, should be [] but is :" + input+":", input.equalsIgnoreCase("P 1 2000 2000 0 DISC 0 "));
+		float[][] playerInfos =  {{1.0f, 20.0f,20.0f, 0.0f}};
+		checkGameworld_Positions(playerInfos);
 	}
 
 }

@@ -21,7 +21,7 @@ import controller.ClientController;
 public class NetworkDecoder {
 
 	/**
-	 * Get the string to send to the server that represents the player's coordinates and ID
+	 * Get the string to send to the server that represents the player's coordinates and ID and rotation
 	 * The coordanites are multiplied by 100 and casted to ints for simple broadcasting.
 	 * The server is expected to divide it by 100 when received.
 	 *
@@ -144,7 +144,10 @@ public class NetworkDecoder {
 	 */
 	public static boolean decodeClientInput(GameWorld game,String input, int player,Set<String> approvedCommands){
 //		System.out.println("Received "+ input + " from player " + player);
-		if(input==null)return false;
+		if(input==null){
+			game.removePlayer(player);
+			approvedCommands.add("DISC "+player);
+			return false;}
 		Scanner sc = new Scanner(input);
 		while(sc.hasNext()){
 			String next = sc.next();

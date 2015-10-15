@@ -72,7 +72,7 @@ public class GameWorld {
 	 * If the total number of players (indicated by MAX_PLAYERS) is exceeded,
 	 * returns -1.
 	 * If the game has already started, and no new players can join, returns -2.
-	 * The returned ID is global (accross server and clients).
+	 * The returned ID is global (across server and clients).
 	 * @param name - Name of player to be added.
 	 * @return - The ID of the newly added player; -1 if max players has been reached; -2 if game has already started.
 	 */

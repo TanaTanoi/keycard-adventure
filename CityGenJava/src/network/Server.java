@@ -11,10 +11,30 @@ import java.util.List;
 import java.util.Set;
 
 import org.lwjgl.opengl.GL;
+
+/**
+ * This controls the server's version of the game world as well as the networking. <br>
+ * It works by waiting until we get the maximum amount of players in the server, then attaches
+ * all of the clients to a separate thread that requests information from all clients
+ * then distributes a package based on the information it received to all players.
+ * All decoding is delegated to the NetworkDecoder static class.
+ * @author Tana
+ */
 public class Server {
 
 	public static final int port = 32768;
 	static GameWorld world;//FIXME Find a way to have this private. Its not great having it package level
+
+
+
+
+	/**
+	 * The main deals with the connection of GameWorld.MAX_PLAYERS amount of players, then sending
+	 * the information to the thread. It will not receive or distribute any information until the max amount of players
+	 * has been connected. This prevents many game logic related errors.
+	 * @param argv - Expects no arguments
+	 * @throws Exception
+	 */
 	public static void main(String argv[]) throws Exception{
 		Window w = new Window();
 		GL.createCapabilities(true); // valid for latest build
@@ -61,6 +81,14 @@ public class Server {
 
 }
 
+/**
+ * This class controls the main server tick. It continuously accepts inputs from all clients
+ * then confirms this information is valid, then distributes those messages to all other clients.<br>
+ * When a user makes an action, it doesn't happen on the local client until it has passed through this message
+ * (With the exception of NPCs talking).
+ * @author Tana
+ *
+ */
 class ClientThread extends Thread{
 	List<Socket> connections;
 	String clInput;
@@ -69,6 +97,12 @@ class ClientThread extends Thread{
 		this.connections = new ArrayList<Socket>();
 	}
 
+	/**
+	 * This method runs the main server loop. <br>
+	 * Get information from clients -> Process information -> Send package to all information
+	 *
+	 *
+	 */
 	public void run(){
 		Set<String> approvedCommands = new HashSet<String>();//A list of commands that have been approved to be sent
 		try{
@@ -105,6 +139,10 @@ class ClientThread extends Thread{
 		}
 	}
 
+	/**
+	 * Adds a client to the game loop. This shouldn't be called before run has been called.
+	 * @param newClient - Client socket to add.
+	 */
 	public void add(Socket newClient){
 		connections.add(newClient);
 	}
