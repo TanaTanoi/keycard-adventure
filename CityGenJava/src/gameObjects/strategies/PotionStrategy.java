@@ -1,9 +1,10 @@
 package gameObjects.strategies;
 import gameObjects.player.Character;
+import gameObjects.player.Player;
 import gameObjects.objects.Item;
 
 public class PotionStrategy implements InteractStrategy {
-	
+
 	private int healthChange;
 
 	public PotionStrategy(int effect) {
@@ -18,8 +19,8 @@ public class PotionStrategy implements InteractStrategy {
 
 	@Override
 	public void useOnPlayer(Character c) {
-		// takePotion
-
+		Player p = (Player)c;
+		p.takePotion(healthChange);
 	}
 
 }

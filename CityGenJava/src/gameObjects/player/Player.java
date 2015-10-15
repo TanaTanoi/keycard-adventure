@@ -20,6 +20,7 @@ public class Player implements Character{
 
 	private String name; // name selected by user
 	private Tool[] inventory; // items  that the player carries
+	private int MAX_HEALTH = 100;
 	private int health = 100;
 	private int noItems = 0;
 	private Location loc; // describes player's location in game world
@@ -80,6 +81,9 @@ public class Player implements Character{
 	 */
 	public void takePotion(int effect){
 		health += effect;
+		if(health > MAX_HEALTH){
+			health = MAX_HEALTH;
+		}
 	}
 
 	@Override
@@ -194,7 +198,8 @@ public class Player implements Character{
 
 	public void useItemOnSelf() {
 		if(equipped != -1){ // has item equipped
-				inventory[equipped].interact(this);
+			inventory[equipped].interact(this);
+			inventory[equipped] = null;
 		}
 	}
 }
