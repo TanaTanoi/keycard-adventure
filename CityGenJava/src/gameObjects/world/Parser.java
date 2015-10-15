@@ -7,6 +7,7 @@ import gameObjects.objects.Furniture;
 import gameObjects.objects.FurnitureContainer;
 import gameObjects.objects.Item;
 import gameObjects.objects.Key;
+import gameObjects.objects.Map;
 import gameObjects.objects.Portal;
 import gameObjects.objects.Potion;
 import gameObjects.objects.Tool;
@@ -236,7 +237,9 @@ public class Parser {
 			int effectW = s.nextInt();
 		t = new Weapon(name, description, l, effectW, modelName, level, imageName);
 		break;
-
+		case("map"):
+			t = new Map(name, description, l, modelName, setItemID, imageName);
+		break;
 		default:
 			t = null;
 		}
