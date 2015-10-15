@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gameObjects.objects.Item;
+import gameObjects.objects.Potion;
 import gameObjects.objects.Tool;
 import gameObjects.world.Location;
 
@@ -182,5 +183,14 @@ public class Player implements Character{
 
 	public Tool[] getInventory() {
 		return inventory;
+	}
+
+	public void useItemOnSelf() {
+		if(equipped != -1){ // has item equipped
+			if(inventory[equipped] instanceof Potion){
+				Potion p = (Potion)inventory[equipped];
+				p.interact(this);
+			}
+		}
 	}
 }

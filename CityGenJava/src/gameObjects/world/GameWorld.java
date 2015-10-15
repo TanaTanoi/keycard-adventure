@@ -282,6 +282,7 @@ public class GameWorld {
 	 * @return - True if the interaction was successful, false if not.
 	 */
 	public boolean interact(int playerID,int itemID){
+		System.out.println("Player ID " + playerID + "  Item ID " + itemID);
 		Player p = allPlayers.get(playerID);
 		//		Item i = floorList.get(p.getLocation().getFloor()).getItem(itemID);
 		Entity i = floorList.get(p.getLocation().getFloor()).getEntity(itemID);
