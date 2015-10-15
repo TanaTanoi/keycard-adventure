@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Scanner;
 
 import controller.ClientController;
+/**
+ * This class controls sending information to the server over the network <br>.
+ * This works by constantly polling the ClientController for information to send to the server.
+ * It will always send player movement, with an optional package that tells the server of an action.
+ * @author Tana
+ *
+ */
 public class Client extends Thread{
 
 	private  int port = 32768;
@@ -26,7 +33,7 @@ public class Client extends Thread{
 		try{
 			attemptConnect();
 		}catch(IOException e){
-			System.out.println("Encounted network problem");
+			System.out.println("Encounted network problem \n Could not connect.");
 			e.printStackTrace();
 
 		}
@@ -53,15 +60,19 @@ public class Client extends Thread{
 	}
 
 	/**
-	 * Disconnects this client from the server by stopping the client loop and sending a disconnect message.
-	 * Currently no way to reconnect afterwards.
+	 * Disconnects this client from the server by stopping the client loop and sending a disconnect message. <br>
+	 * <b>There is no way to reconnect afterwards.</b>
 	 */
 	public void disconenct(){
 		connected = false;
 	}
 
-	public boolean attemptConnect() throws IOException{
-		String userIn;
+	/**
+	 * This method attempts to create a connection to the server.
+	 * @return - True if the connection is successful.
+	 * @throws IOException - If the connection failed, throws IOException
+	 */
+	public void attemptConnect() throws IOException{
 		String serverInput;
 		System.out.println("Connecting to " + gameHost);
 		clientSocket = new Socket(gameHost,port);
@@ -73,20 +84,18 @@ public class Client extends Thread{
 		serverOut.writeBytes(name+"\n");
 		serverOut.flush();
 
-		//receive ID number
+		//receive ID number for the player
 		serverInput = serverIn.readLine();
 
 		//set game's current player to a new player. Appends the name to the serverInput
 		//To allow for simple parsing
 		NetworkDecoder.decode(game,serverInput + " " + name);
-		return true;
 	}
 
 
 	/**
-	 * This is the thread's main loop. It will set up the connection to the server,
-	 * send an intro package, then continuously send player-position related packages.
-	 *
+	 * This is the thread's main loop. This assumes a connection to the server has been established, then
+	 * continuously streams information from the ClientController and then receives information back from the server.
 	 */
 	public void run() {
 		try{
@@ -109,7 +118,6 @@ public class Client extends Thread{
 
 		}catch(IOException e){
 			System.out.println("Problem communicating with server");
-			e.printStackTrace();
 		}
 	}
 }

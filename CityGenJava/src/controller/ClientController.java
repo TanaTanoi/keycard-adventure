@@ -69,7 +69,12 @@ import graphics.applicationWindow.ConnectionWindow;
 import graphics.applicationWindow.Window;
 import network.Client;
 
-
+/**
+ * This is the client's version of the world as well as the listener non-movement instructions.<br>
+ * This class is also the bridge between the networking code and the world.
+ * @author Tana
+ *
+ */
 public class ClientController {
 
 	GameWorld world; // Model
@@ -87,15 +92,17 @@ public class ClientController {
 
 	/*Mouse control fields*/
 	private Vector2 mousePos = new Vector2(0,0);
-	private boolean mouse_down = false;
-
 	private float xRot = 0;
-	private float rot_y = 0;
 
 	/*Local player game-related fields*/
 	private Entity toInteract = null;
 	public boolean useOnSelf = false;
 
+	/**
+	 * Standard constructor for the client controller
+	 * @param filename - Filename of a config file for the input map
+	 * @param IP - IP Address of the server to connect to. If IP = LOCAL then it will attempt a connection to a local host.
+	 */
 	public ClientController(String filename,String IP){
 		world = new GameWorld();
 		view = new View(world,this);
@@ -133,6 +140,9 @@ public class ClientController {
 		start();
 	}
 
+	/**
+	 * Starts the game and begins the render loop, which is delgated to the view class.
+	 */
 	private void start(){
 		view.setMap(world.getFloor(current.getLocation().getFloor()).getFloorPlan());
 		init();
@@ -152,7 +162,6 @@ public class ClientController {
 	 * players current floor, then swaps the buffers
 	 */
 	private void renderLoop(){
-		setUpCamera();
 
 		glClear(GL_COLOR_BUFFER_BIT); // clear the frame buffer
 		/*#Insert methods that draw in here #*/
@@ -183,16 +192,12 @@ public class ClientController {
 
 	}
 
-	private void setUpCamera(){
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
 	/**
+	 * This gets the rotation of the player, in degrees (0-360)
 	 * @return Players current camera rotation as a float
 	 */
 	public float getRotation(){
-		return xRot;
+		return xRot%360;
 	}
 
 	/**
@@ -204,10 +209,6 @@ public class ClientController {
 		Entity toReturn = toInteract;
 		toInteract = null;
 		return toReturn;
-	}
-
-	public static void main(String[] args) {
-		new ClientController("testConfig.txt",args[0]);
 	}
 
 	/**
@@ -256,11 +257,18 @@ public class ClientController {
 		newP.setOrientation(rotation);
 		world.addPlayer(newP);
 	}
-
+	/**
+	 * Gets the floor this player is currently on.
+	 * @return - A floor of the current player.
+	 */
 	public Floor getFloor(){
 		return world.getFloor(current.getLocation().getFloor());
 	}
-
+	/**
+	 * Initializes the game client, including things such as :<br>
+	 *  Key listeners, mouse button/motion listeners, etc.
+	 *  Also sets up the openGL context for the rest of the program.
+	 */
 	private void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
@@ -293,12 +301,6 @@ public class ClientController {
 			};
 
 		});
-		glfwSetScrollCallback(window.getID(), cbfun_s = new GLFWScrollCallback() {
-			@Override
-			public void invoke(long window, double xoffset, double yoffset) {
-				ScrollCallback(window,xoffset,yoffset);
-			}
-		});
 		// Get the resolution of the primary monitor
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		// Center our window relative to primary monitor
@@ -319,8 +321,14 @@ public class ClientController {
 		GLContext.createFromCurrent();
 	}
 
-
-
+	/**
+	 *Keyboard button controls.
+	 * @param window
+	 * @param key - Key to be pressed (can be converted to a char)
+	 * @param scancode
+	 * @param action - If pressed down or not
+	 * @param mods
+	 */
 	private void KeyboardCallback(long window, int key, int scancode, int action, int mods){
 		if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 			glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
@@ -337,10 +345,17 @@ public class ClientController {
 		view.move(pressed, xRot);
 	}
 
+	/**
+	 * Contols the mouse clicks of the user. This method is also used to bypass network controls<br>
+	 * This allows purely client side actions to take place (i.e. talking to NPCs)
+	 * @param window
+	 * @param button - Which button is pressed
+	 * @param state
+	 * @param arg3
+	 */
 	private void MouseButtonCallback(long window, int button, int state, int arg3){
 		System.out.println(button + " " + state  + " " + arg3);
 		if(button == GLFW_MOUSE_BUTTON_1&&state ==0){
-			mouse_down = state==1;
 			toInteract = world.closestEntity(current.getLocation(), 2.5f,(int)xRot%360);
 			if(toInteract instanceof InfoNPC){
 				view.setText(((InfoNPC)toInteract).getInfo());
@@ -348,36 +363,60 @@ public class ClientController {
 			}
 		}
 	}
+	/**
+	 * Controls the mouse motion call back. Activates when the mouse is moved, but not at all times.
+	 * @param window
+	 * @param xpos - Xpos of the mouse
+	 * @param ypos - Ypos of the mouse
+	 */
 	private void MouseMotionCallback(long window, double xpos, double ypos) {
 		mousePos = new Vector2((float)xpos,(float)ypos);
 	}
-	/**
-	 *
-	 * @param window The glfw window to attach the callback to
-	 * @param xoffset
-	 * @param yoffset - Scroll amount (positive if forward/towards computer)
-	 */
-	private void ScrollCallback(long window, double xoffset, double yoffset) {
-	}
 
+	/**
+	 * Passes on pickup to the world
+	 * @param playerID -ID of the player that is picking up the item
+	 * @param itemID - Global ID of the item to be picked up
+	 */
 	public void pickUp(int playerID, int itemID) {
 		world.pickUpItem(playerID, itemID);
 	}
 
+	/**
+	 * Pass on the interact to the world, but additionally regenerates the collision map
+	 * for the view class.
+	 * @param playerID - Player ID who is interacting
+	 * @param interactID - Entity ID of the entity the player is interacting with
+	 */
 	public void interact(int playerID, int interactID){
 		world.interact(playerID, interactID);
 		view.setMap(world.getFloor(current.getLocation().getFloor()).getFloorPlan());
 	}
+
+	/**
+	 * Passes on the use action to the world. Sets the userOnSelf flag to false
+	 * to prevent future items to be used on self.
+	 * @param playerID - ID of player who is using the item
+	 * @param interactID - ID of the entity it is interacting with.
+	 */
 	public void use(int playerID, int interactID){
-		System.out.println("We picked up an item");
 		useOnSelf = false;
 		world.useEquippedItem(playerID, interactID);
 	}
 
+	/**
+	 * Passes on the remove player information to the world
+	 * @param playerID - ID of the player that will be removed.
+	 */
 	public void removePlayer(int playerID){
 		world.removePlayer(playerID);
 	}
-
-
+	/**
+	 * Standard main for client controller.
+	 * @param args - args[0] is the IP address of the server.
+	 */
+	public static void main(String[] args) {
+		new ClientController("testConfig.txt",args[0]);
+	}
 
 }
