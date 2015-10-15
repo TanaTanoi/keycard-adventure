@@ -56,8 +56,8 @@ public class View {
 	private double inventoryAnimation;
 	private double animationRate = 0.05;
 	private boolean displayHud = true;
-	private String text;
-	float textFade = 1;
+	private int text;
+	float textFade = 0;
 
 	private Map<String, Integer> texMap;
 
@@ -118,6 +118,7 @@ public class View {
 	}
 
 	private void renderObjects(){
+		glDisable(GL_TEXTURE_2D);
 		if(control.getFloor()!=null){
 			for(Entity i: control.getFloor().getEntities()){
 				glPushMatrix();
@@ -130,6 +131,7 @@ public class View {
 				glPopMatrix();
 			}
 		}
+		glEnable(GL_TEXTURE_2D);
 	}
 
 
@@ -192,17 +194,21 @@ public class View {
 		glColor4f(1,1,1,textFade);
 		if (textFade > 0) textFade -= 0.001;
 		glEnable(GL_BLEND);
+		glEnable(GL_TEXTURE_2D);
+
+		glBindTexture(GL_TEXTURE_2D, text);
+
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBegin(GL_QUADS);
 
-		glVertex3f(235, 230, 0);
+		glVertex3f(250, 230, 0);
 		glVertex3f(250, 70, 0);
 		glVertex3f(530, 70, 0);
-		glVertex3f(550, 230, 0);
+		glVertex3f(530, 230, 0);
 
 		glEnd();
 		glColor4f(0,0,0,textFade);
-
+		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
 	}
 
@@ -618,5 +624,10 @@ public class View {
 
 	private FloatBuffer asFloatBuffer(float[] array){
 		return (FloatBuffer)BufferUtils.createFloatBuffer(4).put(array).flip();
+	}
+
+	public void setText(String text) {
+		textFade = 1;
+		this.text = Texture.getTexture(text);
 	}
 }
