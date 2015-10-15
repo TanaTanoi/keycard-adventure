@@ -137,13 +137,17 @@ public class Player implements Character{
 	 * Drops an item from a player's inventory
 	 * @param i
 	 */
-	public Tool drop(){
-		if(equipped != -1){
-			Tool t = inventory[equipped];
-			inventory[equipped] = null;
-			return t;
-		}
-		return null;
+	public Tool drop(int inventoryID){
+		return inventory[inventoryID];
+
+
+//		if(equipped != -1){
+//			Tool t = inventory[equipped];
+//			inventory[equipped] = null;
+//			noItems--;
+//			return t;
+//		}
+//		return null;
 	}
 
 	@Override
