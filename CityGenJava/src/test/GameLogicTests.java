@@ -3,10 +3,13 @@ package test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import gameObjects.objects.Entity;
+import gameObjects.objects.Portal;
 import gameObjects.objects.Weapon;
 import gameObjects.player.Player;
 import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
+import gameObjects.world.Location;
 import gameObjects.world.Parser;
 import graphics.View;
 
@@ -84,6 +87,37 @@ public class GameLogicTests {
 		p.takePotion(-20);
 
 		assert p.getHealth() == 80;
+
+	}
+
+	@Test
+	public void testClosestEntity(){
+		GameWorld g = HelperMethods.setupGame();
+		View view = new View(g,null);
+		HelperMethods.createFloor(g);
+		int iD = g.addNewPlayer("Bobby");
+		Player bob = g.getPlayers().get(iD);
+		bob.setLocation(new Location(1,0,1));
+		Weapon w = HelperMethods.addWeapon(g);
+
+		Entity e = g.closestEntity(bob.getLocation(), 3.0f , 0);
+		assert e ==w;
+	}
+
+	@Test
+	public void testMoveFloor(){
+		GameWorld g = HelperMethods.setupGame();
+		View view = new View(g,null);
+		HelperMethods.createFloor(g);
+		HelperMethods.createSecondFloor(g);
+		HelperMethods.addPortal(g);
+
+		Portal portal = (Portal)g.getFloor(1).getEntity(0);
+
+		Player p = g.getPlayers().get(1);
+		g.moveFloor(p.getID(), portal.getID());
+
+		assert p.getLocation().getFloor() == 2;
 
 	}
 

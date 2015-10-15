@@ -3,6 +3,7 @@ package test;
 import java.util.ArrayList;
 
 import gameObjects.objects.Entity;
+import gameObjects.objects.Portal;
 import gameObjects.objects.Weapon;
 import gameObjects.player.Player;
 import gameObjects.world.Floor;
@@ -27,10 +28,20 @@ public class HelperMethods {
 		g.addFloor(new Floor(1,new char[100][100], new ArrayList<Entity>()));
 	}
 
+	public static void createSecondFloor(GameWorld g){
+		g.addFloor(new Floor(2,new char[100][100], new ArrayList<Entity>()));
+	}
+
 	public static Weapon addWeapon(GameWorld g) {
 		Weapon w = new Weapon("Knife", "A sharp knife", new Location(1,1,1), 5, "locker.obj", 0, "knife.png");
 		g.getFloor(1).addEntity(w);
 		return w;
+	}
+
+	public static void addPortal(GameWorld g) {
+		Portal p = new Portal(1, 2, new Location(0,0,1), "trapdoor.obj", 0);
+		Floor f = g.getFloor(1);
+		f.addEntity(p);
 	}
 
 }

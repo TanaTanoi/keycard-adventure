@@ -99,7 +99,6 @@ public class GameWorld {
 	 */
 	public void removePlayer(int playerID){
 		Player p = allPlayers.get(playerID);
-		floorList.get(p.getLocation().getFloor()).removePlayer(p);
 		allPlayers.remove(playerID);
 	}
 
@@ -224,7 +223,6 @@ public class GameWorld {
 	 * @param i - Item to give to player p
 	 */
 	public boolean dropItem(Player p, int itemID){
-		//Item i = p.drop();
 		System.out.println("Dropping from player");
 		Tool[] tools = p.getInventory();
 		Item i;
