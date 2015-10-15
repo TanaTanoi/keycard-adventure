@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gameObjects.objects.Item;
+import gameObjects.objects.Map;
 import gameObjects.objects.Potion;
 import gameObjects.objects.Tool;
 import gameObjects.world.Location;
@@ -27,6 +28,7 @@ public class Player implements Character{
 	private int ID;
 	private int orientation;
 	private int equipped = -1;
+	private boolean canSeeMap;
 
 	public Player(String name, int ID){
 		this.name = name;
@@ -126,6 +128,9 @@ public class Player implements Character{
 			else{
 				inventory[1] = i;
 			}
+			if(i instanceof Map){
+				canSeeMap = true;
+			}
 			noItems++;
 			return true;
 		}
@@ -141,6 +146,9 @@ public class Player implements Character{
 		Tool t =  inventory[inventoryID];
 		inventory[inventoryID] = null;
 		noItems--;
+		if(t instanceof Map){
+			canSeeMap = false;
+		}
 		return t;
 	}
 
@@ -192,6 +200,10 @@ public class Player implements Character{
 
 	public Tool[] getInventory() {
 		return inventory;
+	}
+
+	public boolean canSeeMap(){
+		return canSeeMap;
 	}
 
 	public void useItem(int itemID) {

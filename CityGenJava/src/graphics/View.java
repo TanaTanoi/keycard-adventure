@@ -180,7 +180,9 @@ public class View {
 		glMatrixMode(GL_MODELVIEW);
 
 		drawInventory();
-		drawMinimap();
+		if(control.getCurrentPlayer().canSeeMap()){
+			drawMinimap();
+		}
 		drawHealth();
 		displayText();
 

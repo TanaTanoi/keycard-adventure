@@ -73,6 +73,7 @@ public class ClientController {
 	GameWorld world; // Model
 	Floor floor;
 	Player current; // Player giving controls
+
 	View view; // view
 	private Client client;
 	//** GLFW Listeners **//
