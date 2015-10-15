@@ -3,6 +3,8 @@ package test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import gameObjects.objects.Weapon;
+import gameObjects.player.Player;
 import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
 import gameObjects.world.Parser;
@@ -37,10 +39,52 @@ public class GameLogicTests {
 	public void testItemInWorld(){
 		GameWorld g = HelperMethods.setupGame();
 		View view = new View(g,null);
+		HelperMethods.createFloor(g);
 		HelperMethods.addWeapon(g);
 
 		Floor f = g.getFloor(1);
 		assert f.getEntities().size() == 1;
+	}
+
+	@Test
+	public void testPickUp(){
+		GameWorld g = HelperMethods.setupGame();
+		View view = new View(g,null);
+		HelperMethods.createFloor(g);
+		Weapon w = HelperMethods.addWeapon(g);
+
+		Floor f = g.getFloor(1);
+		g.pickUpItem(g.getPlayers().get(1).getID(),w.getID());
+
+		assert f.getEntities().size() == 0;
+		assert g.getPlayers().get(1).getInventory()[0].equals(w);
+	}
+
+
+	@Test
+	public void attackPlayer(){
+		GameWorld g = HelperMethods.setupGame();
+		View view = new View(g,null);
+		HelperMethods.createFloor(g);
+
+		Player p = g.getPlayers().get(1);
+		p.attack(50);
+
+		assert p.getHealth() == 50;
+
+	}
+
+	@Test
+	public void takePotion(){
+		GameWorld g = HelperMethods.setupGame();
+		View view = new View(g,null);
+		HelperMethods.createFloor(g);
+
+		Player p = g.getPlayers().get(1);
+		p.takePotion(-20);
+
+		assert p.getHealth() == 80;
+
 	}
 
 

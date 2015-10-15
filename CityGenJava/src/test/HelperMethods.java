@@ -1,7 +1,11 @@
 package test;
 
+import java.util.ArrayList;
+
+import gameObjects.objects.Entity;
 import gameObjects.objects.Weapon;
 import gameObjects.player.Player;
+import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
 import gameObjects.world.Location;
 
@@ -19,9 +23,14 @@ public class HelperMethods {
 		return g;
 	}
 
-	public static void addWeapon(GameWorld g) {
-		Weapon w = new Weapon("Knife", "A sharp knife", new Location(1,1,1), 5, null, 0, null);
+	public static void createFloor(GameWorld g){
+		g.addFloor(new Floor(1,new char[100][100], new ArrayList<Entity>()));
+	}
+
+	public static Weapon addWeapon(GameWorld g) {
+		Weapon w = new Weapon("Knife", "A sharp knife", new Location(1,1,1), 5, "locker.obj", 0, "knife.png");
 		g.getFloor(1).addEntity(w);
+		return w;
 	}
 
 }
