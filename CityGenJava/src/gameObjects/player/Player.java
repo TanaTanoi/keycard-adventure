@@ -177,6 +177,13 @@ public class Player implements Character{
 		return equipped;
 	}
 
+	public Tool getEquippedTool(){
+		if(getEquipped() == -1){
+			return null;
+		}
+		return inventory[getEquipped()];
+	}
+
 	public void setFloor(int f){
 		loc.setFloor(f);
 	}
@@ -187,10 +194,7 @@ public class Player implements Character{
 
 	public void useItemOnSelf() {
 		if(equipped != -1){ // has item equipped
-			if(inventory[equipped] instanceof Potion){
-				Potion p = (Potion)inventory[equipped];
-				p.interact(this);
-			}
+				inventory[equipped].interact(this);
 		}
 	}
 }
