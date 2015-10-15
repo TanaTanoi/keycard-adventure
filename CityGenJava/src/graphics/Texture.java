@@ -16,8 +16,20 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
+/**
+ * @author CJ Deighton
+ *
+ * Class for loading textures from a file
+ */
 public class Texture {
 
+	/**
+	 * Loads a texture from a file and returns the integer
+	 * corresponding to this
+	 *
+	 * @param path Filepath of texture
+	 * @return integer of the texture create
+	 */
 	public static int getTexture(String path){
 		try {
 			BufferedImage tex = ImageIO.read(new File(path));
@@ -32,7 +44,7 @@ public class Texture {
 	                buffer.put((byte) ((pixel >> 16) & 0xFF));     // Red component
 	                buffer.put((byte) ((pixel >> 8) & 0xFF));      // Green component
 	                buffer.put((byte) (pixel & 0xFF));               // Blue component
-	                buffer.put((byte) ((pixel >> 24) & 0xFF));    // Alpha component. Only for RGBA
+	                buffer.put((byte) ((pixel >> 24) & 0xFF));    // Alpha component
 	            }
 	        }
 
@@ -41,17 +53,13 @@ public class Texture {
 	     	int textureID = glGenTextures(); //Generate texture ID
 	        glBindTexture(GL_TEXTURE_2D, textureID); //Bind texture ID
 
-	        //Setup wrap mode
-	        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//repeat mode for continuous textures
 	        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	        //Setup texture scaling filtering
 	        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	        //Send texel data to OpenGL
 	        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex.getWidth(), tex.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-	        //Return the texture ID so we can bind it later again
 	      return textureID;
 		} catch (IOException e) {
 			System.out.println("Invalid texture");

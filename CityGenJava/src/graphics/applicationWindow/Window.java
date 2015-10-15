@@ -25,6 +25,11 @@ import org.lwjgl.glfw.GLFWvidmode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
+
+/**
+ * Class to hold the main glfw window
+ *
+ */
 public class Window {
 
 	/*Window long*/
@@ -86,6 +91,10 @@ public class Window {
 		GLContext.createFromCurrent();
 	}
 
+	/**
+	 * gets the ID of a window for use by GLFW
+	 * @return long reference of the window
+	 */
 	public long getID() {
 		return window;
 	}
@@ -98,8 +107,8 @@ public class Window {
 		return HEIGHT;
 	}
 	/**
-	 * Destroys the current window, removing it and preventing all 
-	 * GL calls. 
+	 * Destroys the current window, removing it and preventing all
+	 * GL calls.
 	 */
 	public void destory(){
 		glfwDestroyWindow(window);

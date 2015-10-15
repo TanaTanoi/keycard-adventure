@@ -14,6 +14,12 @@ import javax.swing.JTextField;
 
 import controller.ClientController;
 
+/**
+ * @author CJ Deighton
+ *
+ * Swing window to get the players name and the IP they wish to
+ * connect to before the game starts
+ */
 public class ConnectionWindow extends JFrame{
 	String[] nameAndIP;
 	public ConnectionWindow(String[] nameAndIP){
@@ -51,12 +57,9 @@ public class ConnectionWindow extends JFrame{
 		display.add(IP);
 
 		JButton completed = new JButton(new AbstractAction("Enter") {
-			public void actionPerformed(ActionEvent e){
+			public void actionPerformed(ActionEvent e){ //Code for retrieving name and IP for network
 				String name = playerName.getText();
 				String address = IP.getText();
-				//
-				//TODO code to deal with network here
-				//
 				nameAndIP[0] = name;
 				nameAndIP[1] = address;
 				setVisible(false);

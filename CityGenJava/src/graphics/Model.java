@@ -8,6 +8,13 @@ import java.util.List;
 
 import org.lwjgl.util.vector.*;
 
+
+/**
+ * @author CJ Deighton
+ *
+ * Class used for loading and storing objects to later be
+ * loaded into display lists
+ */
 public class Model {
 	private List<Vector3f> vertices;
 	private List<Vector3f> normals;
@@ -16,30 +23,6 @@ public class Model {
 
 	public Model(String filePath){
 		loadOBJModel(filePath);
-	}
-
-	public List<Vector3f> getVertices() {
-		return vertices;
-	}
-
-	public void setVertices(List<Vector3f> vertices) {
-		this.vertices = vertices;
-	}
-
-	public List<Vector3f> getNormals() {
-		return normals;
-	}
-
-	public void setNormals(List<Vector3f> normals) {
-		this.normals = normals;
-	}
-
-	public List<Face> getFaces() {
-		return faces;
-	}
-
-	public void setFaces(List<Face> faces) {
-		this.faces = faces;
 	}
 
 	private void loadOBJModel(String filePath){
@@ -101,8 +84,17 @@ public class Model {
 		return textureCoordinates;
 	}
 
-	public void setTextureCoordinates(List<Vector2f> textureCoordinates) {
-		this.textureCoordinates = textureCoordinates;
+	public List<Vector3f> getVertices() {
+		return vertices;
+	}
+
+	public List<Vector3f> getNormals() {
+		return normals;
+	}
+
+
+	public List<Face> getFaces() {
+		return faces;
 	}
 
 }

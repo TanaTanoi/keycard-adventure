@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -129,12 +130,17 @@ public class Floor {
 	 * @param filePath - Path to the .obj (that uses tris)
 	 * @param offset - World offset of this particular entity.
 	 */
+	
 	private Model loadModel(String filePath){
 
 		Model m = new Model(filePath);
 		int newList = glGenLists(1);
 		glNewList(newList, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
+
+//		setMaterial(new float[]{0.2125f, 0.1275f, 0.054f, 0.714f, 0.4284f, 0.18144f,
+//				0.393548f, 0.271906f, 0.166721f, 0.2f });
+
 		String materialSeed = ""+filePath.hashCode();
 		while(materialSeed.length()<20){
 			materialSeed = materialSeed+Math.abs(materialSeed.hashCode());
@@ -146,7 +152,9 @@ public class Floor {
 			float b = Integer.parseInt(""+materialSeed.substring(len-i-2, len-i));
 			values[i] = Math.min(a/b,1.0f);
 		}
+
 		setMaterial(values);
+
 		for(Face face: m.getFaces()){
 			Vector2f t1 = m.getTextureCoordinates().get((int) face.textures.x -1);
 			glTexCoord2d(t1.x,t1.y);

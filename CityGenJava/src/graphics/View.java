@@ -5,41 +5,25 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import gameObjects.objects.Entity;
-import gameObjects.objects.Furniture;
-import gameObjects.objects.Item;
 import gameObjects.objects.Tool;
 import gameObjects.player.Player;
-import gameObjects.world.Floor;
 import gameObjects.world.GameWorld;
 import gameObjects.world.Location;
 import graphics.applicationWindow.Window;
-
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWvidmode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
 import controller.ClientController;
 
-
+/**
+ * @author CJ Deighton
+ *
+ * Class used for all rendering in the graphics pane
+ *
+ * Will render the floor of the client's current player
+ */
 public class View {
 	private static final double ROOF_HEIGHT = 2.5;
 	private char[][] occupiedSpace;
@@ -61,7 +45,6 @@ public class View {
 
 	private Map<String, Integer> texMap;
 
-
 	public View(GameWorld world,ClientController control){
 		this.world = world;
 		this.control = control;
@@ -70,6 +53,11 @@ public class View {
 		w = new Window();
 	}
 
+
+	/**
+	 * Code called by the main render loop of the client controller.
+	 * Calls all render methods required for the next buffer swap.
+	 */
 	public void renderView(){
 		if (!loaded){
 			loadTextures();
@@ -94,13 +82,19 @@ public class View {
 			renderDisplayBar();
 
 		}
-		inventoryAnimation+=animationRate;
+
+		inventoryAnimation+=animationRate; //Allows for the sprite sheets in the inventory to change
 		if (inventoryAnimation > 4 || inventoryAnimation < 0){
 			animationRate*=-1;
 			inventoryAnimation+=animationRate;
 		}
 	}
 
+	/**
+	 * Imports all textures that will be required in the game.
+	 * These are loaded all at once rather than when the parser
+	 * asks simply because there are so few of them
+	 */
 	private void loadTextures(){
 		texMap= new HashMap<String,Integer>();
 		texMap.put("brick.jpg", Texture.getTexture("brick.jpg"));
@@ -115,9 +109,12 @@ public class View {
 
 		texMap.put("purple_keycard.png", Texture.getTexture("purple_keycard.png"));
 		texMap.put("red_keycard.png", Texture.getTexture("red_keycard.png"));
-		text = Texture.getTexture("brick.jpg");
 	}
 
+
+	/**
+	 * Displays all objects that are currently on the clients floor
+	 */
 	private void renderObjects(){
 		glDisable(GL_TEXTURE_2D);
 		if(control.getFloor()!=null){
@@ -135,9 +132,9 @@ public class View {
 		glEnable(GL_TEXTURE_2D);
 	}
 
-
-
-
+	/**
+	 * Draws the roof and floor of the current room
+	 */
 	private void renderBounds() {
 		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
@@ -170,6 +167,10 @@ public class View {
 		glDisable(GL_TEXTURE_2D);
 	}
 
+	/**
+	 * Calls the draw methods for the players HUD (Minimap, inventory,
+	 * any text that is currently displayed, and the blue surround to these)
+	 */
 	private void renderDisplayBar() {
 		glDisable(GL_DEPTH_TEST); //disable depth test so that objects don't draw over the display
 		glDisable(GL_LIGHTING); //disable lighting so the bar isn't affected by shadows
@@ -193,6 +194,10 @@ public class View {
 
 	}
 
+
+	/**
+	 * Shows any text from npcs or the game if there is any to display
+	 */
 	private void displayText() {
 		glColor4f(1,1,1,textFade);
 		if (textFade > 0) textFade -= 0.001;
@@ -220,6 +225,9 @@ public class View {
 		glDisable(GL_BLEND);
 	}
 
+	/**
+	 * Draws health bar portion of the HUD
+	 */
 	private void drawHealth() {
 
 		double healthLost = (100 - control.getCurrentPlayer().getHealth())/100.0;
@@ -245,6 +253,9 @@ public class View {
 		glEnd();
 	}
 
+	/**
+	 * Shows the blue surround to the players HUD
+	 */
 	private void drawInventory() {
 		glColor3f(0.0f,0.12f,0.20f);
 
@@ -327,6 +338,9 @@ public class View {
 		renderItems();
 	}
 
+	/**
+	 * Renders the items currently in the players inventory
+	 */
 	private void renderItems(){
 		glEnable(GL_TEXTURE_2D);
 		Tool[] inv = control.getCurrentPlayer().getInventory();
@@ -360,6 +374,7 @@ public class View {
 		glVertex3f(770,120,0);
 		glEnd();
 	}
+
 
 	private void drawMinimap(){
 		List<Player> players = world.getPlayers();
@@ -411,6 +426,11 @@ public class View {
 
 	}
 
+	/**
+	 * Sets up the collision map with empty rooms and walls around the edges
+	 * @param width
+	 * @param depth
+	 */
 	private void initaliseCollisions(int width, int depth) {
 		occupiedSpace = new char[width][depth];
 		for (int x = 0; x < width; x++){
@@ -436,6 +456,15 @@ public class View {
 		return w;
 	}
 
+	/**
+	 * Calculates where the player should land an then
+	 * runs through the collision map to see if the player
+	 * can move there, if so, it moves the player, else returns.
+	 *
+	 *
+	 * @param pressed Key that the player pressed
+	 * @param xRot Current orientation of the player
+	 */
 	public void move(char pressed, double xRot){
 		double dz = Math.cos(Math.toRadians(xRot))/10;
 		double dx = Math.sin(Math.toRadians(xRot))/10;
@@ -467,12 +496,15 @@ public class View {
 		control.getCurrentPlayer().move(tempX, tempZ);
 	}
 
+	/**
+	 * returns the first character in the collision map that relates to an object
+	 *
+	 * @param xRot current orientation of the player
+	 * @return closest character in the collision array in the direction the player is facing
+	 */
 	public char interact(double xRot){
 		double dz = Math.cos(Math.toRadians(xRot))/10;
 		double dx = Math.sin(Math.toRadians(xRot))/10;
-
-
-
 		for (int i = -13; i < 13; i++){
 			int x = (int)(((this.x-dx+10) + dx*i)/squareSize);
 			int z = (int)(((this.z+dz+10) + dz*i)/squareSize);
@@ -509,20 +541,20 @@ public class View {
 
 				glTranslatef(-playerLoc.getX(),playersY,-playerLoc.getY());
 
-				//				System.out.println("rel: " + (x-playerLoc.getX()) + " z : " +  (z-playerLoc.getY()));
-				//System.out.println("rot " + p.getOrientation());
 				glRotated(p.getOrientation()+90,0,1,0); // -90 to make the spout point in the direction the player is facing
 				glScaled(0.5, 0.5, 0.5);
 				glCallList(control.getFloor().getPlayerDisplayList());
 
 				glColor3f(1, 1, 1);
 				glPopMatrix();
-				//				glPopMatrix();
 			}
 		}
 		glEnable(GL_TEXTURE_2D);
 	}
 
+	/**
+	 * renders all X's in the collision map as walls
+	 */
 	private void renderWalls(){
 		glColor3f(0.8f,0.8f,0.8f);
 		glEnable(GL_TEXTURE_2D);
@@ -563,6 +595,10 @@ public class View {
 		glDisable(GL_TEXTURE_2D);
 	}
 
+
+	/**
+	 * Sets the players view frustum and the lighting
+	 */
 	private void initaliseCamera() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -574,22 +610,12 @@ public class View {
 
 		//----------- Variables & method calls added for Lighting Test -----------//
 		glShadeModel(GL_SMOOTH);
-		//		glMaterialfv(GL_FRONT, GL_SPECULAR, asFloatBuffer(new float[]{0.5f,0.5f,0.5f,0.5f}));				// sets specular material color
-		//		glMaterialf(GL_FRONT, GL_SHININESS, 0.1f);					// sets shininess
 
 		glLightfv(GL_LIGHT0, GL_POSITION, asFloatBuffer(new float[]{0,5f,0,0.0f}));				// sets light position
 		glLightfv(GL_LIGHT0, GL_SPECULAR, asFloatBuffer(new float[]{lightIntensity/3,lightIntensity/3,lightIntensity/3,0.01f}));				// sets specular light to white
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(new float[]{lightIntensity/3,lightIntensity/3,lightIntensity/3,0.5f}));					// sets diffuse light to white
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{lightIntensity,lightIntensity,lightIntensity,1f}));		// global ambient light
-		//		float  spotDir[] = {0.0f,0f,1f,0};
-		//
-		//		glLightfv(GL_LIGHT0,GL_SPOT_DIRECTION, asFloatBuffer(spotDir));
-		//
-		//		// Specific spot effects
-		//		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,10);
-		//
-		//		// Fairly shiny spot
-		//		glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,1.0f);
+
 		glEnable(GL_LIGHTING);										// enables lighting
 		glEnable(GL_LIGHT0);										// enables light0
 
@@ -597,6 +623,10 @@ public class View {
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);			// tell opengl glColor3f effects the ambient and diffuse properties of material
 	}
 
+	/**
+	 * Sets the collision map for the floor
+	 * @param map
+	 */
 	public void setMap(char[][] map){
 		occupiedSpace = map;
 	}
@@ -620,22 +650,40 @@ public class View {
 		glEnd();//End quad mode
 	}
 
+	/**
+	 * Turns the detail of the HUD minimap (players, objects, and walls) on and off
+	 */
 	public void toggleHUD(){
 		displayHud = !displayHud;
 	}
+
 
 	public float getLightIntensity() {
 		return lightIntensity;
 	}
 
+	/**
+	 * Allows the user to dim or brighten lights
+	 * @param lightIntensity new brightness value
+	 */
 	public void setLightIntensity(float lightIntensity) {
 		this.lightIntensity = lightIntensity;
 	}
 
+	/**
+	 * Creates a float buffer from a given float array object
+	 * @param array the array the buffer is created from
+	 * @return a floatbuffer for 4 floats
+	 */
 	private FloatBuffer asFloatBuffer(float[] array){
 		return (FloatBuffer)BufferUtils.createFloatBuffer(4).put(array).flip();
 	}
 
+
+	/**
+	 * Loads in a texture of text to be displayed on the HUD
+	 * @param text The file path of the texture if text to be output
+	 */
 	public void setText(String text) {
 		textFade = 1;
 		this.text = Texture.getTexture(text);

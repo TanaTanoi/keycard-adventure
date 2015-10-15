@@ -69,6 +69,7 @@ import graphics.applicationWindow.ConnectionWindow;
 import graphics.applicationWindow.Window;
 import network.Client;
 
+
 public class ClientController {
 
 	GameWorld world; // Model
@@ -96,7 +97,6 @@ public class ClientController {
 	public boolean useOnSelf = false;
 
 	public ClientController(String filename,String IP){
-
 		world = new GameWorld();
 		view = new View(world,this);
 
@@ -134,7 +134,6 @@ public class ClientController {
 	}
 
 	private void start(){
-
 		view.setMap(world.getFloor(current.getLocation().getFloor()).getFloorPlan());
 		init();
 		// need to make a spawn method for new player
@@ -148,6 +147,10 @@ public class ClientController {
 		client.disconenct();
 	}
 
+	/**
+	 * The main loop that clears the buffers, tells the view to render the
+	 * players current floor, then swaps the buffers
+	 */
 	private void renderLoop(){
 		setUpCamera();
 
@@ -169,7 +172,7 @@ public class ClientController {
 				xRot -=Math.pow((200-mousePos.x)/100,1.4);
 			}
 			//xRot %= 360;
-			current.setOrientation((int)xRot);
+			if (current != null)current.setOrientation((int)xRot);
 		}
 		/*----------------------------------*/
 		glFlush();
@@ -177,14 +180,17 @@ public class ClientController {
 		/*This polls for events that happened on the window
 		 * (i.e. keyboard, mouse, scroll events)*/
 		glfwPollEvents();
+
 	}
 
 	private void setUpCamera(){
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		//glRotatef(xRot, 0, 1, 0);
 	}
 
+	/**
+	 * @return Players current camera rotation as a float
+	 */
 	public float getRotation(){
 		return xRot;
 	}
@@ -265,7 +271,6 @@ public class ClientController {
 
 		// Set up window here
 		Window window = view.getWindow();
-
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window.getID(), keyCallback = new GLFWKeyCallback() {
 			@Override
@@ -294,7 +299,6 @@ public class ClientController {
 				ScrollCallback(window,xoffset,yoffset);
 			}
 		});
-
 		// Get the resolution of the primary monitor
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		// Center our window relative to primary monitor
@@ -337,7 +341,7 @@ public class ClientController {
 		System.out.println(button + " " + state  + " " + arg3);
 		if(button == GLFW_MOUSE_BUTTON_1&&state ==0){
 			mouse_down = state==1;
-			toInteract = world.closestEntity(current.getLocation(), 2.5f,(int)xRot%360);//TODO calibrate pickup radius
+			toInteract = world.closestEntity(current.getLocation(), 2.5f,(int)xRot%360);
 			if(toInteract instanceof InfoNPC){
 				view.setText(((InfoNPC)toInteract).getInfo());
 				toInteract = null;
@@ -349,7 +353,7 @@ public class ClientController {
 	}
 	/**
 	 *
-	 * @param window
+	 * @param window The glfw window to attach the callback to
 	 * @param xoffset
 	 * @param yoffset - Scroll amount (positive if forward/towards computer)
 	 */
