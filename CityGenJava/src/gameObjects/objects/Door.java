@@ -4,6 +4,12 @@ import gameObjects.player.Character;
 import gameObjects.player.Player;
 import gameObjects.world.Location;
 
+/**
+ * A door is a type of object that blocks players from entering a room.
+ * While we only currently use doors while they are locked, it is possible to extend this in the future
+ * @author craighhann *
+ */
+
 public class Door implements Item{
 	String name;
 	String description;

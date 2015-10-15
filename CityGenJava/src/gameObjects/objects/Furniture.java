@@ -3,18 +3,22 @@ package gameObjects.objects;
 import gameObjects.player.Character;
 import gameObjects.world.Location;
 
+/**
+ * A furniture item represents an item that's only purpose is to decorate the
+ * room or create some kind of non movable collision
+ *
+ * You cannot interact with them or move them
+ * @author craighhann
+ *
+ */
+
 public class Furniture implements Item {
 
 	private int ID;
-
-	//private String name;
-	//private String description;
 	private Location loc;
 	private String model;
 
 	public Furniture(Location loc, String model, int ID){
-		//this.name = name;
-		//description = desc;
 		this.loc = loc;
 		this.model = model;
 		this.ID = ID;
@@ -32,14 +36,13 @@ public class Furniture implements Item {
 
 	@Override
 	public void interact(Character c) {
-		// TODO Auto-generated method stub
+		// Cannot interact with player
 
 	}
 
 	@Override
 	public void interact(Item i) {
-		// TODO Auto-generated method stub
-
+		// Cannot interact with item
 	}
 
 	@Override

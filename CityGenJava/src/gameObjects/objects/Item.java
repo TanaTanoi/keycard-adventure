@@ -19,8 +19,7 @@ public interface Item extends Entity {
 	public void interact(Character c);
 
 	/**
-	 * Performs action on this item with another item
-	 * NOTE: may need a mouse click or object interacting with as param
+	 * Performs action on this item with another item	 *
 	 */
 	public void interact(Item i);
 

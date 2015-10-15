@@ -101,7 +101,6 @@ public abstract class Container implements Item{
 		if(i instanceof Key){
 			setLockStatus((Key)i);
 		}
-
 	}
 
 	/**

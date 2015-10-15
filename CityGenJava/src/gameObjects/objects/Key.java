@@ -1,8 +1,16 @@
 package gameObjects.objects;
 
-
 import gameObjects.strategies.KeyInteractStrategy;
 import gameObjects.world.Location;
+
+/**
+ * A key is a type of tool that can be used on other items
+ * such as containers and doors to unlock them. It should also be able to relock
+ * the item if need be
+ *
+ * @author craighhann
+ *
+ */
 
 public class Key extends Tool {
 

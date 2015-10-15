@@ -2,6 +2,15 @@ package gameObjects.objects;
 
 import gameObjects.world.Location;
 
+/**
+ * A portal represents a link between two floors in the gameworld. It only appears on the start floor
+ * of its location, also indcated by its startFloor ID. It will spawn the player at the location of the portal
+ * (in x y) but on the end floor
+ *
+ * @author craighhann
+ *
+ */
+
 public class Portal implements Entity {
 
 	int startFloor;
