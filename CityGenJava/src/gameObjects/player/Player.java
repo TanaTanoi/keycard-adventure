@@ -140,6 +140,7 @@ public class Player implements Character{
 	public Tool drop(int inventoryID){
 		Tool t =  inventory[inventoryID];
 		inventory[inventoryID] = null;
+		noItems--;
 		return t;
 
 
