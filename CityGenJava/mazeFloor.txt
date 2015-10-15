@@ -1,3 +1,7 @@
+WALL 0 0 99 0
+WALL 99 0 99 99
+WALL 99 99 0 99
+WALL 99 0 0 0
 WALL 60 25 50 25
 WALL 50 25 50 10
 WALL 50 10 10 10
@@ -17,4 +21,7 @@ WALL 90 20 75 20
 WALL 75 20 75 75
 WALL 75 75 70 75
 WALL 70 75 70 25
-PORTAL 4 4 3 trapdoor.obj
+PORTAL 1 5 3 trapdoor.obj
+TOOL key Green Door Key
+This will unlock the Green Door
+-6 3 keycard.obj red_keycard.png
