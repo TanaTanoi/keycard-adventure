@@ -33,7 +33,7 @@ public class View {
 	private double squareSize = 0.5;
 	private float x,y,z;
 	private boolean loaded = false;
-	private Window w;
+	private Window gl_window;
 	private double yChange = 0.003;
 	private float playersY = 0.5f;
 	private float lightIntensity = 0.8f;
@@ -50,7 +50,7 @@ public class View {
 		this.control = control;
 		initaliseCollisions(100,100);
 		y = -0.95f;
-		w = new Window();
+		gl_window = new Window();
 	}
 
 
@@ -178,7 +178,7 @@ public class View {
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, w.getWidth(), 0, w.getHeight(), -1, 1);
+		glOrtho(0, gl_window.getWidth(), 0, gl_window.getHeight(), -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 
 		drawInventory();
@@ -454,7 +454,7 @@ public class View {
 	}
 
 	public Window getWindow(){
-		return w;
+		return gl_window;
 	}
 
 	/**
